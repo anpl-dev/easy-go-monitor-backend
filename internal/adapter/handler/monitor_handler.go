@@ -9,12 +9,12 @@ import (
 
 // MonitorHandler handles HTTP requests for monitors.
 type MonitorHandler struct {
-	createUseCase usecase.CreateMonitorUseCase
+	createUC usecase.CreateMonitorUseCase
 }
 
 // NewMonitorHandler constructor
 func NewMonitorHandler(createUC usecase.CreateMonitorUseCase) *MonitorHandler {
-	return &MonitorHandler{createUseCase: createUC}
+	return &MonitorHandler{createUC: createUC}
 }
 
 // CreateMonitor handles POST /monitors
@@ -25,7 +25,7 @@ func (h *MonitorHandler) CreateMonitor(c *gin.Context) {
 		return
 	}
 
-	output, err := h.createUseCase.Execute(c.Request.Context(), input)
+	output, err := h.createUC.Execute(c.Request.Context(), input)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

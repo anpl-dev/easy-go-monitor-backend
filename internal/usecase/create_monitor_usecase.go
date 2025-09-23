@@ -18,7 +18,7 @@ type (
 	CreateMonitorInput struct {
 		UserID         uuid.UUID `json:"user_id" binding:"required"`
 		Name           string    `json:"name" binding:"required"`
-		URL            string    `json:"url" binding:"required"`
+		Url            string    `json:"url" binding:"required"`
 		IntervalSecond int       `json:"interval_second" binding:"required,min=1"`
 	}
 
@@ -32,7 +32,7 @@ type (
 		ID             uuid.UUID
 		UserID         uuid.UUID
 		Name           string
-		URL            string
+		Url            string
 		IntervalSecond int
 		CreatedAt      time.Time
 		UpdatedAt      time.Time
@@ -44,28 +44,31 @@ type (
 	}
 )
 
-func NewCreateMonitor(repo domain.MonitorRepository, presenter CreateMonitorPresenter) CreateMonitorUseCase {
+func NewCreateMonitor(
+	repo domain.MonitorRepository,
+	presenter CreateMonitorPresenter,
+) CreateMonitorUseCase {
 	return &createMonitorInteractor{
 		repo:      repo,
 		presenter: presenter,
 	}
 }
 
-func (m *createMonitorInteractor) Execute(ctx context.Context, input CreateMonitorInput) (CreateMonitorOutput, error) {
+func (uc *createMonitorInteractor) Execute(ctx context.Context, input CreateMonitorInput) (CreateMonitorOutput, error) {
 	monitor, err := domain.NewMonitor(
 		input.UserID,
 		input.Name,
-		input.URL,
+		input.Url,
 		input.IntervalSecond,
 	)
 	if err != nil {
 		return CreateMonitorOutput{}, err
 	}
 
-	created, err := m.repo.Create(ctx, *monitor)
+	created, err := uc.repo.Create(ctx, *monitor)
 	if err != nil {
 		return CreateMonitorOutput{}, err
 	}
 
-	return m.presenter.Output(created), nil
+	return uc.presenter.Output(created), nil
 }

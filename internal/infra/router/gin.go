@@ -8,19 +8,25 @@ import (
 
 func NewGinRouter(
 	monitorHandler *handler.MonitorHandler,
-	// userHandler *handler.UserHandler,
+	userHandler *handler.UserHandler,
 ) *gin.Engine {
 	r := gin.Default()
 
-	// Monitors
-	r.POST("/monitors", monitorHandler.CreateMonitor)
+	api := r.Group("/api/v1")
 
-	// Users
-	// r.POST("/users", userHandler.CreateUser)
+	{
+		// Monitors
+		api.POST("/monitors", monitorHandler.CreateMonitor)
+
+		// Users
+		api.POST("/users", userHandler.CreateUser)
+
+	}
 
 	// Health Check
-	r.GET("/heahth", func(c *gin.Context) {
+	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
+
 	return r
 }

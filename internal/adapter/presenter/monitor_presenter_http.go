@@ -12,7 +12,7 @@ func (p MonitorHTTPPresenter) Output(m *domain.Monitor) usecase.CreateMonitorOut
         ID:             m.ID,
         UserID:         m.UserID,
         Name:           m.Name,
-        URL:            m.Url,
+        Url:            m.Url,
         IntervalSecond: m.IntervalSecond,
         CreatedAt:      m.CreatedAt,
         UpdatedAt:      m.UpdatedAt,
