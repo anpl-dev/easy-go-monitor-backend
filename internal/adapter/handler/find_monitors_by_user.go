@@ -20,7 +20,7 @@ func (h *FindMonitorsByUserHandler) Handle(c *gin.Context) {
 	userIDStr := c.Param("user_id")
 	userID, err := uuid.Parse(userIDStr)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid uuid"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user id"})
 		return
 	}
 	output, err := h.uc.Execute(c.Request.Context(), usecase.FindMonitorsByUserInput{UserID: userID})

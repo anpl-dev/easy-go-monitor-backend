@@ -43,33 +43,32 @@ func main() {
 	// --- Presenter ---
 	createUserPresenter := presenter.NewCreateUserPresenter()
 	findUserByIDPresenter := presenter.NewFindUserByIDPresenter()
-	findUserByEmailPresenter := presenter.NewFindUserByEmailPresenter()
+	searchUserPresenter := presenter.NewSearchUserPresenter()
 
 	createMonitorPresenter := presenter.NewCreateMonitorPresenter()
 	findMonitorByIDPresenter := presenter.NewFindMonitorByIDPresenter()
 	findMonitorsByUserPresenter := presenter.NewFindMonitorsByUserPresenter()
 
-
 	// --- UseCase ---
 	createUserUC := usecase.NewCreateUser(userRepo, createUserPresenter)
 	findUserByIDUC := usecase.NewFindUserByID(userRepo, findUserByIDPresenter)
-	findUserByEmailUC := usecase.NewFindUserByEmail(userRepo, findUserByEmailPresenter)
+	searchUserUC := usecase.NewSearchUser(userRepo, searchUserPresenter)
 
 	createMonitorUC := usecase.NewCreateMonitor(monitorRepo, createMonitorPresenter)
 	findMointorByIDUC := usecase.NewFindMonitorByID(monitorRepo, findMonitorByIDPresenter)
-	findMonitorsByUser := usecase.NewFindMonitorsByUser(monitorRepo, findMonitorsByUserPresenter)
+	findMonitorsByUserUC := usecase.NewFindMonitorsByUser(monitorRepo, findMonitorsByUserPresenter)
 
 	// --- Handler ---
 	userHandlers := router.UserHandlers{
-		Create:      handler.NewCreateUserHandler(createUserUC),
-		FindByID:    handler.NewFindUserByIDHandler(findUserByIDUC),
-		FindByEmail: handler.NewFindUserByEmailHandler(findUserByEmailUC),
-		
-		
+		Create:   handler.NewCreateUserHandler(createUserUC),
+		FindByID: handler.NewFindUserByIDHandler(findUserByIDUC),
+		Search:   handler.NewSearchUserHandler(searchUserUC),
 	}
 
 	monitorHandlers := router.MonitorHandlers{
-		Create: handler.NewCreateMonitorHandler(createMonitorUC),
+		Create:       handler.NewCreateMonitorHandler(createMonitorUC),
+		FindByID:     handler.NewFindMonitorByIDHandler(findMointorByIDUC),
+		FindByUserID: handler.NewFindMonitorsByUserHandler(findMonitorsByUserUC),
 	}
 
 	// --- Router ---

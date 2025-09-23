@@ -8,9 +8,9 @@ import (
 
 type (
 	UserHandlers struct {
-		Create      *handler.CreateUserHandler
-		FindByID    *handler.FindUserByIDHandler
-		FindByEmail *handler.FindUserByEmailHandler
+		Create   *handler.CreateUserHandler
+		FindByID *handler.FindUserByIDHandler
+		Search   *handler.SearchUserHandler
 	}
 
 	MonitorHandlers struct {
@@ -26,15 +26,21 @@ func NewGinRouter(users UserHandlers, monitors MonitorHandlers) *gin.Engine {
 	api := r.Group("/api/v1")
 
 	{
-		// Users
-		api.POST("/users", users.Create.Handle)
-		api.GET("/users/:id", users.FindByID.Handle)
-		api.GET("/users/email/:email", users.FindByEmail.Handle)
+		usersApi := api.Group("/users")
+		{
+			usersApi.POST("", users.Create.Handle)
+			usersApi.GET("/:id", users.FindByID.Handle)
+			usersApi.GET("/search", users.Search.Handle)
+			usersApi.GET("/:id/monitors", monitors.FindByUserID.Handle)
 
-		// Monitors
-		api.POST("/monitors", monitors.Create.Handle)
-		api.GET("/monitors/:id", monitors.FindByID.Handle)
-		api.GET("/monitors/:user_id/monitors", monitors.FindByUserID.Handle)
+		}
+
+		monitorsApi := api.Group("/monitors")
+		{
+			monitorsApi.POST("", monitors.Create.Handle)
+			monitorsApi.GET("/:id", monitors.FindByID.Handle)
+
+		}
 
 	}
 
