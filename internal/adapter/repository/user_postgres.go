@@ -17,25 +17,32 @@ func NewUserPostgresRepository(db *sql.DB) *UserPostgresRepository {
 	return &UserPostgresRepository{queries: sqlcgen.New(db)}
 }
 
-func (r *UserPostgresRepository) Create(ctx context.Context, u domain.User) (*domain.User, error) {
-	row, err := r.queries.CreateUser(ctx, sqlcgen.CreateUserParams{
+func toDomainUser(s sqlcgen.User) *domain.User {
+	return &domain.User{
+		ID:           s.ID,
+		Name:         s.Name,
+		Email:        s.Email,
+		PasswordHash: s.PasswordHash,
+		CreatedAt:    s.CreatedAt,
+		UpdatedAt:    s.UpdatedAt,
+	}
+}
+
+func toSQLCUserParams(u domain.User) sqlcgen.CreateUserParams {
+	return sqlcgen.CreateUserParams{
 		ID:           u.ID,
 		Name:         u.Name,
 		Email:        u.Email,
 		PasswordHash: u.PasswordHash,
-	})
+	}
+}
+
+func (r *UserPostgresRepository) Create(ctx context.Context, u domain.User) (*domain.User, error) {
+	row, err := r.queries.CreateUser(ctx, toSQLCUserParams(u))
 	if err != nil {
 		return nil, err
 	}
-
-	return &domain.User{
-		ID:           row.ID,
-		Name:         row.Name,
-		Email:        row.Email,
-		PasswordHash: row.PasswordHash,
-		CreatedAt:    row.CreatedAt,
-		UpdatedAt:    row.UpdatedAt,
-	}, nil
+	return toDomainUser(row), nil
 }
 
 func (r *UserPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) (*domain.User, error) {
@@ -43,14 +50,7 @@ func (r *UserPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) (*d
 	if err != nil {
 		return nil, err
 	}
-	return &domain.User{
-		ID:           u.ID,
-		Name:         u.Name,
-		Email:        u.Email,
-		PasswordHash: u.PasswordHash,
-		CreatedAt:    u.CreatedAt,
-		UpdatedAt:    u.UpdatedAt,
-	}, nil
+	return toDomainUser(u), nil
 }
 
 func (r *UserPostgresRepository) FindByEmail(ctx context.Context, email string) (*domain.User, error) {
@@ -58,12 +58,5 @@ func (r *UserPostgresRepository) FindByEmail(ctx context.Context, email string) 
 	if err != nil {
 		return nil, err
 	}
-	return &domain.User{
-		ID:           u.ID,
-		Name:         u.Name,
-		Email:        u.Email,
-		PasswordHash: u.PasswordHash,
-		CreatedAt:    u.CreatedAt,
-		UpdatedAt:    u.UpdatedAt,
-	}, nil
+	return toDomainUser(u), nil
 }
