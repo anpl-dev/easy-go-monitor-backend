@@ -41,19 +41,27 @@ func main() {
 	monitorRepo := repository.NewMonitorPostgresRepository(db)
 
 	// --- Presenter ---
-	userPresenter := presenter.NewUserHTTPPresenter()
-	monitorPresenter := presenter.NewMonitorHTTPPresenter()
+	createUserPresenter := presenter.NewCreateUserPresenter()
+	findUserPresenter := presenter.NewFindUserPresenter()
+	createMonitorPresenter := presenter.NewCreateMonitorPresenter()
 
 	// --- UseCase ---
-	createUserUC := usecase.NewCreateUser(userRepo, userPresenter)
-	createMonitorUC := usecase.NewCreateMonitor(monitorRepo, monitorPresenter)
+	createUserUC := usecase.NewCreateUser(userRepo, createUserPresenter)
+	findUserUC := usecase.NewFindUser(userRepo, findUserPresenter)
+	createMonitorUC := usecase.NewCreateMonitor(monitorRepo, createMonitorPresenter)
 
 	// --- Handler ---
-	userHandler := handler.NewUserHandler(createUserUC)
-	monitorHandler := handler.NewMonitorHandler(createMonitorUC)
+	userHandlers := router.UserHandlers{
+		Create: handler.NewCreateUserHandler(createUserUC),
+		Find:   handler.NewFindUserHandler(findUserUC),
+	}
+
+	monitorHandlers := router.MonitorHandlers{
+		Create: handler.NewCreateMonitorHandler(createMonitorUC),
+	}
 
 	// --- Router ---
-	r := router.NewGinRouter(userHandler, monitorHandler)
+	r := router.NewGinRouter(userHandlers, monitorHandlers)
 
 	// --- Run Server ---
 	if err := r.Run(":8080"); err != nil {

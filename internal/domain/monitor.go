@@ -18,8 +18,8 @@ var (
 type (
 	MonitorRepository interface {
 		Create(ctx context.Context, m Monitor) (*Monitor, error)
-		// FindByID(ctx context.Context, id uuid.UUID) (*Monitor, error)
-		// FindByUserID(ctx context.Context, user_id uuid.UUID) ([]*Monitor, error)
+		FindByID(ctx context.Context, id uuid.UUID) (*Monitor, error)
+		FindByUserID(ctx context.Context, user_id uuid.UUID) ([]*Monitor, error)
 		// Update(ctx context.Context, m Monitor) (*Monitor, error)
 		// Delete(ctx context.Context, id uuid.UUID) error
 	}

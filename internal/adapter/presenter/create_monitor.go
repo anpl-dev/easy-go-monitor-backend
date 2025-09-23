@@ -5,13 +5,13 @@ import (
 	"go-monitor-tool/internal/usecase"
 )
 
-type MonitorHTTPPresenter struct{}
+type CreateMonitorPresenter struct{}
 
-func NewMonitorHTTPPresenter() *MonitorHTTPPresenter {
-    return &MonitorHTTPPresenter{}
+func NewCreateMonitorPresenter() *CreateMonitorPresenter {
+    return &CreateMonitorPresenter{}
 }
 
-func (p MonitorHTTPPresenter) Output(m *domain.Monitor) usecase.CreateMonitorOutput {
+func (p CreateMonitorPresenter) Output(m *domain.Monitor) usecase.CreateMonitorOutput {
     return usecase.CreateMonitorOutput{
         ID:             m.ID,
         UserID:         m.UserID,
