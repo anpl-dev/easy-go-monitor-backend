@@ -29,12 +29,12 @@ func NewGinRouter(users UserHandlers, monitors MonitorHandlers) *gin.Engine {
 		// Users
 		api.POST("/users", users.Create.Handle)
 		api.GET("/users/:id", users.FindByID.Handle)
-		api.GET("/users/:email", users.FindByEmail.Handle)
+		api.GET("/users/email/:email", users.FindByEmail.Handle)
 
 		// Monitors
 		api.POST("/monitors", monitors.Create.Handle)
-		api.GET("/monitors", monitors.FindByID.Handle)
-		api.GET("/monitors", monitors.FindByUserID.Handle)
+		api.GET("/monitors/:id", monitors.FindByID.Handle)
+		api.GET("/monitors/:user_id/monitors", monitors.FindByUserID.Handle)
 
 	}
 
