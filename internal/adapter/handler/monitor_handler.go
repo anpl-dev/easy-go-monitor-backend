@@ -13,8 +13,12 @@ type MonitorHandler struct {
 }
 
 // NewMonitorHandler constructor
-func NewMonitorHandler(createUC usecase.CreateMonitorUseCase) *MonitorHandler {
-	return &MonitorHandler{createUC: createUC}
+func NewMonitorHandler(
+	createUC usecase.CreateMonitorUseCase,
+) *MonitorHandler {
+	return &MonitorHandler{
+		createUC: createUC,
+	}
 }
 
 // CreateMonitor handles POST /monitors

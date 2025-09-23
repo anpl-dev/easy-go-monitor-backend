@@ -7,6 +7,10 @@ import (
 
 type MonitorHTTPPresenter struct{}
 
+func NewMonitorHTTPPresenter() *MonitorHTTPPresenter {
+    return &MonitorHTTPPresenter{}
+}
+
 func (p MonitorHTTPPresenter) Output(m *domain.Monitor) usecase.CreateMonitorOutput {
     return usecase.CreateMonitorOutput{
         ID:             m.ID,

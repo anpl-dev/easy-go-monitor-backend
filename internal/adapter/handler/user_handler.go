@@ -7,14 +7,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// UserHandler handles HTTP requests for users
 type UserHandler struct {
 	createUC usecase.CreateUserUseCase
 }
 
-func NewCreateUser(createUC usecase.CreateUserUseCase) *UserHandler {
-	return &UserHandler{createUC: createUC}
+// NewUserHandler constructor
+func NewUserHandler(
+	createUC usecase.CreateUserUseCase,
+) *UserHandler {
+	return &UserHandler{
+		createUC: createUC,
+	}
 }
 
+// CreateUser handles POST api /users
 func (h *UserHandler) CreateUser(c *gin.Context) {
 	var input usecase.CreateUserInput
 	if err := c.ShouldBindJSON(&input); err != nil {

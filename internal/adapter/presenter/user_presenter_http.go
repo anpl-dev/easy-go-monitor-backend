@@ -7,6 +7,10 @@ import (
 
 type UserHTTPPresenter struct{}
 
+func NewUserHTTPPresenter() *UserHTTPPresenter {
+	return &UserHTTPPresenter{}
+}
+
 func (p UserHTTPPresenter) Output(u *domain.User) usecase.CreateUserOutput {
 	return usecase.CreateUserOutput{
 		ID:        u.ID,

@@ -7,19 +7,19 @@ import (
 )
 
 func NewGinRouter(
-	monitorHandler *handler.MonitorHandler,
 	userHandler *handler.UserHandler,
+	monitorHandler *handler.MonitorHandler,
 ) *gin.Engine {
 	r := gin.Default()
 
 	api := r.Group("/api/v1")
 
 	{
-		// Monitors
-		api.POST("/monitors", monitorHandler.CreateMonitor)
-
 		// Users
 		api.POST("/users", userHandler.CreateUser)
+
+		// Monitors
+		api.POST("/monitors", monitorHandler.CreateMonitor)
 
 	}
 
