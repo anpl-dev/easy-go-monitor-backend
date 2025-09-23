@@ -16,7 +16,7 @@ type (
 
 	// UpdateUserInput input data
 	UpdateUserInput struct {
-		ID           uuid.UUID `json:"id" binding:"required"`
+		ID           uuid.UUID `json:"-"`
 		Name         string    `json:"name" binding:"required"`
 		Email        string    `json:"email" binding:"required"`
 		PasswordHash string    `json:"password_hash" binding:"required"`
