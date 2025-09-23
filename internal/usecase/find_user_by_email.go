@@ -45,11 +45,11 @@ func NewFindUserByEmail(
 	}
 }
 
-func (uc *findUserByEmailIntatactor) Execute(ctx context.Context, input FindUserByEmailInput) (FindUserByEmailOutput, error) {
-	user, err := uc.repo.FindByEmail(ctx, input.Email)
+func (i *findUserByEmailIntatactor) Execute(ctx context.Context, input FindUserByEmailInput) (FindUserByEmailOutput, error) {
+	user, err := i.repo.FindByEmail(ctx, input.Email)
 	if err != nil {
 		return FindUserByEmailOutput{}, err
 	}
-	return uc.presenter.Output(user), nil
+	return i.presenter.Output(user), nil
 
 }

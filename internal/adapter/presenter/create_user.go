@@ -12,6 +12,9 @@ func NewCreateUserPresenter() *CreateUserPresenter {
 }
 
 func (p CreateUserPresenter) Output(u *domain.User) usecase.CreateUserOutput {
+	if u == nil {
+		return usecase.CreateUserOutput{}
+	}
 	return usecase.CreateUserOutput{
 		ID:        u.ID,
 		Name:      u.Name,

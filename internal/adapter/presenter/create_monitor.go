@@ -12,6 +12,9 @@ func NewCreateMonitorPresenter() *CreateMonitorPresenter {
 }
 
 func (p CreateMonitorPresenter) Output(m *domain.Monitor) usecase.CreateMonitorOutput {
+    if m == nil {
+        return usecase.CreateMonitorOutput{}
+    }
     return usecase.CreateMonitorOutput{
         ID:             m.ID,
         UserID:         m.UserID,

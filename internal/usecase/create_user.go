@@ -51,7 +51,7 @@ func NewCreateUser(
 	}
 }
 
-func (uc *createUserIteractor) Execute(ctx context.Context, input CreateUserInput) (CreateUserOutput, error) {
+func (i *createUserIteractor) Execute(ctx context.Context, input CreateUserInput) (CreateUserOutput, error) {
 	user, err := domain.NewUser(
 		input.Name,
 		input.Email,
@@ -60,9 +60,9 @@ func (uc *createUserIteractor) Execute(ctx context.Context, input CreateUserInpu
 	if err != nil {
 		return CreateUserOutput{}, err
 	}
-	created, err := uc.repo.Create(ctx, *user)
+	created, err := i.repo.Create(ctx, *user)
 	if err != nil {
 		return CreateUserOutput{}, err
 	}
-	return uc.presenter.Output(created), nil
+	return i.presenter.Output(created), nil
 }

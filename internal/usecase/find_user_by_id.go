@@ -45,11 +45,11 @@ func NewFindUserByID(
 	}
 }
 
-func (uc *findUserByIDIntatactor) Execute(ctx context.Context, input FindUserByIDInput) (FindUserByIDOutput, error) {
-	user, err := uc.repo.FindByID(ctx, input.ID)
+func (i *findUserByIDIntatactor) Execute(ctx context.Context, input FindUserByIDInput) (FindUserByIDOutput, error) {
+	user, err := i.repo.FindByID(ctx, input.ID)
 	if err != nil {
 		return FindUserByIDOutput{}, err
 	}
-	return uc.presenter.Output(user), nil
+	return i.presenter.Output(user), nil
 
 }

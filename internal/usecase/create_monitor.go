@@ -54,7 +54,7 @@ func NewCreateMonitor(
 	}
 }
 
-func (uc *createMonitorInteractor) Execute(ctx context.Context, input CreateMonitorInput) (CreateMonitorOutput, error) {
+func (i *createMonitorInteractor) Execute(ctx context.Context, input CreateMonitorInput) (CreateMonitorOutput, error) {
 	monitor, err := domain.NewMonitor(
 		input.UserID,
 		input.Name,
@@ -65,10 +65,10 @@ func (uc *createMonitorInteractor) Execute(ctx context.Context, input CreateMoni
 		return CreateMonitorOutput{}, err
 	}
 
-	created, err := uc.repo.Create(ctx, *monitor)
+	created, err := i.repo.Create(ctx, *monitor)
 	if err != nil {
 		return CreateMonitorOutput{}, err
 	}
 
-	return uc.presenter.Output(created), nil
+	return i.presenter.Output(created), nil
 }
