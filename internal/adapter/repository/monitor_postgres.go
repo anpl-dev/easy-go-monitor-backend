@@ -21,7 +21,7 @@ func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor
 		UserID: m.UserID,
 		Name: m.Name,
 		Url: m.Url, 
-		IntervalSeconds: int32(m.IntervalSeconds),
+		IntervalSecond: int32(m.IntervalSecond),
 	})
 	if err != nil {
 		return nil, err
@@ -31,7 +31,7 @@ func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor
 		UserID: row.UserID,
 		Name: row.Name,
 		Url: row.Url,
-		IntervalSeconds: int(row.IntervalSeconds),
+		IntervalSecond: int(row.IntervalSecond),
 		CreatedAt: row.CreatedAt,
 		UpdatedAt: row.UpdatedAt,
 	}, nil

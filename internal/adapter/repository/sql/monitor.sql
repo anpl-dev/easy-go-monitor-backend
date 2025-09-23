@@ -1,5 +1,5 @@
 -- name: CreateMonitor :one
-INSERT INTO monitors (id, user_id, name, url, interval_seconds)
+INSERT INTO monitors (id, user_id, name, url, interval_second)
 VALUES ($1, $2, $3, $4, $5)
 RETURNING *;
 
@@ -16,7 +16,7 @@ ORDER BY created_at DESC;
 UPDATE monitors
 SET name = $2,
     url = $3,
-    interval_seconds = $4,
+    interval_second = $4,
     updated_at = now()
 WHERE id = $1
 RETURNING *;;

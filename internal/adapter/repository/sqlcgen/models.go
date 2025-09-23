@@ -11,13 +11,13 @@ import (
 )
 
 type Monitor struct {
-	ID              uuid.UUID
-	UserID          uuid.UUID
-	Name            string
-	Url             string
-	IntervalSeconds int32
-	CreatedAt       time.Time
-	UpdatedAt       time.Time
+	ID             uuid.UUID
+	UserID         uuid.UUID
+	Name           string
+	Url            string
+	IntervalSecond int32
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
 }
 
 type User struct {

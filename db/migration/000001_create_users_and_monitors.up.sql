@@ -12,7 +12,7 @@ CREATE TABLE monitors (
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     url TEXT NOT NULL,
-    interval_seconds INT NOT NULL,
+    interval_second INT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

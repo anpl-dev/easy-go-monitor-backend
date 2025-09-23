@@ -12,17 +12,17 @@ import (
 )
 
 const createMonitor = `-- name: CreateMonitor :one
-INSERT INTO monitors (id, user_id, name, url, interval_seconds)
+INSERT INTO monitors (id, user_id, name, url, interval_second)
 VALUES ($1, $2, $3, $4, $5)
-RETURNING id, user_id, name, url, interval_seconds, created_at, updated_at
+RETURNING id, user_id, name, url, interval_second, created_at, updated_at
 `
 
 type CreateMonitorParams struct {
-	ID              uuid.UUID
-	UserID          uuid.UUID
-	Name            string
-	Url             string
-	IntervalSeconds int32
+	ID             uuid.UUID
+	UserID         uuid.UUID
+	Name           string
+	Url            string
+	IntervalSecond int32
 }
 
 func (q *Queries) CreateMonitor(ctx context.Context, arg CreateMonitorParams) (Monitor, error) {
@@ -31,7 +31,7 @@ func (q *Queries) CreateMonitor(ctx context.Context, arg CreateMonitorParams) (M
 		arg.UserID,
 		arg.Name,
 		arg.Url,
-		arg.IntervalSeconds,
+		arg.IntervalSecond,
 	)
 	var i Monitor
 	err := row.Scan(
@@ -39,7 +39,7 @@ func (q *Queries) CreateMonitor(ctx context.Context, arg CreateMonitorParams) (M
 		&i.UserID,
 		&i.Name,
 		&i.Url,
-		&i.IntervalSeconds,
+		&i.IntervalSecond,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -57,7 +57,7 @@ func (q *Queries) DeleteMonitor(ctx context.Context, id uuid.UUID) error {
 }
 
 const getMonitorByID = `-- name: GetMonitorByID :one
-SELECT id, user_id, name, url, interval_seconds, created_at, updated_at FROM monitors
+SELECT id, user_id, name, url, interval_second, created_at, updated_at FROM monitors
 WHERE id = $1
 `
 
@@ -69,7 +69,7 @@ func (q *Queries) GetMonitorByID(ctx context.Context, id uuid.UUID) (Monitor, er
 		&i.UserID,
 		&i.Name,
 		&i.Url,
-		&i.IntervalSeconds,
+		&i.IntervalSecond,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -77,7 +77,7 @@ func (q *Queries) GetMonitorByID(ctx context.Context, id uuid.UUID) (Monitor, er
 }
 
 const listMonitorsByUser = `-- name: ListMonitorsByUser :many
-SELECT id, user_id, name, url, interval_seconds, created_at, updated_at FROM monitors
+SELECT id, user_id, name, url, interval_second, created_at, updated_at FROM monitors
 WHERE user_id = $1
 ORDER BY created_at DESC
 `
@@ -96,7 +96,7 @@ func (q *Queries) ListMonitorsByUser(ctx context.Context, userID uuid.UUID) ([]M
 			&i.UserID,
 			&i.Name,
 			&i.Url,
-			&i.IntervalSeconds,
+			&i.IntervalSecond,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -117,17 +117,17 @@ const updateMonitor = `-- name: UpdateMonitor :one
 UPDATE monitors
 SET name = $2,
     url = $3,
-    interval_seconds = $4,
+    interval_second = $4,
     updated_at = now()
 WHERE id = $1
-RETURNING id, user_id, name, url, interval_seconds, created_at, updated_at
+RETURNING id, user_id, name, url, interval_second, created_at, updated_at
 `
 
 type UpdateMonitorParams struct {
-	ID              uuid.UUID
-	Name            string
-	Url             string
-	IntervalSeconds int32
+	ID             uuid.UUID
+	Name           string
+	Url            string
+	IntervalSecond int32
 }
 
 func (q *Queries) UpdateMonitor(ctx context.Context, arg UpdateMonitorParams) (Monitor, error) {
@@ -135,7 +135,7 @@ func (q *Queries) UpdateMonitor(ctx context.Context, arg UpdateMonitorParams) (M
 		arg.ID,
 		arg.Name,
 		arg.Url,
-		arg.IntervalSeconds,
+		arg.IntervalSecond,
 	)
 	var i Monitor
 	err := row.Scan(
@@ -143,7 +143,7 @@ func (q *Queries) UpdateMonitor(ctx context.Context, arg UpdateMonitorParams) (M
 		&i.UserID,
 		&i.Name,
 		&i.Url,
-		&i.IntervalSeconds,
+		&i.IntervalSecond,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
