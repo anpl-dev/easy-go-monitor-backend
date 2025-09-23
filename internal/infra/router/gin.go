@@ -11,6 +11,7 @@ type (
 		Create   *handler.CreateUserHandler
 		FindByID *handler.FindUserByIDHandler
 		Search   *handler.SearchUserHandler
+		Update   *handler.UpdateUserHandler
 	}
 
 	MonitorHandlers struct {
@@ -32,6 +33,7 @@ func NewGinRouter(users UserHandlers, monitors MonitorHandlers) *gin.Engine {
 			usersApi.GET("/:id", users.FindByID.Handle)
 			usersApi.GET("/search", users.Search.Handle)
 			usersApi.GET("/:id/monitors", monitors.FindByUserID.Handle)
+			usersApi.POST("/:id", users.Update.Handle)
 
 		}
 

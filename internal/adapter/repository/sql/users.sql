@@ -15,7 +15,7 @@ WHERE email = $1;
 SELECT * FROM users
 ORDER BY created_at DESC;
 
--- name: UpdateUsers :one
+-- name: UpdateUser :one
 UPDATE users
 SET name = $2,
     email = $3,

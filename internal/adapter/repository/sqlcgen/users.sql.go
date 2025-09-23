@@ -126,7 +126,7 @@ func (q *Queries) FindUserByID(ctx context.Context, id uuid.UUID) (User, error) 
 	return i, err
 }
 
-const updateUsers = `-- name: UpdateUsers :one
+const updateUser = `-- name: UpdateUser :one
 UPDATE users
 SET name = $2,
     email = $3,
@@ -136,15 +136,15 @@ WHERE id = $1
 RETURNING id, name, email, password_hash, created_at, updated_at
 `
 
-type UpdateUsersParams struct {
+type UpdateUserParams struct {
 	ID           uuid.UUID
 	Name         string
 	Email        string
 	PasswordHash string
 }
 
-func (q *Queries) UpdateUsers(ctx context.Context, arg UpdateUsersParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, updateUsers,
+func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
+	row := q.db.QueryRowContext(ctx, updateUser,
 		arg.ID,
 		arg.Name,
 		arg.Email,

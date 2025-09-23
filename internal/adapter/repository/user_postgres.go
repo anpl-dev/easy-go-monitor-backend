@@ -28,17 +28,13 @@ func toDomainUser(s sqlcgen.User) *domain.User {
 	}
 }
 
-func toSQLCUserParams(u domain.User) sqlcgen.CreateUserParams {
-	return sqlcgen.CreateUserParams{
+func (r *UserPostgresRepository) Create(ctx context.Context, u domain.User) (*domain.User, error) {
+	row, err := r.queries.CreateUser(ctx, sqlcgen.CreateUserParams{
 		ID:           u.ID,
 		Name:         u.Name,
 		Email:        u.Email,
 		PasswordHash: u.PasswordHash,
-	}
-}
-
-func (r *UserPostgresRepository) Create(ctx context.Context, u domain.User) (*domain.User, error) {
-	row, err := r.queries.CreateUser(ctx, toSQLCUserParams(u))
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -46,17 +42,30 @@ func (r *UserPostgresRepository) Create(ctx context.Context, u domain.User) (*do
 }
 
 func (r *UserPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) (*domain.User, error) {
-	u, err := r.queries.FindUserByID(ctx, id)
+	row, err := r.queries.FindUserByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
-	return toDomainUser(u), nil
+	return toDomainUser(row), nil
 }
 
 func (r *UserPostgresRepository) FindByEmail(ctx context.Context, email string) (*domain.User, error) {
-	u, err := r.queries.FindUserByEmail(ctx, email)
+	row, err := r.queries.FindUserByEmail(ctx, email)
 	if err != nil {
 		return nil, err
 	}
-	return toDomainUser(u), nil
+	return toDomainUser(row), nil
+}
+
+func (r *UserPostgresRepository) Update(ctx context.Context, u domain.User) (*domain.User, error) {
+	row, err := r.queries.UpdateUser(ctx, sqlcgen.UpdateUserParams{
+		ID:           u.ID,
+		Name:         u.Name,
+		Email:        u.Email,
+		PasswordHash: u.PasswordHash,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return toDomainUser(row), nil
 }
