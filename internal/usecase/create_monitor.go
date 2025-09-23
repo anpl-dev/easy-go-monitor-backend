@@ -18,7 +18,7 @@ type (
 	CreateMonitorInput struct {
 		UserID         uuid.UUID `json:"user_id" binding:"required"`
 		Name           string    `json:"name" binding:"required"`
-		Url            string    `json:"url" binding:"required"`
+		URL            string    `json:"url" binding:"required"`
 		IntervalSecond int       `json:"interval_second" binding:"required,min=1"`
 	}
 
@@ -32,7 +32,7 @@ type (
 		ID             uuid.UUID `json:"id"`
 		UserID         uuid.UUID `json:"user_id"`
 		Name           string    `json:"name"`
-		Url            string    `json:"url"`
+		URL            string    `json:"url"`
 		IntervalSecond int       `json:"interval_second"`
 		CreatedAt      time.Time `json:"created_at"`
 		UpdatedAt      time.Time `json:"updated_at"`
@@ -58,7 +58,7 @@ func (i *createMonitorInteractor) Execute(ctx context.Context, input CreateMonit
 	monitor, err := domain.NewMonitor(
 		input.UserID,
 		input.Name,
-		input.Url,
+		input.URL,
 		input.IntervalSecond,
 	)
 	if err != nil {

@@ -28,7 +28,7 @@ type (
 		ID             uuid.UUID
 		UserID         uuid.UUID
 		Name           string
-		Url            string
+		URL            string
 		IntervalSecond int
 		CreatedAt      time.Time
 		UpdatedAt      time.Time
@@ -52,7 +52,7 @@ func NewMonitor(userID uuid.UUID, name string, rawURL string, interval int) (*Mo
 		ID:             uuid.New(),
 		UserID:         userID,
 		Name:           name,
-		Url:            rawURL,
+		URL:            rawURL,
 		IntervalSecond: interval,
 		CreatedAt:      now,
 		UpdatedAt:      now,

@@ -39,7 +39,7 @@ func (r *UserPostgresRepository) Create(ctx context.Context, u domain.User) (*do
 }
 
 func (r *UserPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) (*domain.User, error) {
-	u, err := r.queries.GetUserByID(ctx, id)
+	u, err := r.queries.FindUserByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func (r *UserPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) (*d
 }
 
 func (r *UserPostgresRepository) FindByEmail(ctx context.Context, email string) (*domain.User, error) {
-	u, err := r.queries.GetUserByEmail(ctx, email)
+	u, err := r.queries.FindUserByEmail(ctx, email)
 	if err != nil {
 		return nil, err
 	}

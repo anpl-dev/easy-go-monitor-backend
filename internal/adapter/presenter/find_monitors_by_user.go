@@ -25,7 +25,7 @@ func (p *FindMonitorsByUserPresenter) Output(monitors []*domain.Monitor) []useca
 			ID:             m.ID,
 			UserID:         m.UserID,
 			Name:           m.Name,
-			Url:            m.Url,
+			URL:            m.URL,
 			IntervalSecond: m.IntervalSecond,
 			CreatedAt:      m.CreatedAt,
 			UpdatedAt:      m.UpdatedAt,

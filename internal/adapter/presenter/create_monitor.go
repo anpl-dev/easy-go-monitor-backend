@@ -19,7 +19,7 @@ func (p *CreateMonitorPresenter) Output(monitor *domain.Monitor) usecase.CreateM
 		ID:             monitor.ID,
 		UserID:         monitor.UserID,
 		Name:           monitor.Name,
-		Url:            monitor.Url,
+		URL:            monitor.URL,
 		IntervalSecond: monitor.IntervalSecond,
 		CreatedAt:      monitor.CreatedAt,
 		UpdatedAt:      monitor.UpdatedAt,
