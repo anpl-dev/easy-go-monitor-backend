@@ -3,15 +3,15 @@ INSERT INTO users (id, name, email, password_hash)
 VALUES ($1, $2, $3, $4)
 RETURNING *;
 
--- name: GetUserByID :one
+-- name: FindUserByID :one
 SELECT * FROM users
 WHERE id = $1;
 
--- name: GetUserByEmail :one
+-- name: FindUserByEmail :one
 SELECT * FROM users
 WHERE email = $1;
 
--- name: ListUsers :many
+-- name: FindAllUsers :many
 SELECT * FROM users
 ORDER BY created_at DESC;
 
