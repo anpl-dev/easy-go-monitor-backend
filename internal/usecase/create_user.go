@@ -27,12 +27,12 @@ type (
 
 	// CreateUserOutput output data
 	CreateUserOutput struct {
-		ID           uuid.UUID
-		Name         string
-		Email        string
-		PasswordHash string
-		CreatedAt    time.Time
-		UpdatedAt    time.Time
+		ID           uuid.UUID `json:"id"`
+		Name         string    `json:"name"`
+		Email        string    `json:"email"`
+		PasswordHash string    `json:"password_hash"`
+		CreatedAt    time.Time `json:"created_at"`
+		UpdatedAt    time.Time `json:"updated_at"`
 	}
 
 	createUserIteractor struct {

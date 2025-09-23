@@ -11,15 +11,15 @@ func NewCreateUserPresenter() *CreateUserPresenter {
 	return &CreateUserPresenter{}
 }
 
-func (p CreateUserPresenter) Output(u *domain.User) usecase.CreateUserOutput {
-	if u == nil {
+func (p *CreateUserPresenter) Output(user *domain.User) usecase.CreateUserOutput {
+	if user == nil {
 		return usecase.CreateUserOutput{}
 	}
 	return usecase.CreateUserOutput{
-		ID:        u.ID,
-		Name:      u.Name,
-		Email:     u.Email,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
+		ID:        user.ID,
+		Name:      user.Name,
+		Email:     user.Email,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
 	}
 }

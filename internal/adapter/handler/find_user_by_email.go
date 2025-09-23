@@ -8,11 +8,11 @@ import (
 )
 
 type FindUserByEmailHandler struct {
-	findUC usecase.FindUserByEmailUseCase
+	uc usecase.FindUserByEmailUseCase
 }
 
 func NewFindUserByEmailHandler(findUC usecase.FindUserByEmailUseCase) *FindUserByEmailHandler {
-	return &FindUserByEmailHandler{findUC: findUC}
+	return &FindUserByEmailHandler{uc: findUC}
 }
 
 func (h *FindUserByEmailHandler) Handle(c *gin.Context) {
@@ -21,7 +21,7 @@ func (h *FindUserByEmailHandler) Handle(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid email"})
 		return
 	}
-	output, err := h.findUC.Execute(c.Request.Context(), usecase.FindUserByEmailInput{Email: email})
+	output, err := h.uc.Execute(c.Request.Context(), usecase.FindUserByEmailInput{Email: email})
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return

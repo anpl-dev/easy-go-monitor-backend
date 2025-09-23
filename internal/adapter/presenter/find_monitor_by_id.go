@@ -5,21 +5,20 @@ import (
 	"go-monitor-tool/internal/usecase"
 )
 
-type CreateMonitorPresenter struct{}
+type FindMonitorByIDPresenter struct{}
 
-func NewCreateMonitorPresenter() *CreateMonitorPresenter {
-	return &CreateMonitorPresenter{}
+func NewFindMonitorByIDPresenter() *FindMonitorByIDPresenter {
+	return &FindMonitorByIDPresenter{}
 }
 
-func (p *CreateMonitorPresenter) Output(monitor *domain.Monitor) usecase.CreateMonitorOutput {
+func (p *FindMonitorByIDPresenter) Output(monitor *domain.Monitor) usecase.FindMonitorByIDOutput {
 	if monitor == nil {
-		return usecase.CreateMonitorOutput{}
+		return usecase.FindMonitorByIDOutput{}
 	}
-	return usecase.CreateMonitorOutput{
+	return usecase.FindMonitorByIDOutput{
 		ID:             monitor.ID,
 		UserID:         monitor.UserID,
 		Name:           monitor.Name,
-		Url:            monitor.Url,
 		IntervalSecond: monitor.IntervalSecond,
 		CreatedAt:      monitor.CreatedAt,
 		UpdatedAt:      monitor.UpdatedAt,

@@ -8,11 +8,11 @@ import (
 )
 
 type CreateUserHandler struct {
-	createUC usecase.CreateUserUseCase
+	uc usecase.CreateUserUseCase
 }
 
 func NewCreateUserHandler(createUC usecase.CreateUserUseCase) *CreateUserHandler {
-	return &CreateUserHandler{createUC: createUC}
+	return &CreateUserHandler{uc: createUC}
 }
 
 func (h *CreateUserHandler) Handle(c *gin.Context) {
@@ -22,7 +22,7 @@ func (h *CreateUserHandler) Handle(c *gin.Context) {
 		return
 	}
 
-	output, err := h.createUC.Execute(c.Request.Context(), input)
+	output, err := h.uc.Execute(c.Request.Context(), input)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

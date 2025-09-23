@@ -29,13 +29,13 @@ type (
 
 	// CreateMonitorInput output data
 	CreateMonitorOutput struct {
-		ID             uuid.UUID
-		UserID         uuid.UUID
-		Name           string
-		Url            string
-		IntervalSecond int
-		CreatedAt      time.Time
-		UpdatedAt      time.Time
+		ID             uuid.UUID `json:"id"`
+		UserID         uuid.UUID `json:"user_id"`
+		Name           string    `json:"name"`
+		Url            string    `json:"url"`
+		IntervalSecond int       `json:"interval_second"`
+		CreatedAt      time.Time `json:"created_at"`
+		UpdatedAt      time.Time `json:"updated_at"`
 	}
 
 	createMonitorInteractor struct {

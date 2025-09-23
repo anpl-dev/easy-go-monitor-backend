@@ -24,7 +24,7 @@ type (
 	FindMonitorsByUserOutput struct {
 		ID             uuid.UUID `json:"id"`
 		UserID         uuid.UUID `json:"user_id"`
-		Name           uuid.UUID `json:"name"`
+		Name           string    `json:"name"`
 		Url            string    `json:"url"`
 		IntervalSecond int       `json:"interval_second"`
 		CreatedAt      time.Time `json:"created_at"`

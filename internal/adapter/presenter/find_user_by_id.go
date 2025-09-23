@@ -11,15 +11,15 @@ func NewFindUserByIDPresenter() *FindUserByIDPresenter {
 	return &FindUserByIDPresenter{}
 }
 
-func (p FindUserByIDPresenter) Output(u *domain.User) usecase.FindUserByIDOutput {
-	if u == nil {
+func (p *FindUserByIDPresenter) Output(user *domain.User) usecase.FindUserByIDOutput {
+	if user == nil {
 		return usecase.FindUserByIDOutput{}
 	}
 	return usecase.FindUserByIDOutput{
-		ID:        u.ID,
-		Name:      u.Name,
-		Email:     u.Email,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
+		ID:        user.ID,
+		Name:      user.Name,
+		Email:     user.Email,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
 	}
 }

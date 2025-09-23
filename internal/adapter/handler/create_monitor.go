@@ -8,11 +8,11 @@ import (
 )
 
 type CreateMonitorHandler struct {
-	createUC usecase.CreateMonitorUseCase
+	uc usecase.CreateMonitorUseCase
 }
 
 func NewCreateMonitorHandler(createUC usecase.CreateMonitorUseCase) *CreateMonitorHandler {
-	return &CreateMonitorHandler{createUC: createUC}
+	return &CreateMonitorHandler{uc: createUC}
 }
 
 func (h *CreateMonitorHandler) Handle(c *gin.Context) {
@@ -22,7 +22,7 @@ func (h *CreateMonitorHandler) Handle(c *gin.Context) {
 		return
 	}
 
-	output, err := h.createUC.Execute(c.Request.Context(), input)
+	output, err := h.uc.Execute(c.Request.Context(), input)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
