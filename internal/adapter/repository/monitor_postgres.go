@@ -13,6 +13,9 @@ type MonitorPostgresRepository struct {
 	queries *sqlcgen.Queries
 }
 
+func NewMonitorPostgresRepository(db *sql.DB) *MonitorPostgresRepository {
+	return &MonitorPostgresRepository{queries: sqlcgen.New(db)}
+}
 func toDomainMonitor(s sqlcgen.Monitor) *domain.Monitor {
 	return &domain.Monitor{
 		ID:             s.ID,
@@ -31,10 +34,6 @@ func toSQLCMonitorParams(m domain.Monitor) sqlcgen.CreateMonitorParams {
 		Url:            m.URL,
 		IntervalSecond: int32(m.IntervalSecond),
 	}
-}
-
-func NewMonitorPostgresRepository(db *sql.DB) *MonitorPostgresRepository {
-	return &MonitorPostgresRepository{queries: sqlcgen.New(db)}
 }
 
 func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor) (*domain.Monitor, error) {
