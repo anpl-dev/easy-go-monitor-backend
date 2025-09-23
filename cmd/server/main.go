@@ -44,7 +44,11 @@ func main() {
 	createUserPresenter := presenter.NewCreateUserPresenter()
 	findUserByIDPresenter := presenter.NewFindUserByIDPresenter()
 	findUserByEmailPresenter := presenter.NewFindUserByEmailPresenter()
+
 	createMonitorPresenter := presenter.NewCreateMonitorPresenter()
+	findMonitorByIDPresenter := presenter.NewFindMonitorByIDPresenter()
+	findMonitorsByUserPresenter := presenter.NewFindMonitorsByUserPresenter()
+
 
 	// --- UseCase ---
 	createUserUC := usecase.NewCreateUser(userRepo, createUserPresenter)
@@ -52,12 +56,16 @@ func main() {
 	findUserByEmailUC := usecase.NewFindUserByEmail(userRepo, findUserByEmailPresenter)
 
 	createMonitorUC := usecase.NewCreateMonitor(monitorRepo, createMonitorPresenter)
+	findMointorByIDUC := usecase.NewFindMonitorByID(monitorRepo, findMonitorByIDPresenter)
+	findMonitorsByUser := usecase.NewFindMonitorsByUser(monitorRepo, findMonitorsByUserPresenter)
 
 	// --- Handler ---
 	userHandlers := router.UserHandlers{
 		Create:      handler.NewCreateUserHandler(createUserUC),
 		FindByID:    handler.NewFindUserByIDHandler(findUserByIDUC),
 		FindByEmail: handler.NewFindUserByEmailHandler(findUserByEmailUC),
+		
+		
 	}
 
 	monitorHandlers := router.MonitorHandlers{

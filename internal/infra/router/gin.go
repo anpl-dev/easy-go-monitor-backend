@@ -6,15 +6,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UserHandlers struct {
-	Create      *handler.CreateUserHandler
-	FindByID    *handler.FindUserByIDHandler
-	FindByEmail *handler.FindUserByEmailHandler
-}
+type (
+	UserHandlers struct {
+		Create      *handler.CreateUserHandler
+		FindByID    *handler.FindUserByIDHandler
+		FindByEmail *handler.FindUserByEmailHandler
+	}
 
-type MonitorHandlers struct {
-	Create *handler.CreateMonitorHandler
-}
+	MonitorHandlers struct {
+		Create       *handler.CreateMonitorHandler
+		FindByID     *handler.FindMonitorByIDHandler
+		FindByUserID *handler.FindMonitorsByUserHandler
+	}
+)
 
 func NewGinRouter(users UserHandlers, monitors MonitorHandlers) *gin.Engine {
 	r := gin.Default()
@@ -23,12 +27,14 @@ func NewGinRouter(users UserHandlers, monitors MonitorHandlers) *gin.Engine {
 
 	{
 		// Users
+		api.POST("/users", users.Create.Handle)
 		api.GET("/users/:id", users.FindByID.Handle)
 		api.GET("/users/:email", users.FindByEmail.Handle)
-		api.POST("/users", users.Create.Handle)
 
 		// Monitors
 		api.POST("/monitors", monitors.Create.Handle)
+		api.GET("/monitors", monitors.FindByID.Handle)
+		api.GET("/monitors", monitors.FindByUserID.Handle)
 
 	}
 
