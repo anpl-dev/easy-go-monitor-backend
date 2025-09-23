@@ -17,7 +17,7 @@ func NewFindMonitorsByUserHandler(findUC usecase.FindMonitorsByUserUseCase) *Fin
 }
 
 func (h *FindMonitorsByUserHandler) Handle(c *gin.Context) {
-	userIDStr := c.Param("user_id")
+	userIDStr := c.Param("id")
 	userID, err := uuid.Parse(userIDStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user id"})
