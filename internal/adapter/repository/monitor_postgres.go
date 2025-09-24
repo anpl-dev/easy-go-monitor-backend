@@ -26,18 +26,14 @@ func toDomainMonitor(s sqlcgen.Monitor) *domain.Monitor {
 	}
 }
 
-func toSQLCMonitorParams(m domain.Monitor) sqlcgen.CreateMonitorParams {
-	return sqlcgen.CreateMonitorParams{
+func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor) (*domain.Monitor, error) {
+	row, err := r.queries.CreateMonitor(ctx, sqlcgen.CreateMonitorParams{
 		ID:             m.ID,
 		UserID:         m.UserID,
 		Name:           m.Name,
 		Url:            m.URL,
 		IntervalSecond: int32(m.IntervalSecond),
-	}
-}
-
-func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor) (*domain.Monitor, error) {
-	row, err := r.queries.CreateMonitor(ctx, toSQLCMonitorParams(m))
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -63,4 +59,21 @@ func (r *MonitorPostgresRepository) FindByUserID(ctx context.Context, userID uui
 		result = append(result, toDomainMonitor(row))
 	}
 	return result, nil
+}
+
+func (r *MonitorPostgresRepository) Update(ctx context.Context, m domain.Monitor) (*domain.Monitor, error) {
+	row, err := r.queries.UpdateMonitor(ctx, sqlcgen.UpdateMonitorParams{
+		ID:             m.ID,
+		Name:           m.Name,
+		Url:            m.URL,
+		IntervalSecond: int32(m.IntervalSecond),
+	})
+	if err != nil {
+		return nil, err
+	}
+	return toDomainMonitor(row), nil
+}
+
+func (r *MonitorPostgresRepository) Delete(ctx context.Context, id uuid.UUID) error {
+	return r.queries.DeleteMonitor(ctx, id)
 }

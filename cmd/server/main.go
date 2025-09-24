@@ -49,6 +49,7 @@ func main() {
 	createMonitorPresenter := presenter.NewCreateMonitorPresenter()
 	findMonitorByIDPresenter := presenter.NewFindMonitorByIDPresenter()
 	findMonitorsByUserPresenter := presenter.NewFindMonitorsByUserPresenter()
+	updateMonitorPresenter := presenter.NewUpdateMonitorPresenter()
 
 	// --- UseCase ---
 	createUserUC := usecase.NewCreateUser(userRepo, createUserPresenter)
@@ -60,6 +61,8 @@ func main() {
 	createMonitorUC := usecase.NewCreateMonitor(monitorRepo, createMonitorPresenter)
 	findMointorByIDUC := usecase.NewFindMonitorByID(monitorRepo, findMonitorByIDPresenter)
 	findMonitorsByUserUC := usecase.NewFindMonitorsByUser(monitorRepo, findMonitorsByUserPresenter)
+	updateMonitorUC := usecase.NewUpdateMonitor(monitorRepo, updateMonitorPresenter)
+	deleteMonitorUC := usecase.NewDeleteMonitor(monitorRepo)
 
 	// --- Handler ---
 	userHandlers := router.UserHandlers{
@@ -74,6 +77,8 @@ func main() {
 		Create:       handler.NewCreateMonitorHandler(createMonitorUC),
 		FindByID:     handler.NewFindMonitorByIDHandler(findMointorByIDUC),
 		FindByUserID: handler.NewFindMonitorsByUserHandler(findMonitorsByUserUC),
+		Update:       handler.NewUpdateMonitorHandler(updateMonitorUC),
+		Delete:       handler.NewDeleteMonitorHandler(deleteMonitorUC),
 	}
 
 	// --- Router ---

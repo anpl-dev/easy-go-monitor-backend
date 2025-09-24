@@ -19,6 +19,8 @@ type (
 		Create       *handler.CreateMonitorHandler
 		FindByID     *handler.FindMonitorByIDHandler
 		FindByUserID *handler.FindMonitorsByUserHandler
+		Update       *handler.UpdateMonitorHandler
+		Delete       *handler.DeleteMonitorHandler
 	}
 )
 
@@ -36,14 +38,14 @@ func NewGinRouter(users UserHandlers, monitors MonitorHandlers) *gin.Engine {
 			usersApi.GET("/:id/monitors", monitors.FindByUserID.Handle)
 			usersApi.PUT("/:id", users.Update.Handle)
 			usersApi.DELETE("/:id", users.Delete.Handle)
-
 		}
 
 		monitorsApi := api.Group("/monitors")
 		{
 			monitorsApi.POST("", monitors.Create.Handle)
 			monitorsApi.GET("/:id", monitors.FindByID.Handle)
-
+			monitorsApi.PUT("/:id", monitors.Update.Handle)
+			monitorsApi.DELETE("/:id", monitors.Delete.Handle)
 		}
 
 	}
