@@ -69,3 +69,7 @@ func (r *UserPostgresRepository) Update(ctx context.Context, u domain.User) (*do
 	}
 	return toDomainUser(row), nil
 }
+
+func (r *UserPostgresRepository) Delete(ctx context.Context, id uuid.UUID) error {
+	return r.queries.DeleteUser(ctx, id)
+}

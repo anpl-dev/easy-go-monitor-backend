@@ -12,8 +12,8 @@ type UpdateUserHandler struct {
 	uc usecase.UpdateUserUseCase
 }
 
-func NewUpdateUserHandler(createUC usecase.UpdateUserUseCase) *UpdateUserHandler {
-	return &UpdateUserHandler{uc: createUC}
+func NewUpdateUserHandler(uc usecase.UpdateUserUseCase) *UpdateUserHandler {
+	return &UpdateUserHandler{uc: uc}
 }
 
 func (h *UpdateUserHandler) Handle(c *gin.Context) {

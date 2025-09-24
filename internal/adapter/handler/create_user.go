@@ -11,8 +11,8 @@ type CreateUserHandler struct {
 	uc usecase.CreateUserUseCase
 }
 
-func NewCreateUserHandler(createUC usecase.CreateUserUseCase) *CreateUserHandler {
-	return &CreateUserHandler{uc: createUC}
+func NewCreateUserHandler(uc usecase.CreateUserUseCase) *CreateUserHandler {
+	return &CreateUserHandler{uc: uc}
 }
 
 func (h *CreateUserHandler) Handle(c *gin.Context) {

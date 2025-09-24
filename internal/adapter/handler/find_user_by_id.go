@@ -12,8 +12,8 @@ type FindUserByIDHandler struct {
 	uc usecase.FindUserByIDUseCase
 }
 
-func NewFindUserByIDHandler(findUC usecase.FindUserByIDUseCase) *FindUserByIDHandler {
-	return &FindUserByIDHandler{uc: findUC}
+func NewFindUserByIDHandler(uc usecase.FindUserByIDUseCase) *FindUserByIDHandler {
+	return &FindUserByIDHandler{uc: uc}
 }
 
 func (h *FindUserByIDHandler) Handle(c *gin.Context) {

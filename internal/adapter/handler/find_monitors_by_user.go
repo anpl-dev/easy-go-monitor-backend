@@ -12,8 +12,8 @@ type FindMonitorsByUserHandler struct {
 	uc usecase.FindMonitorsByUserUseCase
 }
 
-func NewFindMonitorsByUserHandler(findUC usecase.FindMonitorsByUserUseCase) *FindMonitorsByUserHandler {
-	return &FindMonitorsByUserHandler{uc: findUC}
+func NewFindMonitorsByUserHandler(uc usecase.FindMonitorsByUserUseCase) *FindMonitorsByUserHandler {
+	return &FindMonitorsByUserHandler{uc: uc}
 }
 
 func (h *FindMonitorsByUserHandler) Handle(c *gin.Context) {

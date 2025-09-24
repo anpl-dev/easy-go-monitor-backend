@@ -11,8 +11,8 @@ type SearchUserHandler struct {
 	uc usecase.SearchUserUseCase
 }
 
-func NewSearchUserHandler(SearchUC usecase.SearchUserUseCase) *SearchUserHandler {
-	return &SearchUserHandler{uc: SearchUC}
+func NewSearchUserHandler(uc usecase.SearchUserUseCase) *SearchUserHandler {
+	return &SearchUserHandler{uc: uc}
 }
 
 func (h *SearchUserHandler) Handle(c *gin.Context) {

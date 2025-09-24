@@ -21,7 +21,7 @@ type (
 		FindByID(ctx context.Context, id uuid.UUID) (*User, error)
 		FindByEmail(ctx context.Context, email string) (*User, error)
 		Update(ctx context.Context, u User) (*User, error)
-		// Delete(ctx context.Context, id uuid.UUID) error
+		Delete(ctx context.Context, id uuid.UUID) error
 	}
 
 	User struct {

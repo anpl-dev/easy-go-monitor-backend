@@ -12,8 +12,8 @@ type FindMonitorByIDHandler struct {
 	uc usecase.FindMonitorByIDUseCase
 }
 
-func NewFindMonitorByIDHandler(findUC usecase.FindMonitorByIDUseCase) *FindMonitorByIDHandler {
-	return &FindMonitorByIDHandler{uc: findUC}
+func NewFindMonitorByIDHandler(uc usecase.FindMonitorByIDUseCase) *FindMonitorByIDHandler {
+	return &FindMonitorByIDHandler{uc: uc}
 }
 
 func (h *FindMonitorByIDHandler) Handle(c *gin.Context) {

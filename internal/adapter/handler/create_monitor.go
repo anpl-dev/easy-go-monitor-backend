@@ -11,8 +11,8 @@ type CreateMonitorHandler struct {
 	uc usecase.CreateMonitorUseCase
 }
 
-func NewCreateMonitorHandler(createUC usecase.CreateMonitorUseCase) *CreateMonitorHandler {
-	return &CreateMonitorHandler{uc: createUC}
+func NewCreateMonitorHandler(uc usecase.CreateMonitorUseCase) *CreateMonitorHandler {
+	return &CreateMonitorHandler{uc: uc}
 }
 
 func (h *CreateMonitorHandler) Handle(c *gin.Context) {
