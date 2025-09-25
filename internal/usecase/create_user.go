@@ -41,7 +41,7 @@ type (
 	}
 )
 
-func NewCreateUser(
+func NewCreateUserInteractor(
 	repo domain.UserRepository,
 	presenter CreateUserPresenter,
 ) CreateUserUseCase {

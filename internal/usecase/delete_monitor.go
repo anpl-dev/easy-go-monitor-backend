@@ -23,7 +23,7 @@ type (
 	}
 )
 
-func NewDeleteMonitor(repo domain.MonitorRepository) DeleteMonitorUseCase {
+func NewDeleteMonitorInteractor(repo domain.MonitorRepository) DeleteMonitorUseCase {
 	return &deleteMonitorIteractor{repo: repo}
 }
 

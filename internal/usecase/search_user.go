@@ -36,7 +36,7 @@ type (
 	}
 )
 
-func NewSearchUser(repo domain.UserRepository, presenter SearchUserPresenter) SearchUserUseCase {
+func NewSearchUserInteractor(repo domain.UserRepository, presenter SearchUserPresenter) SearchUserUseCase {
 	return &findUserByEmailIntatactor{
 		repo:      repo,
 		presenter: presenter,

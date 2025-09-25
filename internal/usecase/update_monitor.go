@@ -43,7 +43,7 @@ type (
 	}
 )
 
-func NewUpdateMonitor(
+func NewUpdateMonitorInteractor(
 	repo domain.MonitorRepository,
 	presenter UpdateMonitorPresenter,
 ) UpdateMonitorUseCase {

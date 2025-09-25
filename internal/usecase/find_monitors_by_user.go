@@ -37,7 +37,7 @@ type (
 	}
 )
 
-func NewFindMonitorsByUser(
+func NewFindMonitorsByUserInteractor(
 	repo domain.MonitorRepository,
 	presenter FindMonitorsByUserPresenter,
 ) FindMonitorsByUserUseCase {

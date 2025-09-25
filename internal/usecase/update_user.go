@@ -40,7 +40,7 @@ type (
 	}
 )
 
-func NewUpdateUser(
+func NewUpdateUserInteractor(
 	repo domain.UserRepository,
 	presenter UpdateUserPresenter,
 ) UpdateUserUseCase {

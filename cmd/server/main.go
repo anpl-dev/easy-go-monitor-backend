@@ -52,17 +52,17 @@ func main() {
 	updateMonitorPresenter := presenter.NewUpdateMonitorPresenter()
 
 	// --- UseCase ---
-	createUserUC := usecase.NewCreateUser(userRepo, createUserPresenter)
-	findUserByIDUC := usecase.NewFindUserByID(userRepo, findUserByIDPresenter)
-	searchUserUC := usecase.NewSearchUser(userRepo, searchUserPresenter)
-	updateUserUC := usecase.NewUpdateUser(userRepo, updateUserPresenter)
-	deleteUserUC := usecase.NewDeleteUser(userRepo)
+	createUserUC := usecase.NewCreateUserInteractor(userRepo, createUserPresenter)
+	findUserByIDUC := usecase.NewFindUserByIDInteractor(userRepo, findUserByIDPresenter)
+	searchUserUC := usecase.NewSearchUserInteractor(userRepo, searchUserPresenter)
+	updateUserUC := usecase.NewUpdateUserInteractor(userRepo, updateUserPresenter)
+	deleteUserUC := usecase.NewDeleteUserInteracotr(userRepo)
 
-	createMonitorUC := usecase.NewCreateMonitor(monitorRepo, createMonitorPresenter)
-	findMointorByIDUC := usecase.NewFindMonitorByID(monitorRepo, findMonitorByIDPresenter)
-	findMonitorsByUserUC := usecase.NewFindMonitorsByUser(monitorRepo, findMonitorsByUserPresenter)
-	updateMonitorUC := usecase.NewUpdateMonitor(monitorRepo, updateMonitorPresenter)
-	deleteMonitorUC := usecase.NewDeleteMonitor(monitorRepo)
+	createMonitorUC := usecase.NewCreateMonitorInteractor(monitorRepo, createMonitorPresenter)
+	findMointorByIDUC := usecase.NewFindMonitorByIDInteractor(monitorRepo, findMonitorByIDPresenter)
+	findMonitorsByUserUC := usecase.NewFindMonitorsByUserInteractor(monitorRepo, findMonitorsByUserPresenter)
+	updateMonitorUC := usecase.NewUpdateMonitorInteractor(monitorRepo, updateMonitorPresenter)
+	deleteMonitorUC := usecase.NewDeleteMonitorInteractor(monitorRepo)
 
 	// --- Handler ---
 	userHandlers := router.UserHandlers{

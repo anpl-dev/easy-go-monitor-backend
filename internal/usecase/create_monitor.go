@@ -44,7 +44,7 @@ type (
 	}
 )
 
-func NewCreateMonitor(
+func NewCreateMonitorInteractor(
 	repo domain.MonitorRepository,
 	presenter CreateMonitorPresenter,
 ) CreateMonitorUseCase {
