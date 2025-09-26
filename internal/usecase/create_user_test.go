@@ -68,10 +68,10 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 		repository    domain.UserRepository
 		presenter     CreateUserPresenter
 		expected      CreateUserOutput
-		expectedError interface{}
+		expectedError error
 	}{
 		{
-			name: "Create user successful",
+			name: "successs: create user",
 			input: CreateUserInput{
 				Name:         "Alice",
 				Email:        "alice@example.com",
@@ -100,54 +100,45 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			expectedError: nil,
 		},
 		{
-			name: "Create user error because of not entering name",
+			name: "error: missing name",
 			input: CreateUserInput{
 				Name:         "",
 				Email:        "alice@exampel.com",
 				PasswordHash: "hashedPass",
 			},
-			repository: mockUserRepoStore{
-				result: &domain.User{},
-				err:    errors.New("error"),
-			},
+			repository: mockUserRepoStore{},
 			presenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			expectedError: "invalid user name",
+			expectedError: domain.ErrInvalidUserName,
 			expected:      CreateUserOutput{},
 		},
 		{
-			name: "Create user error because of not entering Name",
+			name: "error: missing email",
 			input: CreateUserInput{
 				Name:         "Alice",
 				Email:        "",
 				PasswordHash: "hashedPass",
 			},
-			repository: mockUserRepoStore{
-				result: &domain.User{},
-				err:    errors.New("error"),
-			},
+			repository: mockUserRepoStore{},
 			presenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			expectedError: "invalid email",
+			expectedError: domain.ErrInvalidEmail,
 			expected:      CreateUserOutput{},
 		},
 		{
-			name: "Create user error because of hashed password",
+			name: "error: missing password",
 			input: CreateUserInput{
 				Name:         "Alice",
 				Email:        "alice@example.com",
 				PasswordHash: "",
 			},
-			repository: mockUserRepoStore{
-				result: &domain.User{},
-				err:    errors.New("error"),
-			},
+			repository: mockUserRepoStore{},
 			presenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			expectedError: "invalid password hash",
+			expectedError: domain.ErrInvalidPassword,
 			expected:      CreateUserOutput{},
 		},
 	}
@@ -157,7 +148,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			uc := NewCreateUserInteractor(tt.repository, tt.presenter)
 
 			result, err := uc.Execute(context.Background(), tt.input)
-			if (err != nil) && (err.Error() != tt.expectedError) {
+			if !errors.Is(err, tt.expectedError) {
 				t.Errorf("[TestCase '%s'] Result error: '%v' | Expected: '%v'", tt.name, err, tt.expectedError)
 			}
 
