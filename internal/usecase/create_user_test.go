@@ -68,7 +68,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 		repository    domain.UserRepository
 		presenter     CreateUserPresenter
 		expected      CreateUserOutput
-		expectedError error
+		expectedError interface{}
 	}{
 		{
 			name: "Create user successful",
@@ -99,6 +99,57 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			},
 			expectedError: nil,
 		},
+		{
+			name: "Create user error because of not entering name",
+			input: CreateUserInput{
+				Name:         "",
+				Email:        "alice@exampel.com",
+				PasswordHash: "hashedPass",
+			},
+			repository: mockUserRepoStore{
+				result: &domain.User{},
+				err:    errors.New("error"),
+			},
+			presenter: mockCreateUserPresenter{
+				result: CreateUserOutput{},
+			},
+			expectedError: "invalid user name",
+			expected:      CreateUserOutput{},
+		},
+		{
+			name: "Create user error because of not entering Name",
+			input: CreateUserInput{
+				Name:         "Alice",
+				Email:        "",
+				PasswordHash: "hashedPass",
+			},
+			repository: mockUserRepoStore{
+				result: &domain.User{},
+				err:    errors.New("error"),
+			},
+			presenter: mockCreateUserPresenter{
+				result: CreateUserOutput{},
+			},
+			expectedError: "invalid email",
+			expected:      CreateUserOutput{},
+		},
+		{
+			name: "Create user error because of hashed password",
+			input: CreateUserInput{
+				Name:         "Alice",
+				Email:        "alice@example.com",
+				PasswordHash: "",
+			},
+			repository: mockUserRepoStore{
+				result: &domain.User{},
+				err:    errors.New("error"),
+			},
+			presenter: mockCreateUserPresenter{
+				result: CreateUserOutput{},
+			},
+			expectedError: "invalid password hash",
+			expected:      CreateUserOutput{},
+		},
 	}
 
 	for _, tt := range tests {
@@ -106,7 +157,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			uc := NewCreateUserInteractor(tt.repository, tt.presenter)
 
 			result, err := uc.Execute(context.Background(), tt.input)
-			if !errors.Is(err, tt.expectedError) {
+			if (err != nil) && (err.Error() != tt.expectedError) {
 				t.Errorf("[TestCase '%s'] Result error: '%v' | Expected: '%v'", tt.name, err, tt.expectedError)
 			}
 

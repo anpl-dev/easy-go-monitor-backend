@@ -36,14 +36,14 @@ type (
 
 // validation: User
 func NewUser(name, email, passwordHash string) (*User, error) {
+	if name == "" {
+		return nil, ErrInvalidUserName
+	}
 	if !strings.Contains(email, "@") {
 		return nil, ErrInvalidEmail
 	}
 	if passwordHash == "" {
 		return nil, ErrInvalidPassword
-	}
-	if name == "" {
-		return nil, ErrInvalidUserName
 	}
 
 	now := time.Now()
