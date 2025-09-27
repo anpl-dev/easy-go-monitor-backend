@@ -9,16 +9,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type SearchUserHandler struct {
-	uc usecase.SearchUserUseCase
+type SearchUsersHandler struct {
+	uc usecase.SearchUsersUseCase
 }
 
-func NewSearchUserHandler(uc usecase.SearchUserUseCase) *SearchUserHandler {
-	return &SearchUserHandler{uc: uc}
+func NewSearchUsersHandler(uc usecase.SearchUsersUseCase) *SearchUsersHandler {
+	return &SearchUsersHandler{uc: uc}
 }
 
-func (h *SearchUserHandler) Handle(c *gin.Context) {
-	input := usecase.SearchUserInput{
+func (h *SearchUsersHandler) Handle(c *gin.Context) {
+	input := usecase.SearchUsersInput{
 		Email: c.Query("email"),
 		Name:  c.Query("name"),
 	}

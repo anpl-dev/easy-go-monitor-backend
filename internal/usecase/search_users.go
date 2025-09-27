@@ -9,20 +9,20 @@ import (
 )
 
 type (
-	SearchUserUseCase interface {
-		Execute(ctx context.Context, input SearchUserInput) ([]SearchUserOutput, error)
+	SearchUsersUseCase interface {
+		Execute(ctx context.Context, input SearchUsersInput) ([]SearchUsersOutput, error)
 	}
 
-	SearchUserInput struct {
+	SearchUsersInput struct {
 		Email string `json:"email,omitempty"`
 		Name  string `json:"name,omitempty"`
 	}
 
-	SearchUserPresenter interface {
-		Output([]*domain.User) []SearchUserOutput
+	SearchUsersPresenter interface {
+		Output([]*domain.User) []SearchUsersOutput
 	}
 
-	SearchUserOutput struct {
+	SearchUsersOutput struct {
 		ID        uuid.UUID `json:"id"`
 		Name      string    `json:"name"`
 		Email     string    `json:"email"`
@@ -32,18 +32,18 @@ type (
 
 	searchUsersIntatactor struct {
 		repo      domain.UserRepository
-		presenter SearchUserPresenter
+		presenter SearchUsersPresenter
 	}
 )
 
-func NewSearchUserInteractor(repo domain.UserRepository, presenter SearchUserPresenter) SearchUserUseCase {
+func NewSearchUsersInteractor(repo domain.UserRepository, presenter SearchUsersPresenter) SearchUsersUseCase {
 	return &searchUsersIntatactor{
 		repo:      repo,
 		presenter: presenter,
 	}
 }
 
-func (i *searchUsersIntatactor) Execute(ctx context.Context, input SearchUserInput) ([]SearchUserOutput, error) {
+func (i *searchUsersIntatactor) Execute(ctx context.Context, input SearchUsersInput) ([]SearchUsersOutput, error) {
 	var users []*domain.User
 	var err error
 

@@ -25,16 +25,16 @@ func (m mockUserRepoSearch) FindByEmail(_ context.Context, _ string) (*domain.Us
 }
 
 // --- Mock Presenter ---
-type mockSearchUserPresenter struct {
-	result []SearchUserOutput
+type mockSearchUsersPresenter struct {
+	result []SearchUsersOutput
 }
 
-func (m mockSearchUserPresenter) Output(_ []*domain.User) []SearchUserOutput {
+func (m mockSearchUsersPresenter) Output(_ []*domain.User) []SearchUsersOutput {
 	return m.result
 }
 
 // --- Test ---
-func TestSearchUserInteractor_Execute(t *testing.T) {
+func TestSearchUsersInteractor_Execute(t *testing.T) {
 	t.Parallel()
 
 	now := time.Now()
@@ -49,15 +49,15 @@ func TestSearchUserInteractor_Execute(t *testing.T) {
 
 	tests := []struct {
 		name          string
-		input         SearchUserInput
+		input         SearchUsersInput
 		repository    domain.UserRepository
-		presenter     SearchUserPresenter
-		expected      []SearchUserOutput
+		presenter     SearchUsersPresenter
+		expected      []SearchUsersOutput
 		expectedError error
 	}{
 		{
 			name: "successs: user found",
-			input: SearchUserInput{
+			input: SearchUsersInput{
 				Email: user.Email,
 				Name:  user.Name,
 			},
@@ -65,8 +65,8 @@ func TestSearchUserInteractor_Execute(t *testing.T) {
 				result: user,
 				err:    nil,
 			},
-			presenter: mockSearchUserPresenter{
-				result: []SearchUserOutput{
+			presenter: mockSearchUsersPresenter{
+				result: []SearchUsersOutput{
 					{
 						ID:        user.ID,
 						Name:      user.Name,
@@ -76,7 +76,7 @@ func TestSearchUserInteractor_Execute(t *testing.T) {
 					},
 				},
 			},
-			expected: []SearchUserOutput{
+			expected: []SearchUsersOutput{
 				{
 					ID:        user.ID,
 					Name:      user.Name,
@@ -89,14 +89,14 @@ func TestSearchUserInteractor_Execute(t *testing.T) {
 		},
 		{
 			name: "error: user not found",
-			input: SearchUserInput{
+			input: SearchUsersInput{
 				Email: "dummy@example.com",
 			},
 			repository: mockUserRepoSearch{
 				result: nil,
 				err:    errors.ErrNotFound,
 			},
-			presenter:     mockSearchUserPresenter{},
+			presenter:     mockSearchUsersPresenter{},
 			expected:      nil,
 			expectedError: errors.ErrNotFound,
 		},
@@ -104,7 +104,7 @@ func TestSearchUserInteractor_Execute(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			uc := NewSearchUserInteractor(tt.repository, tt.presenter)
+			uc := NewSearchUsersInteractor(tt.repository, tt.presenter)
 
 			result, err := uc.Execute(context.Background(), tt.input)
 			if tt.expectedError == nil {

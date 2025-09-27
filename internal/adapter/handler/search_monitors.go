@@ -10,22 +10,22 @@ import (
 	"github.com/google/uuid"
 )
 
-type FindMonitorsByUserHandler struct {
-	uc usecase.FindMonitorsByUserUseCase
+type SearchMonitorsHandler struct {
+	uc usecase.SearchMonitorsUseCase
 }
 
-func NewFindMonitorsByUserHandler(uc usecase.FindMonitorsByUserUseCase) *FindMonitorsByUserHandler {
-	return &FindMonitorsByUserHandler{uc: uc}
+func NewSearchMonitorsHandler(uc usecase.SearchMonitorsUseCase) *SearchMonitorsHandler {
+	return &SearchMonitorsHandler{uc: uc}
 }
 
-func (h *FindMonitorsByUserHandler) Handle(c *gin.Context) {
+func (h *SearchMonitorsHandler) Handle(c *gin.Context) {
 	userIDStr := c.Param("id")
 	userID, err := uuid.Parse(userIDStr)
 	if err != nil {
 		response.NewHTTPError(errors.ErrInvalidUUID).Send(c)
 		return
 	}
-	output, err := h.uc.Execute(c.Request.Context(), usecase.FindMonitorsByUserInput{UserID: userID})
+	output, err := h.uc.Execute(c.Request.Context(), usecase.SearchMonitorsInput{UserID: userID})
 	if err != nil {
 		response.NewHTTPError(errors.ErrNotFound).Send(c)
 		return

@@ -43,24 +43,24 @@ func main() {
 	// --- Presenter ---
 	createUserPresenter := presenter.NewCreateUserPresenter()
 	findUserByIDPresenter := presenter.NewFindUserByIDPresenter()
-	searchUserPresenter := presenter.NewSearchUserPresenter()
+	searchUsersPresenter := presenter.NewSearchUsersPresenter()
 	updateUserPresenter := presenter.NewUpdateUserPresenter()
 
 	createMonitorPresenter := presenter.NewCreateMonitorPresenter()
 	findMonitorByIDPresenter := presenter.NewFindMonitorByIDPresenter()
-	findMonitorsByUserPresenter := presenter.NewFindMonitorsByUserPresenter()
+	searchMonitorsPresenter := presenter.NewSearchMonitorsPresenter()
 	updateMonitorPresenter := presenter.NewUpdateMonitorPresenter()
 
 	// --- UseCase ---
 	createUserUC := usecase.NewCreateUserInteractor(userRepo, createUserPresenter)
 	findUserByIDUC := usecase.NewFindUserByIDInteractor(userRepo, findUserByIDPresenter)
-	searchUserUC := usecase.NewSearchUserInteractor(userRepo, searchUserPresenter)
+	searchUsersUC := usecase.NewSearchUsersInteractor(userRepo, searchUsersPresenter)
 	updateUserUC := usecase.NewUpdateUserInteractor(userRepo, updateUserPresenter)
 	deleteUserUC := usecase.NewDeleteUserInteractor(userRepo)
 
 	createMonitorUC := usecase.NewCreateMonitorInteractor(monitorRepo, createMonitorPresenter)
 	findMointorByIDUC := usecase.NewFindMonitorByIDInteractor(monitorRepo, findMonitorByIDPresenter)
-	findMonitorsByUserUC := usecase.NewFindMonitorsByUserInteractor(monitorRepo, findMonitorsByUserPresenter)
+	searchMonitorsUC := usecase.NewSearchMonitorsInteractor(monitorRepo, searchMonitorsPresenter)
 	updateMonitorUC := usecase.NewUpdateMonitorInteractor(monitorRepo, updateMonitorPresenter)
 	deleteMonitorUC := usecase.NewDeleteMonitorInteractor(monitorRepo)
 
@@ -68,17 +68,17 @@ func main() {
 	userHandlers := router.UserHandlers{
 		Create:   handler.NewCreateUserHandler(createUserUC),
 		FindByID: handler.NewFindUserByIDHandler(findUserByIDUC),
-		Search:   handler.NewSearchUserHandler(searchUserUC),
+		Search:   handler.NewSearchUsersHandler(searchUsersUC),
 		Update:   handler.NewUpdateUserHandler(updateUserUC),
 		Delete:   handler.NewDeleteUserHandler(deleteUserUC),
 	}
 
 	monitorHandlers := router.MonitorHandlers{
-		Create:       handler.NewCreateMonitorHandler(createMonitorUC),
-		FindByID:     handler.NewFindMonitorByIDHandler(findMointorByIDUC),
-		FindByUserID: handler.NewFindMonitorsByUserHandler(findMonitorsByUserUC),
-		Update:       handler.NewUpdateMonitorHandler(updateMonitorUC),
-		Delete:       handler.NewDeleteMonitorHandler(deleteMonitorUC),
+		Create:   handler.NewCreateMonitorHandler(createMonitorUC),
+		FindByID: handler.NewFindMonitorByIDHandler(findMointorByIDUC),
+		Search:   handler.NewSearchMonitorsHandler(searchMonitorsUC),
+		Update:   handler.NewUpdateMonitorHandler(updateMonitorUC),
+		Delete:   handler.NewDeleteMonitorHandler(deleteMonitorUC),
 	}
 
 	// --- Router ---

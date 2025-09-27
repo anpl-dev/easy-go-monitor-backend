@@ -10,17 +10,17 @@ type (
 	UserHandlers struct {
 		Create   *handler.CreateUserHandler
 		FindByID *handler.FindUserByIDHandler
-		Search   *handler.SearchUserHandler
+		Search   *handler.SearchUsersHandler
 		Update   *handler.UpdateUserHandler
 		Delete   *handler.DeleteUserHandler
 	}
 
 	MonitorHandlers struct {
-		Create       *handler.CreateMonitorHandler
-		FindByID     *handler.FindMonitorByIDHandler
-		FindByUserID *handler.FindMonitorsByUserHandler
-		Update       *handler.UpdateMonitorHandler
-		Delete       *handler.DeleteMonitorHandler
+		Create   *handler.CreateMonitorHandler
+		FindByID *handler.FindMonitorByIDHandler
+		Search   *handler.SearchMonitorsHandler
+		Update   *handler.UpdateMonitorHandler
+		Delete   *handler.DeleteMonitorHandler
 	}
 )
 
@@ -35,7 +35,6 @@ func NewGinRouter(users UserHandlers, monitors MonitorHandlers) *gin.Engine {
 			usersApi.POST("", users.Create.Handle)
 			usersApi.GET("/:id", users.FindByID.Handle)
 			usersApi.GET("/search", users.Search.Handle)
-			usersApi.GET("/:id/monitors", monitors.FindByUserID.Handle)
 			usersApi.PUT("/:id", users.Update.Handle)
 			usersApi.DELETE("/:id", users.Delete.Handle)
 		}
@@ -44,6 +43,7 @@ func NewGinRouter(users UserHandlers, monitors MonitorHandlers) *gin.Engine {
 		{
 			monitorsApi.POST("", monitors.Create.Handle)
 			monitorsApi.GET("/:id", monitors.FindByID.Handle)
+			usersApi.GET("/search", monitors.Search.Handle)
 			monitorsApi.PUT("/:id", monitors.Update.Handle)
 			monitorsApi.DELETE("/:id", monitors.Delete.Handle)
 		}
