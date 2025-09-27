@@ -99,7 +99,7 @@ func TestSearchMonitorsInteractor_Execute(t *testing.T) {
 				err:    errors.ErrNotFound,
 			},
 			presenter:     mockSearchMonitorsPresenter{},
-			expected:      []SearchMonitorsOutput{},
+			expected:      nil,
 			expectedError: errors.ErrNotFound,
 		},
 	}
