@@ -64,7 +64,7 @@ func TestDeleteUserInteractor_Execute(t *testing.T) {
 				}
 			} else {
 				if !errors.Is(err, tt.expectedError) {
-					t.Errorf("[TestCase '%s'] got error: '%v', want: '%v'", tt.name, err, tt.expectedError)
+					t.Errorf("[TestCase '%s'] Result error: '%v', Expected: '%v'", tt.name, err, tt.expectedError)
 				}
 			}
 
