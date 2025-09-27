@@ -19,7 +19,7 @@ func NewCreateUserHandler(uc usecase.CreateUserUseCase) *CreateUserHandler {
 func (h *CreateUserHandler) Handle(c *gin.Context) {
 	var input usecase.CreateUserInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		response.NewError(err, http.StatusBadRequest).Send(c)
+		response.NewError(http.StatusBadRequest, err).Send(c)
 		return
 	}
 

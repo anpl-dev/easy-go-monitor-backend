@@ -1,11 +1,13 @@
 package errors
 
-import "errors"
+import (
+	"errors"
+)
 
 // Domain
 var (
 	// Common errors
-	ErrNotFound   = errors.New("resource not found")
+	ErrNotFound    = errors.New("resource not found")
 	ErrInvalidUUID = errors.New("invalid uuid")
 
 	// User errors

@@ -19,7 +19,7 @@ func NewCreateMonitorHandler(uc usecase.CreateMonitorUseCase) *CreateMonitorHand
 func (h *CreateMonitorHandler) Handle(c *gin.Context) {
 	var input usecase.CreateMonitorInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		response.NewError(err, http.StatusBadRequest).Send(c)
+		response.NewError(http.StatusBadRequest, err).Send(c)
 		return
 	}
 

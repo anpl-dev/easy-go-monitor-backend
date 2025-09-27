@@ -12,7 +12,7 @@ type Error struct {
 	Errors     []string `json:"errors"`
 }
 
-func NewError(err error, status int) *Error {
+func NewError(status int, err error) *Error {
 	return &Error{
 		StatusCode: status,
 		Errors:     []string{err.Error()},
@@ -29,24 +29,24 @@ func NewHTTPError(err error) *Error {
 	case errors.Is(err, errors.ErrInvalidUserName),
 		errors.Is(err, errors.ErrInvalidEmail),
 		errors.Is(err, errors.ErrInvalidPassword):
-		return NewError(err, http.StatusBadRequest)
+		return NewError(http.StatusBadRequest, err)
 
 	case errors.Is(err, errors.ErrInvalidMonitorName),
 		errors.Is(err, errors.ErrInvalidMonitorURL),
 		errors.Is(err, errors.ErrInvalidMonitorInterval):
-		return NewError(err, http.StatusBadRequest)
+		return NewError(http.StatusBadRequest, err)
 
 	case errors.Is(err, errors.ErrNotFound):
-		return NewError(err, http.StatusNotFound)
+		return NewError(http.StatusNotFound, err)
 
 	case errors.Is(err, errors.ErrInvalidUUID):
-		return NewError(err, http.StatusBadRequest)
+		return NewError(http.StatusBadRequest, err)
 
 	// Handler
 	case errors.Is(err, errors.ErrSearchParameters):
-		return NewError(err, http.StatusBadRequest)
+		return NewError(http.StatusBadRequest, err)
 
 	default:
-		return NewError(errors.New("internal server error"), http.StatusInternalServerError)
+		return NewError(http.StatusInternalServerError, errors.New("internal server error"))
 	}
 }
