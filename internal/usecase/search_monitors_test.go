@@ -61,8 +61,8 @@ func TestSearchMonitorsInteractor_Execute(t *testing.T) {
 			input: SearchMonitorsInput{
 				UserID: monitor.UserID,
 			},
-			repository: mockMonitorRepoFindByID{
-				result: monitor,
+			repository: mockMonitorRepoSearch{
+				result: []*domain.Monitor{monitor},
 				err:    nil,
 			},
 			presenter: mockSearchMonitorsPresenter{
@@ -92,11 +92,9 @@ func TestSearchMonitorsInteractor_Execute(t *testing.T) {
 			expectedError: nil,
 		},
 		{
-			name: "error: monitor not found",
-			input: SearchMonitorsInput{
-				UserID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
-			},
-			repository: mockMonitorRepoFindByID{
+			name:  "error: monitor not found",
+			input: SearchMonitorsInput{},
+			repository: mockMonitorRepoSearch{
 				result: nil,
 				err:    errors.ErrNotFound,
 			},
