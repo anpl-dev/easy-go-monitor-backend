@@ -133,12 +133,19 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			uc := NewCreateUserInteractor(tt.repository, tt.presenter)
 
 			result, err := uc.Execute(context.Background(), tt.input)
-			if !errors.Is(err, tt.expectedError) {
-				t.Errorf("[TestCase '%s'] Result error: '%v' | Expected: '%v'", tt.name, err, tt.expectedError)
-			}
+			if tt.expectedError == nil {
+				if err != nil {
+					t.Errorf("[TestCase '%s'] unexpected error: '%v'", tt.name, err)
+				}
+				if !reflect.DeepEqual(result, tt.expected) {
+					t.Errorf("[TestCase '%s'] Result: '%+v' | Expected: '%+v'", tt.name, result, tt.expected)
+				}
+			} else {
 
-			if !reflect.DeepEqual(result, tt.expected) {
-				t.Errorf("[TestCase '%s'] Result: '%+v' | Expected: '%+v'", tt.name, result, tt.expected)
+				if !errors.Is(err, tt.expectedError) {
+					t.Errorf("[TestCase '%s'] Result error: '%v' | Expected: '%v'", tt.name, err, tt.expectedError)
+				}
+
 			}
 		})
 	}

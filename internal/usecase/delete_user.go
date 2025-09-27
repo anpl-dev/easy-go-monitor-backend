@@ -23,7 +23,7 @@ type (
 	}
 )
 
-func NewDeleteUserInteracotr(repo domain.UserRepository) DeleteUserUseCase {
+func NewDeleteUserInteractor(repo domain.UserRepository) DeleteUserUseCase {
 	return &deleteUserIteractor{repo: repo}
 }
 

@@ -56,7 +56,7 @@ func main() {
 	findUserByIDUC := usecase.NewFindUserByIDInteractor(userRepo, findUserByIDPresenter)
 	searchUserUC := usecase.NewSearchUserInteractor(userRepo, searchUserPresenter)
 	updateUserUC := usecase.NewUpdateUserInteractor(userRepo, updateUserPresenter)
-	deleteUserUC := usecase.NewDeleteUserInteracotr(userRepo)
+	deleteUserUC := usecase.NewDeleteUserInteractor(userRepo)
 
 	createMonitorUC := usecase.NewCreateMonitorInteractor(monitorRepo, createMonitorPresenter)
 	findMointorByIDUC := usecase.NewFindMonitorByIDInteractor(monitorRepo, findMonitorByIDPresenter)
