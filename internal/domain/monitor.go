@@ -2,17 +2,11 @@ package domain
 
 import (
 	"context"
-	"errors"
+	"go-monitor-tool/internal/errors"
 	"net/url"
 	"time"
 
 	"github.com/google/uuid"
-)
-
-var (
-	ErrInvalidMonitorName     = errors.New("invalid monitor name")
-	ErrInvalidMonitorURL      = errors.New("invalid monitor url")
-	ErrInvalidMonitorInterval = errors.New("monitor interval must be greater than zero")
 )
 
 type (
@@ -38,13 +32,13 @@ type (
 // NewMonitor creates a new Monitor entity with validation.
 func NewMonitor(userID uuid.UUID, name string, rawURL string, interval int) (*Monitor, error) {
 	if name == "" {
-		return nil, ErrInvalidMonitorName
+		return nil, errors.ErrInvalidMonitorName
 	}
 	if interval <= 0 {
-		return nil, ErrInvalidMonitorInterval
+		return nil, errors.ErrInvalidMonitorInterval
 	}
 	if _, err := url.ParseRequestURI(rawURL); err != nil {
-		return nil, ErrInvalidMonitorURL
+		return nil, errors.ErrInvalidMonitorURL
 	}
 
 	now := time.Now()

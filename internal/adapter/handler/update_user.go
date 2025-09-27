@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"go-monitor-tool/internal/adapter/response"
+	"go-monitor-tool/internal/errors"
 	"go-monitor-tool/internal/usecase"
 	"net/http"
 
@@ -20,13 +22,13 @@ func (h *UpdateUserHandler) Handle(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user id"})
+		response.NewHTTPError(errors.ErrInvalidUUID).Send(c)
 		return
 	}
 
 	var input usecase.UpdateUserInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		response.NewError(err, http.StatusBadRequest).Send(c)
 		return
 	}
 
@@ -34,7 +36,7 @@ func (h *UpdateUserHandler) Handle(c *gin.Context) {
 
 	output, err := h.uc.Execute(c.Request.Context(), input)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		response.NewHTTPError(err).Send(c)
 		return
 	}
 	c.JSON(http.StatusOK, output)

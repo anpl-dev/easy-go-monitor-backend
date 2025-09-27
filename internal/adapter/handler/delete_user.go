@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"go-monitor-tool/internal/adapter/response"
+	"go-monitor-tool/internal/errors"
 	"go-monitor-tool/internal/usecase"
 	"net/http"
 
@@ -20,13 +22,13 @@ func (h *DeleteUserHandler) Handle(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user id"})
+		response.NewHTTPError(errors.ErrInvalidUUID).Send(c)
 		return
 	}
 
 	err = h.uc.Execute(c.Request.Context(), usecase.DeleteUserInput{ID: id})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		response.NewHTTPError(err).Send(c)
 		return
 	}
 	c.Status(http.StatusNoContent)

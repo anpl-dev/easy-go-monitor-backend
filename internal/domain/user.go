@@ -2,17 +2,11 @@ package domain
 
 import (
 	"context"
-	"errors"
+	"go-monitor-tool/internal/errors"
 	"strings"
 	"time"
 
 	"github.com/google/uuid"
-)
-
-var (
-	ErrInvalidUserName = errors.New("invalid user name")
-	ErrInvalidEmail    = errors.New("invalid email")
-	ErrInvalidPassword = errors.New("invalid password hash")
 )
 
 type (
@@ -37,13 +31,13 @@ type (
 // validation: User
 func NewUser(name, email, passwordHash string) (*User, error) {
 	if name == "" {
-		return nil, ErrInvalidUserName
+		return nil, errors.ErrInvalidUserName
 	}
 	if !strings.Contains(email, "@") {
-		return nil, ErrInvalidEmail
+		return nil, errors.ErrInvalidEmail
 	}
 	if passwordHash == "" {
-		return nil, ErrInvalidPassword
+		return nil, errors.ErrInvalidPassword
 	}
 
 	now := time.Now()

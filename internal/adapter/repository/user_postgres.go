@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"go-monitor-tool/internal/adapter/repository/sqlcgen"
 	"go-monitor-tool/internal/domain"
+	"go-monitor-tool/internal/errors"
 
 	"github.com/google/uuid"
 )
@@ -44,6 +45,9 @@ func (r *UserPostgresRepository) Create(ctx context.Context, u domain.User) (*do
 func (r *UserPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) (*domain.User, error) {
 	row, err := r.queries.FindUserByID(ctx, id)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, errors.ErrNotFound
+		}
 		return nil, err
 	}
 	return toDomainUser(row), nil
@@ -52,6 +56,9 @@ func (r *UserPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) (*d
 func (r *UserPostgresRepository) FindByEmail(ctx context.Context, email string) (*domain.User, error) {
 	row, err := r.queries.FindUserByEmail(ctx, email)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, errors.ErrNotFound
+		}
 		return nil, err
 	}
 	return toDomainUser(row), nil
@@ -65,6 +72,9 @@ func (r *UserPostgresRepository) Update(ctx context.Context, u domain.User) (*do
 		PasswordHash: u.PasswordHash,
 	})
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, errors.ErrNotFound
+		}
 		return nil, err
 	}
 	return toDomainUser(row), nil

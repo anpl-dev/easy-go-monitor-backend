@@ -2,40 +2,40 @@ package usecase
 
 import (
 	"context"
-	"errors"
 	"reflect"
 	"testing"
 	"time"
 
 	"go-monitor-tool/internal/domain"
+	"go-monitor-tool/internal/errors"
 
 	"github.com/google/uuid"
 )
 
 // --- Mock Repository ---
-type mockUserRepoStore struct {
+type mockCreateUserRepo struct {
 	result *domain.User
 	err    error
 }
 
-func (m mockUserRepoStore) Create(_ context.Context, _ domain.User) (*domain.User, error) {
+func (m mockCreateUserRepo) Create(_ context.Context, _ domain.User) (*domain.User, error) {
 	return m.result, m.err
 }
 
 // dummy implement
-func (m mockUserRepoStore) FindByID(_ context.Context, _ uuid.UUID) (*domain.User, error) {
+func (m mockCreateUserRepo) FindByID(_ context.Context, _ uuid.UUID) (*domain.User, error) {
 	return nil, nil
 }
 
-func (m mockUserRepoStore) FindByEmail(_ context.Context, _ string) (*domain.User, error) {
+func (m mockCreateUserRepo) FindByEmail(_ context.Context, _ string) (*domain.User, error) {
 	return nil, nil
 }
 
-func (m mockUserRepoStore) Update(_ context.Context, _ domain.User) (*domain.User, error) {
+func (m mockCreateUserRepo) Update(_ context.Context, _ domain.User) (*domain.User, error) {
 	return nil, nil
 }
 
-func (m mockUserRepoStore) Delete(_ context.Context, _ uuid.UUID) error {
+func (m mockCreateUserRepo) Delete(_ context.Context, _ uuid.UUID) error {
 	return nil
 }
 
@@ -54,7 +54,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 
 	now := time.Now()
 	user := &domain.User{
-		ID:           uuid.MustParse("74ce6ef9-d96e-43dd-8be4-3b7f0b5dbef5"),
+		ID:           uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:         "Alice",
 		Email:        "alice@example.com",
 		PasswordHash: "hashedPass",
@@ -77,7 +77,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 				Email:        "alice@example.com",
 				PasswordHash: "hashedPass",
 			},
-			repository: mockUserRepoStore{
+			repository: mockCreateUserRepo{
 				result: user,
 				err:    nil,
 			},
@@ -106,11 +106,11 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 				Email:        "alice@exampel.com",
 				PasswordHash: "hashedPass",
 			},
-			repository: mockUserRepoStore{},
+			repository: mockCreateUserRepo{},
 			presenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			expectedError: domain.ErrInvalidUserName,
+			expectedError: errors.ErrInvalidUserName,
 			expected:      CreateUserOutput{},
 		},
 		{
@@ -120,11 +120,11 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 				Email:        "",
 				PasswordHash: "hashedPass",
 			},
-			repository: mockUserRepoStore{},
+			repository: mockCreateUserRepo{},
 			presenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			expectedError: domain.ErrInvalidEmail,
+			expectedError: errors.ErrInvalidEmail,
 			expected:      CreateUserOutput{},
 		},
 		{
@@ -134,11 +134,11 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 				Email:        "alice@example.com",
 				PasswordHash: "",
 			},
-			repository: mockUserRepoStore{},
+			repository: mockCreateUserRepo{},
 			presenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			expectedError: domain.ErrInvalidPassword,
+			expectedError: errors.ErrInvalidPassword,
 			expected:      CreateUserOutput{},
 		},
 	}

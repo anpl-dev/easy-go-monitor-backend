@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"go-monitor-tool/internal/adapter/response"
+	"go-monitor-tool/internal/errors"
 	"go-monitor-tool/internal/usecase"
 	"net/http"
 
@@ -21,12 +23,12 @@ func (h *SearchUserHandler) Handle(c *gin.Context) {
 		Name:  c.Query("name"),
 	}
 	if input.Email == "" && input.Name == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "no search parameters"})
+		response.NewHTTPError(errors.ErrSearchParameters).Send(c)
 		return
 	}
 	output, err := h.uc.Execute(c.Request.Context(), input)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		response.NewHTTPError(errors.ErrNotFound).Send(c)
 		return
 	}
 	c.JSON(http.StatusOK, output)

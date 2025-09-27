@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"go-monitor-tool/internal/adapter/repository/sqlcgen"
 	"go-monitor-tool/internal/domain"
+	"go-monitor-tool/internal/errors"
 
 	"github.com/google/uuid"
 )
@@ -51,6 +52,9 @@ func (r *MonitorPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) 
 func (r *MonitorPostgresRepository) FindByUserID(ctx context.Context, userID uuid.UUID) ([]*domain.Monitor, error) {
 	rows, err := r.queries.FindMonitorsByUser(ctx, userID)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, errors.ErrNotFound
+		}
 		return nil, err
 	}
 
@@ -69,6 +73,9 @@ func (r *MonitorPostgresRepository) Update(ctx context.Context, m domain.Monitor
 		IntervalSecond: int32(m.IntervalSecond),
 	})
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, errors.ErrNotFound
+		}
 		return nil, err
 	}
 	return toDomainMonitor(row), nil
