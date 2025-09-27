@@ -25,7 +25,7 @@ type CreateUserParams struct {
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, createUser,
+	row := q.db.QueryRow(ctx, createUser,
 		arg.ID,
 		arg.Name,
 		arg.Email,
@@ -49,7 +49,7 @@ WHERE id = $1
 `
 
 func (q *Queries) DeleteUser(ctx context.Context, id uuid.UUID) error {
-	_, err := q.db.ExecContext(ctx, deleteUser, id)
+	_, err := q.db.Exec(ctx, deleteUser, id)
 	return err
 }
 
@@ -59,7 +59,7 @@ ORDER BY created_at DESC
 `
 
 func (q *Queries) FindAllUsers(ctx context.Context) ([]User, error) {
-	rows, err := q.db.QueryContext(ctx, findAllUsers)
+	rows, err := q.db.Query(ctx, findAllUsers)
 	if err != nil {
 		return nil, err
 	}
@@ -79,9 +79,6 @@ func (q *Queries) FindAllUsers(ctx context.Context) ([]User, error) {
 		}
 		items = append(items, i)
 	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
@@ -94,7 +91,7 @@ WHERE email = $1
 `
 
 func (q *Queries) FindUserByEmail(ctx context.Context, email string) (User, error) {
-	row := q.db.QueryRowContext(ctx, findUserByEmail, email)
+	row := q.db.QueryRow(ctx, findUserByEmail, email)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -113,7 +110,7 @@ WHERE id = $1
 `
 
 func (q *Queries) FindUserByID(ctx context.Context, id uuid.UUID) (User, error) {
-	row := q.db.QueryRowContext(ctx, findUserByID, id)
+	row := q.db.QueryRow(ctx, findUserByID, id)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -144,7 +141,7 @@ type UpdateUserParams struct {
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, updateUser,
+	row := q.db.QueryRow(ctx, updateUser,
 		arg.ID,
 		arg.Name,
 		arg.Email,

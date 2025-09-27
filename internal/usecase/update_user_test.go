@@ -113,7 +113,6 @@ func TestUpdateUserInteractor_Execute(t *testing.T) {
 					t.Errorf("[TestCase '%s'] Result error: '%v' | Expected: '%v'", tt.name, err, tt.expectedError)
 				}
 			}
-
 		})
 	}
 }

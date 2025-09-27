@@ -5,9 +5,8 @@
 package sqlcgen
 
 import (
-	"time"
-
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Monitor struct {
@@ -16,8 +15,8 @@ type Monitor struct {
 	Name           string
 	Url            string
 	IntervalSecond int32
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
+	CreatedAt      pgtype.Timestamptz
+	UpdatedAt      pgtype.Timestamptz
 }
 
 type User struct {
@@ -25,6 +24,6 @@ type User struct {
 	Name         string
 	Email        string
 	PasswordHash string
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	CreatedAt    pgtype.Timestamptz
+	UpdatedAt    pgtype.Timestamptz
 }

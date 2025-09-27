@@ -26,7 +26,7 @@ type CreateMonitorParams struct {
 }
 
 func (q *Queries) CreateMonitor(ctx context.Context, arg CreateMonitorParams) (Monitor, error) {
-	row := q.db.QueryRowContext(ctx, createMonitor,
+	row := q.db.QueryRow(ctx, createMonitor,
 		arg.ID,
 		arg.UserID,
 		arg.Name,
@@ -52,7 +52,7 @@ WHERE id = $1
 `
 
 func (q *Queries) DeleteMonitor(ctx context.Context, id uuid.UUID) error {
-	_, err := q.db.ExecContext(ctx, deleteMonitor, id)
+	_, err := q.db.Exec(ctx, deleteMonitor, id)
 	return err
 }
 
@@ -62,7 +62,7 @@ WHERE id = $1
 `
 
 func (q *Queries) FindMonitorByID(ctx context.Context, id uuid.UUID) (Monitor, error) {
-	row := q.db.QueryRowContext(ctx, findMonitorByID, id)
+	row := q.db.QueryRow(ctx, findMonitorByID, id)
 	var i Monitor
 	err := row.Scan(
 		&i.ID,
@@ -83,7 +83,7 @@ ORDER BY created_at DESC
 `
 
 func (q *Queries) FindMonitorsByUser(ctx context.Context, userID uuid.UUID) ([]Monitor, error) {
-	rows, err := q.db.QueryContext(ctx, findMonitorsByUser, userID)
+	rows, err := q.db.Query(ctx, findMonitorsByUser, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -103,9 +103,6 @@ func (q *Queries) FindMonitorsByUser(ctx context.Context, userID uuid.UUID) ([]M
 			return nil, err
 		}
 		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err
@@ -131,7 +128,7 @@ type UpdateMonitorParams struct {
 }
 
 func (q *Queries) UpdateMonitor(ctx context.Context, arg UpdateMonitorParams) (Monitor, error) {
-	row := q.db.QueryRowContext(ctx, updateMonitor,
+	row := q.db.QueryRow(ctx, updateMonitor,
 		arg.ID,
 		arg.Name,
 		arg.Url,

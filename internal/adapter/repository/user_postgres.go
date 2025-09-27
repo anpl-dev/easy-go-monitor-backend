@@ -8,14 +8,15 @@ import (
 	"go-monitor-tool/internal/errors"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type UserPostgresRepository struct {
 	queries *sqlcgen.Queries
 }
 
-func NewUserPostgresRepository(db *sql.DB) *UserPostgresRepository {
-	return &UserPostgresRepository{queries: sqlcgen.New(db)}
+func NewUserPostgresRepository(pool *pgxpool.Pool) *UserPostgresRepository {
+	return &UserPostgresRepository{queries: sqlcgen.New(pool)}
 }
 
 func toDomainUser(s sqlcgen.User) *domain.User {
@@ -24,8 +25,8 @@ func toDomainUser(s sqlcgen.User) *domain.User {
 		Name:         s.Name,
 		Email:        s.Email,
 		PasswordHash: s.PasswordHash,
-		CreatedAt:    s.CreatedAt,
-		UpdatedAt:    s.UpdatedAt,
+		CreatedAt:    s.CreatedAt.Time,
+		UpdatedAt:    s.UpdatedAt.Time,
 	}
 }
 

@@ -31,6 +31,9 @@ type (
 
 // NewMonitor creates a new Monitor entity with validation.
 func NewMonitor(userID uuid.UUID, name string, rawURL string, interval int) (*Monitor, error) {
+	if userID == uuid.Nil {
+		return nil, errors.ErrInvalidUUID
+	}
 	if name == "" {
 		return nil, errors.ErrInvalidMonitorName
 	}
@@ -41,18 +44,11 @@ func NewMonitor(userID uuid.UUID, name string, rawURL string, interval int) (*Mo
 		return nil, errors.ErrInvalidMonitorURL
 	}
 
-	now := time.Now()
 	return &Monitor{
 		ID:             uuid.New(),
 		UserID:         userID,
 		Name:           name,
 		URL:            rawURL,
 		IntervalSecond: interval,
-		CreatedAt:      now,
-		UpdatedAt:      now,
 	}, nil
-}
-
-func (m *Monitor) Touch() {
-	m.UpdatedAt = time.Now()
 }

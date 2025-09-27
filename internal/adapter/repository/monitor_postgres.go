@@ -8,14 +8,15 @@ import (
 	"go-monitor-tool/internal/errors"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type MonitorPostgresRepository struct {
 	queries *sqlcgen.Queries
 }
 
-func NewMonitorPostgresRepository(db *sql.DB) *MonitorPostgresRepository {
-	return &MonitorPostgresRepository{queries: sqlcgen.New(db)}
+func NewMonitorPostgresRepository(pool *pgxpool.Pool) *MonitorPostgresRepository {
+	return &MonitorPostgresRepository{queries: sqlcgen.New(pool)}
 }
 func toDomainMonitor(s sqlcgen.Monitor) *domain.Monitor {
 	return &domain.Monitor{
@@ -24,6 +25,8 @@ func toDomainMonitor(s sqlcgen.Monitor) *domain.Monitor {
 		Name:           s.Name,
 		URL:            s.Url,
 		IntervalSecond: int(s.IntervalSecond),
+		CreatedAt:      s.CreatedAt.Time,
+		UpdatedAt:      s.UpdatedAt.Time,
 	}
 }
 
@@ -44,6 +47,9 @@ func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor
 func (r *MonitorPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) (*domain.Monitor, error) {
 	row, err := r.queries.FindMonitorByID(ctx, id)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, errors.ErrNotFound
+		}
 		return nil, err
 	}
 	return toDomainMonitor(row), nil

@@ -40,16 +40,10 @@ func NewUser(name, email, passwordHash string) (*User, error) {
 		return nil, errors.ErrInvalidPassword
 	}
 
-	now := time.Now()
 	return &User{
 		ID:           uuid.New(),
+		Name:         name,
 		Email:        email,
 		PasswordHash: passwordHash,
-		CreatedAt:    now,
-		UpdatedAt:    now,
 	}, nil
-}
-
-func (u *User) Touch() {
-	u.UpdatedAt = time.Now()
 }
