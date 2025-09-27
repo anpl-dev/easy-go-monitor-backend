@@ -33,3 +33,4 @@ func New(message string) error {
 func Is(err, target error) bool {
 	return errors.Is(err, target)
 }
+

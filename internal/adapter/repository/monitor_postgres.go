@@ -8,6 +8,7 @@ import (
 	"go-monitor-tool/internal/errors"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -39,6 +40,11 @@ func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor
 		IntervalSecond: int32(m.IntervalSecond),
 	})
 	if err != nil {
+		if pgErr, ok := err.(*pgconn.PgError); ok {
+			if pgErr.Code == errors.ForeignKeyViolation {
+				return nil, errors.ErrNotFound
+			}
+		}
 		return nil, err
 	}
 	return toDomainMonitor(row), nil
