@@ -7,7 +7,7 @@ import (
 // Domain
 var (
 	// Common errors
-	ErrNotFound    = errors.New("resource not found")
+	ErrNotFound    = errors.New("not found")
 	ErrInvalidUUID = errors.New("invalid uuid")
 
 	// User errors
