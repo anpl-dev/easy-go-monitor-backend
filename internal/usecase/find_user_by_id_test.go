@@ -2,42 +2,26 @@ package usecase
 
 import (
 	"context"
-	"database/sql"
-	"errors"
 	"reflect"
 	"testing"
 	"time"
 
 	"go-monitor-tool/internal/domain"
+	"go-monitor-tool/internal/errors"
 
 	"github.com/google/uuid"
 )
 
 // --- Mock Repository ---
-type mockFindUserByIDRepo struct {
+type mockUserRepoFindByID struct {
+	domain.UserRepository
+
 	result *domain.User
 	err    error
 }
 
-func (m mockFindUserByIDRepo) Create(_ context.Context, _ domain.User) (*domain.User, error) {
-	return nil, nil
-}
-
-// dummy implement
-func (m mockFindUserByIDRepo) FindByID(_ context.Context, _ uuid.UUID) (*domain.User, error) {
+func (m mockUserRepoFindByID) FindByID(_ context.Context, _ uuid.UUID) (*domain.User, error) {
 	return m.result, m.err
-}
-
-func (m mockFindUserByIDRepo) FindByEmail(_ context.Context, _ string) (*domain.User, error) {
-	return nil, nil
-}
-
-func (m mockFindUserByIDRepo) Update(_ context.Context, _ domain.User) (*domain.User, error) {
-	return nil, nil
-}
-
-func (m mockFindUserByIDRepo) Delete(_ context.Context, _ uuid.UUID) error {
-	return nil
 }
 
 // --- Mock Presenter ---
@@ -76,7 +60,7 @@ func TestFindUserByIDInteractor_Execute(t *testing.T) {
 			input: FindUserByIDInput{
 				ID: user.ID,
 			},
-			repository: mockFindUserByIDRepo{
+			repository: mockUserRepoFindByID{
 				result: user,
 				err:    nil,
 			},
@@ -103,23 +87,13 @@ func TestFindUserByIDInteractor_Execute(t *testing.T) {
 			input: FindUserByIDInput{
 				ID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 			},
-			repository:    mockFindUserByIDRepo{
+			repository: mockUserRepoFindByID{
 				result: nil,
-				err: errors.New("db connection error"),
+				err:    errors.ErrNotFound,
 			},
 			presenter:     mockFindUserByIDPresenter{},
 			expected:      FindUserByIDOutput{},
-			expectedError: sql.ErrNoRows,
-		},
-		{
-			name: "error: repository failure",
-			input: FindUserByIDInput{
-				ID: uuid.MustParse("33333333-3333-3333-3333-333333333333"),
-			},
-			repository:    mockFindUserByIDRepo{},
-			presenter:     mockFindUserByIDPresenter{},
-			expected:      FindUserByIDOutput{},
-			expectedError: errors.New("sql: no rows in result set"),
+			expectedError: errors.ErrNotFound,
 		},
 	}
 

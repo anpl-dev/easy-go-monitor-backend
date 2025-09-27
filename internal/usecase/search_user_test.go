@@ -13,28 +13,28 @@ import (
 )
 
 // --- Mock Repository ---
-type mockUserRepoUpdate struct {
+type mockUserRepoSearch struct {
 	domain.UserRepository
 
 	result *domain.User
 	err    error
 }
 
-func (m mockUserRepoUpdate) Update(_ context.Context, _ domain.User) (*domain.User, error) {
+func (m mockUserRepoSearch) FindByEmail(_ context.Context, _ string) (*domain.User, error) {
 	return m.result, m.err
 }
 
 // --- Mock Presenter ---
-type mockUpdateUserPresenter struct {
-	result UpdateUserOutput
+type mockSearchUserPresenter struct {
+	result []SearchUserOutput
 }
 
-func (m mockUpdateUserPresenter) Output(_ *domain.User) UpdateUserOutput {
+func (m mockSearchUserPresenter) Output(_ []*domain.User) []SearchUserOutput {
 	return m.result
 }
 
 // --- Test ---
-func TestUpdateUserInteractor_Execute(t *testing.T) {
+func TestSearchUserInteractor_Execute(t *testing.T) {
 	t.Parallel()
 
 	now := time.Now()
@@ -49,55 +49,62 @@ func TestUpdateUserInteractor_Execute(t *testing.T) {
 
 	tests := []struct {
 		name          string
-		input         UpdateUserInput
+		input         SearchUserInput
 		repository    domain.UserRepository
-		presenter     UpdateUserPresenter
-		expected      UpdateUserOutput
+		presenter     SearchUserPresenter
+		expected      []SearchUserOutput
 		expectedError error
 	}{
 		{
-			name: "successs: user updated",
-			input: UpdateUserInput{
-				ID: user.ID,
+			name: "successs: user found",
+			input: SearchUserInput{
+				Email: user.Email,
+				Name:  user.Name,
 			},
-			repository: mockUserRepoUpdate{
+			repository: mockUserRepoSearch{
 				result: user,
 				err:    nil,
 			},
-			presenter: mockUpdateUserPresenter{
-				result: UpdateUserOutput{
+			presenter: mockSearchUserPresenter{
+				result: []SearchUserOutput{
+					{
+						ID:        user.ID,
+						Name:      user.Name,
+						Email:     user.Email,
+						CreatedAt: user.CreatedAt,
+						UpdatedAt: user.UpdatedAt,
+					},
+				},
+			},
+			expected: []SearchUserOutput{
+				{
 					ID:        user.ID,
 					Name:      user.Name,
 					Email:     user.Email,
+					CreatedAt: user.CreatedAt,
 					UpdatedAt: user.UpdatedAt,
 				},
-			},
-			expected: UpdateUserOutput{
-				ID:        user.ID,
-				Name:      user.Name,
-				Email:     user.Email,
-				UpdatedAt: user.UpdatedAt,
 			},
 			expectedError: nil,
 		},
 		{
-			name: "error: user not updated",
-			input: UpdateUserInput{
-				ID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
+			name: "error: user not found",
+			input: SearchUserInput{
+				Email: "dummy@example.com",
 			},
-			repository: mockUserRepoUpdate{
+			repository: mockUserRepoSearch{
 				result: nil,
 				err:    errors.ErrNotFound,
 			},
-			presenter:     mockUpdateUserPresenter{},
-			expected:      UpdateUserOutput{},
+			presenter:     mockSearchUserPresenter{},
+			expected:      nil,
 			expectedError: errors.ErrNotFound,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			uc := NewUpdateUserInteractor(tt.repository, tt.presenter)
+			uc := NewSearchUserInteractor(tt.repository, tt.presenter)
 
 			result, err := uc.Execute(context.Background(), tt.input)
 			if !errors.Is(err, tt.expectedError) {

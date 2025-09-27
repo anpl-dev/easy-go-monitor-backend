@@ -13,30 +13,15 @@ import (
 )
 
 // --- Mock Repository ---
-type mockCreateUserRepo struct {
+type mockUserRepoCreate struct {
+	domain.UserRepository
+
 	result *domain.User
 	err    error
 }
 
-func (m mockCreateUserRepo) Create(_ context.Context, _ domain.User) (*domain.User, error) {
+func (m mockUserRepoCreate) Create(_ context.Context, _ domain.User) (*domain.User, error) {
 	return m.result, m.err
-}
-
-// dummy implement
-func (m mockCreateUserRepo) FindByID(_ context.Context, _ uuid.UUID) (*domain.User, error) {
-	return nil, nil
-}
-
-func (m mockCreateUserRepo) FindByEmail(_ context.Context, _ string) (*domain.User, error) {
-	return nil, nil
-}
-
-func (m mockCreateUserRepo) Update(_ context.Context, _ domain.User) (*domain.User, error) {
-	return nil, nil
-}
-
-func (m mockCreateUserRepo) Delete(_ context.Context, _ uuid.UUID) error {
-	return nil
 }
 
 // --- Mock Presenter ---
@@ -77,7 +62,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 				Email:        "alice@example.com",
 				PasswordHash: "hashedPass",
 			},
-			repository: mockCreateUserRepo{
+			repository: mockUserRepoCreate{
 				result: user,
 				err:    nil,
 			},
@@ -106,7 +91,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 				Email:        "alice@exampel.com",
 				PasswordHash: "hashedPass",
 			},
-			repository: mockCreateUserRepo{},
+			repository: mockUserRepoCreate{},
 			presenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
@@ -120,7 +105,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 				Email:        "",
 				PasswordHash: "hashedPass",
 			},
-			repository: mockCreateUserRepo{},
+			repository: mockUserRepoCreate{},
 			presenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
@@ -134,7 +119,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 				Email:        "alice@example.com",
 				PasswordHash: "",
 			},
-			repository: mockCreateUserRepo{},
+			repository: mockUserRepoCreate{},
 			presenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},

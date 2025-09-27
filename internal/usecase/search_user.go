@@ -30,20 +30,20 @@ type (
 		UpdatedAt time.Time `json:"updated_at"`
 	}
 
-	findUserByEmailIntatactor struct {
+	searchUsersIntatactor struct {
 		repo      domain.UserRepository
 		presenter SearchUserPresenter
 	}
 )
 
 func NewSearchUserInteractor(repo domain.UserRepository, presenter SearchUserPresenter) SearchUserUseCase {
-	return &findUserByEmailIntatactor{
+	return &searchUsersIntatactor{
 		repo:      repo,
 		presenter: presenter,
 	}
 }
 
-func (i *findUserByEmailIntatactor) Execute(ctx context.Context, input SearchUserInput) ([]SearchUserOutput, error) {
+func (i *searchUsersIntatactor) Execute(ctx context.Context, input SearchUserInput) ([]SearchUserOutput, error) {
 	var users []*domain.User
 	var err error
 
