@@ -36,7 +36,7 @@ func TestDeleteUserInteractor_Execute(t *testing.T) {
 		expectedError error
 	}{
 		{
-			name: "successs: user deleted",
+			name: "success: user deleted",
 			input: DeleteUserInput{
 				ID: user.ID,
 			},

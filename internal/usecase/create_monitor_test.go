@@ -57,7 +57,7 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 		expectedError error
 	}{
 		{
-			name: "successs: create monitor",
+			name: "success: create monitor",
 			input: CreateMonitorInput{
 				UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 				Name:           "test-monitor",

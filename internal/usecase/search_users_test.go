@@ -56,7 +56,7 @@ func TestSearchUsersInteractor_Execute(t *testing.T) {
 		expectedError error
 	}{
 		{
-			name: "successs: user found",
+			name: "success: user found",
 			input: SearchUsersInput{
 				Email: user.Email,
 				Name:  user.Name,

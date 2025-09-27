@@ -57,7 +57,7 @@ func TestFindMonitorByIDInteractor_Execute(t *testing.T) {
 		expectedError error
 	}{
 		{
-			name: "successs: monitor found",
+			name: "success: monitor found",
 			input: FindMonitorByIDInput{
 				ID: monitor.ID,
 			},

@@ -56,7 +56,7 @@ func TestFindUserByIDInteractor_Execute(t *testing.T) {
 		expectedError error
 	}{
 		{
-			name: "successs: user found",
+			name: "success: user found",
 			input: FindUserByIDInput{
 				ID: user.ID,
 			},

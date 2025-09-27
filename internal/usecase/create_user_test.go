@@ -56,7 +56,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 		expectedError error
 	}{
 		{
-			name: "successs: create user",
+			name: "success: create user",
 			input: CreateUserInput{
 				Name:         "Alice",
 				Email:        "alice@example.com",

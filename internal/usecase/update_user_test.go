@@ -56,7 +56,7 @@ func TestUpdateUserInteractor_Execute(t *testing.T) {
 		expectedError error
 	}{
 		{
-			name: "successs: user updated",
+			name: "success: user updated",
 			input: UpdateUserInput{
 				ID: user.ID,
 			},
@@ -113,6 +113,6 @@ func TestUpdateUserInteractor_Execute(t *testing.T) {
 					t.Errorf("[TestCase '%s'] Result error: '%v' | Expected: '%v'", tt.name, err, tt.expectedError)
 				}
 			}
-		})
+	})
 	}
 }

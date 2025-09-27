@@ -57,7 +57,7 @@ func TestSearchMonitorsInteractor_Execute(t *testing.T) {
 		expectedError error
 	}{
 		{
-			name: "successs: monitors found",
+			name: "success: monitors found",
 			input: SearchMonitorsInput{
 				UserID: monitor.UserID,
 			},
