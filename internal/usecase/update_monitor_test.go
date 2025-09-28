@@ -13,28 +13,28 @@ import (
 )
 
 // --- Mock Repository ---
-type mockMonitorRepoFindByID struct {
+type mockMonitorRepoUpdate struct {
 	domain.MonitorRepository
 
 	result *domain.Monitor
 	err    error
 }
 
-func (m mockMonitorRepoFindByID) FindByID(_ context.Context, _ uuid.UUID) (*domain.Monitor, error) {
+func (m mockMonitorRepoUpdate) Update(_ context.Context, _ domain.Monitor) (*domain.Monitor, error) {
 	return m.result, m.err
 }
 
 // --- Mock Presenter ---
-type mockFindMonitorByIDPresenter struct {
-	result FindMonitorByIDOutput
+type mockUpdateMonitorPresenter struct {
+	result UpdateMonitorOutput
 }
 
-func (m mockFindMonitorByIDPresenter) Output(_ *domain.Monitor) FindMonitorByIDOutput {
+func (m mockUpdateMonitorPresenter) Output(_ *domain.Monitor) UpdateMonitorOutput {
 	return m.result
 }
 
 // --- Test ---
-func TestFindMonitorByIDInteractor_Execute(t *testing.T) {
+func TestUpdateMonitorInteractor_Execute(t *testing.T) {
 	t.Parallel()
 
 	now := time.Now()
@@ -50,63 +50,62 @@ func TestFindMonitorByIDInteractor_Execute(t *testing.T) {
 
 	tests := []struct {
 		name          string
-		input         FindMonitorByIDInput
+		input         UpdateMonitorInput
 		repository    domain.MonitorRepository
-		presenter     FindMonitorByIDPresenter
-		expected      FindMonitorByIDOutput
+		presenter     UpdateMonitorPresenter
+		expected      UpdateMonitorOutput
 		expectedError error
 	}{
 		{
-			name: "success: monitor found",
-			input: FindMonitorByIDInput{
+			name: "success: monitor updated",
+			input: UpdateMonitorInput{
 				ID: monitor.ID,
 			},
-			repository: mockMonitorRepoFindByID{
+			repository: mockMonitorRepoUpdate{
 				result: monitor,
 				err:    nil,
 			},
-			presenter: mockFindMonitorByIDPresenter{
-				result: FindMonitorByIDOutput{
-						ID:             monitor.ID,
-						UserID:         monitor.UserID,
-						Name:           monitor.Name,
-						URL:            monitor.URL,
-						IntervalSecond: monitor.IntervalSecond,
-						CreatedAt:      monitor.CreatedAt,
-						UpdatedAt:      monitor.UpdatedAt,
+			presenter: mockUpdateMonitorPresenter{
+				result: UpdateMonitorOutput{
+					ID:             monitor.ID,
+					UserID:         monitor.UserID,
+					Name:           monitor.Name,
+					URL:            monitor.URL,
+					IntervalSecond: monitor.IntervalSecond,
+					UpdatedAt:      monitor.UpdatedAt,
 				},
 			},
-			expected: FindMonitorByIDOutput{
-						ID:             monitor.ID,
-						UserID:         monitor.UserID,
-						Name:           monitor.Name,
-						URL:            monitor.URL,
-						IntervalSecond: monitor.IntervalSecond,
-						CreatedAt:      monitor.CreatedAt,
-						UpdatedAt:      monitor.UpdatedAt,
+			expected: UpdateMonitorOutput{
+				ID:             monitor.ID,
+				UserID:         monitor.UserID,
+				Name:           monitor.Name,
+				URL:            monitor.URL,
+				IntervalSecond: monitor.IntervalSecond,
+				UpdatedAt:      monitor.UpdatedAt,
 			},
 			expectedError: nil,
 		},
 		{
-			name: "error: monitor not found",
-			input: FindMonitorByIDInput{
+			name: "error: monitor not updated",
+			input: UpdateMonitorInput{
 				ID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 			},
-			repository: mockMonitorRepoFindByID{
+			repository: mockMonitorRepoUpdate{
 				result: nil,
 				err:    errors.ErrNotFound,
 			},
-			presenter:     mockFindMonitorByIDPresenter{},
-			expected:      FindMonitorByIDOutput{},
+			presenter:     mockUpdateMonitorPresenter{},
+			expected:      UpdateMonitorOutput{},
 			expectedError: errors.ErrNotFound,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			uc := NewFindMonitorByIDInteractor(tt.repository, tt.presenter)
+			uc := NewUpdateMonitorInteractor(tt.repository, tt.presenter)
 
 			result, err := uc.Execute(context.Background(), tt.input)
+
 			if tt.expectedError == nil {
 				if err != nil {
 					t.Errorf("[TestCase '%s'] unexpected error: %v", tt.name, err)
