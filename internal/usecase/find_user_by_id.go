@@ -9,18 +9,22 @@ import (
 )
 
 type (
+	// FindUserByIDUseCase input port
 	FindUserByIDUseCase interface {
 		Execute(ctx context.Context, input FindUserByIDInput) (FindUserByIDOutput, error)
 	}
-
+	
+	// FindUserByIDInput input data
 	FindUserByIDInput struct {
 		ID uuid.UUID `json:"id" binding:"required"`
 	}
 
+	// FindUserByIDPresenter output port
 	FindUserByIDPresenter interface {
 		Output(*domain.User) FindUserByIDOutput
 	}
 
+	// FindUserByIDOutput output data
 	FindUserByIDOutput struct {
 		ID        uuid.UUID `json:"id"`
 		Name      string    `json:"name"`

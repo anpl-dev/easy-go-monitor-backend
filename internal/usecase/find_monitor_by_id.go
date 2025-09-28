@@ -9,18 +9,22 @@ import (
 )
 
 type (
+	// FindMonitorByIDUseCase input port
 	FindMonitorByIDUseCase interface {
 		Execute(ctx context.Context, input FindMonitorByIDInput) (FindMonitorByIDOutput, error)
 	}
 
+	// FindMonitorByIDInput input data
 	FindMonitorByIDInput struct {
 		ID uuid.UUID `json:"id" binding:"required"`
 	}
 
+	// FindMonitorByIDPresenter output port
 	FindMonitorByIDPresenter interface {
 		Output(*domain.Monitor) FindMonitorByIDOutput
 	}
 
+	// FindMonitorByIDOutput output data
 	FindMonitorByIDOutput struct {
 		ID             uuid.UUID `json:"id"`
 		UserID         uuid.UUID `json:"user_id"`

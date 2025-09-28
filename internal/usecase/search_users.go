@@ -9,19 +9,23 @@ import (
 )
 
 type (
+	// SearchUsersUseCase input port
 	SearchUsersUseCase interface {
 		Execute(ctx context.Context, input SearchUsersInput) ([]SearchUsersOutput, error)
 	}
 
+	// SearchUsersInput input data
 	SearchUsersInput struct {
 		Email string `json:"email,omitempty"`
 		Name  string `json:"name,omitempty"`
 	}
 
+	// SearchUsersPresenter output port
 	SearchUsersPresenter interface {
 		Output([]*domain.User) []SearchUsersOutput
 	}
 
+	// SearchUsersOutput output data
 	SearchUsersOutput struct {
 		ID        uuid.UUID `json:"id"`
 		Name      string    `json:"name"`

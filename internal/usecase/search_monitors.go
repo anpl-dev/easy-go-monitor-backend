@@ -9,19 +9,23 @@ import (
 )
 
 type (
+	// SearchMonitorsUseCase input port
 	SearchMonitorsUseCase interface {
 		Execute(ctx context.Context, input SearchMonitorsInput) ([]SearchMonitorsOutput, error)
 	}
 
+	// SearchMonitorsInput input data
 	SearchMonitorsInput struct {
 		UserID uuid.UUID `json:"user_id,omitempty" `
 		Name   uuid.UUID `json:"name,omitempty" `
 	}
 
+	// SearchMonitorsPresenter output port
 	SearchMonitorsPresenter interface {
 		Output([]*domain.Monitor) []SearchMonitorsOutput
 	}
 
+	// SearchMonitorsOutput output data
 	SearchMonitorsOutput struct {
 		ID             uuid.UUID `json:"id"`
 		UserID         uuid.UUID `json:"user_id"`

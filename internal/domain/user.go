@@ -28,7 +28,7 @@ type (
 	}
 )
 
-// validation: User
+// NewUser creates a new User entity with validation
 func NewUser(name, email, passwordHash string) (*User, error) {
 	if name == "" {
 		return nil, errors.ErrInvalidUserName
