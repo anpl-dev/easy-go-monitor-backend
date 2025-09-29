@@ -52,8 +52,8 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 		input         CreateUserInput
 		repository    domain.UserRepository
 		presenter     CreateUserPresenter
-		expected      CreateUserOutput
-		expectedError error
+		want      CreateUserOutput
+		wantError error
 	}{
 		{
 			name: "success: create user",
@@ -75,14 +75,14 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 					UpdatedAt: user.UpdatedAt,
 				},
 			},
-			expected: CreateUserOutput{
+			want: CreateUserOutput{
 				ID:        user.ID,
 				Name:      user.Name,
 				Email:     user.Email,
 				CreatedAt: user.CreatedAt,
 				UpdatedAt: user.UpdatedAt,
 			},
-			expectedError: nil,
+			wantError: nil,
 		},
 		{
 			name: "error: missing name",
@@ -95,8 +95,8 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			presenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			expectedError: errors.ErrInvalidUserName,
-			expected:      CreateUserOutput{},
+			wantError: errors.ErrInvalidUserName,
+			want:      CreateUserOutput{},
 		},
 		{
 			name: "error: missing email",
@@ -109,8 +109,8 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			presenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			expectedError: errors.ErrInvalidEmail,
-			expected:      CreateUserOutput{},
+			wantError: errors.ErrInvalidEmail,
+			want:      CreateUserOutput{},
 		},
 		{
 			name: "error: missing password",
@@ -123,8 +123,8 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			presenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			expectedError: errors.ErrInvalidPassword,
-			expected:      CreateUserOutput{},
+			wantError: errors.ErrInvalidPassword,
+			want:      CreateUserOutput{},
 		},
 	}
 
@@ -132,17 +132,17 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			uc := NewCreateUserInteractor(tt.repository, tt.presenter)
 
-			result, err := uc.Execute(context.Background(), tt.input)
-			if tt.expectedError == nil {
+			got, err := uc.Execute(context.Background(), tt.input)
+			if tt.wantError == nil {
 				if err != nil {
 					t.Errorf("[TestCase '%s'] unexpected error: '%v'", tt.name, err)
 				}
-				if !reflect.DeepEqual(result, tt.expected) {
-					t.Errorf("[TestCase '%s'] Result: '%+v' | Expected: '%+v'", tt.name, result, tt.expected)
+				if !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("[TestCase '%s'] got: '%+v' , want: '%+v'", tt.name, got, tt.want)
 				}
 			} else {
-				if !errors.Is(err, tt.expectedError) {
-					t.Errorf("[TestCase '%s'] Result error: '%v' | Expected: '%v'", tt.name, err, tt.expectedError)
+				if !errors.Is(err, tt.wantError) {
+					t.Errorf("[TestCase '%s'] got error: '%v' , want: '%v'", tt.name, err, tt.wantError)
 				}
 			}
 		})

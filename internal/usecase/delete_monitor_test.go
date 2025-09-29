@@ -30,26 +30,26 @@ func TestDeleteMonitorInteractor_Execute(t *testing.T) {
 	}
 
 	tests := []struct {
-		name          string
-		input         DeleteMonitorInput
-		repository    domain.MonitorRepository
-		expectedError error
+		name       string
+		input      DeleteMonitorInput
+		repository domain.MonitorRepository
+		wantError  error
 	}{
 		{
 			name: "success: monitor deleted",
 			input: DeleteMonitorInput{
 				ID: monitor.ID,
 			},
-			repository:    mockMonitorRepoDelete{err: nil},
-			expectedError: nil,
+			repository: mockMonitorRepoDelete{err: nil},
+			wantError:  nil,
 		},
 		{
 			name: "error: monitor not deleted",
 			input: DeleteMonitorInput{
 				ID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 			},
-			repository:    mockMonitorRepoDelete{err: errors.ErrNotFound},
-			expectedError: errors.ErrNotFound,
+			repository: mockMonitorRepoDelete{err: errors.ErrNotFound},
+			wantError:  errors.ErrNotFound,
 		},
 	}
 
@@ -58,13 +58,13 @@ func TestDeleteMonitorInteractor_Execute(t *testing.T) {
 			uc := NewDeleteMonitorInteractor(tt.repository)
 
 			err := uc.Execute(context.Background(), tt.input)
-			if tt.expectedError == nil {
+			if tt.wantError == nil {
 				if err != nil {
 					t.Errorf("[TestCase '%s'] unexpected error: %v", tt.name, err)
 				}
 			} else {
-				if !errors.Is(err, tt.expectedError) {
-					t.Errorf("[TestCase '%s'] Result error: '%v', Expected: '%v'", tt.name, err, tt.expectedError)
+				if !errors.Is(err, tt.wantError) {
+					t.Errorf("[TestCase '%s'] got error: '%v', want: '%v'", tt.name, err, tt.wantError)
 				}
 			}
 		})

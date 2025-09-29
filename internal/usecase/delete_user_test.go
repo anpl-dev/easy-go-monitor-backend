@@ -33,7 +33,7 @@ func TestDeleteUserInteractor_Execute(t *testing.T) {
 		name          string
 		input         DeleteUserInput
 		repository    domain.UserRepository
-		expectedError error
+		wantError error
 	}{
 		{
 			name: "success: user deleted",
@@ -41,7 +41,7 @@ func TestDeleteUserInteractor_Execute(t *testing.T) {
 				ID: user.ID,
 			},
 			repository:    mockUserRepoDelete{err: nil},
-			expectedError: nil,
+			wantError: nil,
 		},
 		{
 			name: "error: user not deleted",
@@ -49,7 +49,7 @@ func TestDeleteUserInteractor_Execute(t *testing.T) {
 				ID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 			},
 			repository:    mockUserRepoDelete{err: errors.ErrNotFound},
-			expectedError: errors.ErrNotFound,
+			wantError: errors.ErrNotFound,
 		},
 	}
 
@@ -58,13 +58,13 @@ func TestDeleteUserInteractor_Execute(t *testing.T) {
 			uc := NewDeleteUserInteractor(tt.repository)
 
 			err := uc.Execute(context.Background(), tt.input)
-			if tt.expectedError == nil {
+			if tt.wantError == nil {
 				if err != nil {
 					t.Errorf("[TestCase '%s'] unexpected error: %v", tt.name, err)
 				}
 			} else {
-				if !errors.Is(err, tt.expectedError) {
-					t.Errorf("[TestCase '%s'] Result error: '%v', Expected: '%v'", tt.name, err, tt.expectedError)
+				if !errors.Is(err, tt.wantError) {
+					t.Errorf("[TestCase '%s'] got error: '%v', want: '%v'", tt.name, err, tt.wantError)
 				}
 			}
 		})

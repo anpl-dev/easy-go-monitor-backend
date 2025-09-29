@@ -53,8 +53,8 @@ func TestSearchMonitorsInteractor_Execute(t *testing.T) {
 		input         SearchMonitorsInput
 		repository    domain.MonitorRepository
 		presenter     SearchMonitorsPresenter
-		expected      []SearchMonitorsOutput
-		expectedError error
+		want      []SearchMonitorsOutput
+		wantError error
 	}{
 		{
 			name: "success: monitors found",
@@ -78,7 +78,7 @@ func TestSearchMonitorsInteractor_Execute(t *testing.T) {
 					},
 				},
 			},
-			expected: []SearchMonitorsOutput{
+			want: []SearchMonitorsOutput{
 				{
 					ID:             monitor.ID,
 					UserID:         monitor.UserID,
@@ -89,7 +89,7 @@ func TestSearchMonitorsInteractor_Execute(t *testing.T) {
 					UpdatedAt:      monitor.UpdatedAt,
 				},
 			},
-			expectedError: nil,
+			wantError: nil,
 		},
 		{
 			name:  "error: monitor not found",
@@ -99,8 +99,8 @@ func TestSearchMonitorsInteractor_Execute(t *testing.T) {
 				err:    errors.ErrNotFound,
 			},
 			presenter:     mockSearchMonitorsPresenter{},
-			expected:      nil,
-			expectedError: errors.ErrNotFound,
+			want:      nil,
+			wantError: errors.ErrNotFound,
 		},
 	}
 
@@ -108,17 +108,17 @@ func TestSearchMonitorsInteractor_Execute(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			uc := NewSearchMonitorsInteractor(tt.repository, tt.presenter)
 
-			result, err := uc.Execute(context.Background(), tt.input)
-			if tt.expectedError == nil {
+			got, err := uc.Execute(context.Background(), tt.input)
+			if tt.wantError == nil {
 				if err != nil {
-					t.Errorf("[TestCase '%s'] unexpected error: %v", tt.name, err)
+					t.Errorf("[TestCase '%s'] unwant error: %v", tt.name, err)
 				}
-				if !reflect.DeepEqual(result, tt.expected) {
-					t.Errorf("[TestCase '%s'] Result: '%+v' | Expected: '%+v'", tt.name, result, tt.expected)
+				if !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("[TestCase '%s'] got: '%+v' , want: '%+v'", tt.name, got, tt.want)
 				}
 			} else {
-				if !errors.Is(err, tt.expectedError) {
-					t.Errorf("[TestCase '%s'] Result error: '%v' | Expected: '%v'", tt.name, err, tt.expectedError)
+				if !errors.Is(err, tt.wantError) {
+					t.Errorf("[TestCase '%s'] got error: '%v' , want: '%v'", tt.name, err, tt.wantError)
 				}
 			}
 		})

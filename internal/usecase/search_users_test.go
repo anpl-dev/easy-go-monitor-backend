@@ -52,8 +52,8 @@ func TestSearchUsersInteractor_Execute(t *testing.T) {
 		input         SearchUsersInput
 		repository    domain.UserRepository
 		presenter     SearchUsersPresenter
-		expected      []SearchUsersOutput
-		expectedError error
+		want      []SearchUsersOutput
+		wantError error
 	}{
 		{
 			name: "success: user found",
@@ -76,7 +76,7 @@ func TestSearchUsersInteractor_Execute(t *testing.T) {
 					},
 				},
 			},
-			expected: []SearchUsersOutput{
+			want: []SearchUsersOutput{
 				{
 					ID:        user.ID,
 					Name:      user.Name,
@@ -85,7 +85,7 @@ func TestSearchUsersInteractor_Execute(t *testing.T) {
 					UpdatedAt: user.UpdatedAt,
 				},
 			},
-			expectedError: nil,
+			wantError: nil,
 		},
 		{
 			name: "error: user not found",
@@ -97,8 +97,8 @@ func TestSearchUsersInteractor_Execute(t *testing.T) {
 				err:    errors.ErrNotFound,
 			},
 			presenter:     mockSearchUsersPresenter{},
-			expected:      nil,
-			expectedError: errors.ErrNotFound,
+			want:      nil,
+			wantError: errors.ErrNotFound,
 		},
 	}
 
@@ -106,17 +106,17 @@ func TestSearchUsersInteractor_Execute(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			uc := NewSearchUsersInteractor(tt.repository, tt.presenter)
 
-			result, err := uc.Execute(context.Background(), tt.input)
-			if tt.expectedError == nil {
+			got, err := uc.Execute(context.Background(), tt.input)
+			if tt.wantError == nil {
 				if err != nil {
 					t.Errorf("[TestCase '%s'] unexpected error: %v", tt.name, err)
 				}
-				if !reflect.DeepEqual(result, tt.expected) {
-					t.Errorf("[TestCase '%s'] Result: '%+v' | Expected: '%+v'", tt.name, result, tt.expected)
+				if !reflect.DeepEqual(got, tt.want) {
+					t.Errorf("[TestCase '%s'] got: '%+v' , want: '%+v'", tt.name, got, tt.want)
 				}
 			} else {
-				if !errors.Is(err, tt.expectedError) {
-					t.Errorf("[TestCase '%s'] Result error: '%v' | Expected: '%v'", tt.name, err, tt.expectedError)
+				if !errors.Is(err, tt.wantError) {
+					t.Errorf("[TestCase '%s'] got error: '%v' , want: '%v'", tt.name, err, tt.wantError)
 				}
 			}
 		})
