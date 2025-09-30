@@ -34,21 +34,21 @@ func TestCreateUserHandler_Execute(t *testing.T) {
 		"password_hash": "hashedPass",
 	})
 
-	expected := usecase.CreateUserOutput{
+	want := usecase.CreateUserOutput{
 		ID:           uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:         "Alice",
 		Email:        "alice@example.com",
 		PasswordHash: "hashedPass",
-		CreatedAt:    time.Now(),
-		UpdatedAt:    time.Now(),
+		CreatedAt:    time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
+		UpdatedAt:    time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
 	}
 
 	tests := []struct {
-		name               string
-		rawPayload         []byte
-		ucMock             usecase.CreateUserUseCase
-		expectedStatusCode int
-		expectedBody       usecase.CreateUserOutput
+		name           string
+		rawPayload     []byte
+		ucMock         usecase.CreateUserUseCase
+		wantStatusCode int
+		wantBody       usecase.CreateUserOutput
 	}{
 		{
 			name:       "success: create user handler",
@@ -59,13 +59,13 @@ func TestCreateUserHandler_Execute(t *testing.T) {
 					Name:         "Alice",
 					Email:        "alice@example.com",
 					PasswordHash: "hashedPass",
-					CreatedAt:    time.Now(),
-					UpdatedAt:    time.Now(),
+					CreatedAt:    time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
+					UpdatedAt:    time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
 				},
 				err: nil,
 			},
-			expectedStatusCode: http.StatusCreated,
-			expectedBody:       expected,
+			wantStatusCode: http.StatusCreated,
+			wantBody:       want,
 		},
 	}
 
@@ -80,13 +80,13 @@ func TestCreateUserHandler_Execute(t *testing.T) {
 			h := NewCreateUserHandler(tt.ucMock)
 			h.Handle(c)
 
-			if w.Code != tt.expectedStatusCode {
-				t.Errorf("[%s] status code: got %v, want %v", tt.name, w.Code, tt.expectedStatusCode)
+			if w.Code != tt.wantStatusCode {
+				t.Errorf("[%s] status code: got %v, want %v", tt.name, w.Code, tt.wantStatusCode)
 			}
 
-			expectedJSON, _ := json.Marshal(expected)
+			wantJSON, _ := json.Marshal(want)
 
-			assert.JSONEq(t, string(expectedJSON), w.Body.String())
+			assert.JSONEq(t, string(wantJSON), w.Body.String())
 		})
 	}
 }
