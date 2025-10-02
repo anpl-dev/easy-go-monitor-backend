@@ -45,7 +45,7 @@ func TestFindMonitorByIDHandler_Execute(t *testing.T) {
 		wantBody       usecase.FindMonitorByIDOutput
 	}{
 		{
-			name:     "success: find monitor by id handler",
+			name:     "success: find monitor by id",
 			targetID: "11111111-1111-1111-1111-111111111111",
 			ucMock: &mockFindMonitorByIDUC{
 				result: usecase.FindMonitorByIDOutput{

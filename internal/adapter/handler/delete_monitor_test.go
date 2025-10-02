@@ -29,7 +29,7 @@ func TestDeleteMonitorHandler_Execute(t *testing.T) {
 		wantStatusCode int
 	}{
 		{
-			name:           "success: delete monitor handler",
+			name:           "success: delete monitor",
 			targetID:       "11111111-1111-1111-1111-111111111111",
 			ucMock:         &mockDeleteMonitorUC{err: nil},
 			wantStatusCode: http.StatusNoContent,

@@ -29,7 +29,7 @@ func TestDeleteUserHandler_Execute(t *testing.T) {
 		wantStatusCode int
 	}{
 		{
-			name:           "success: delete user handler",
+			name:           "success: delete user",
 			targetID:       "11111111-1111-1111-1111-111111111111",
 			ucMock:         &mockDeleteUserUC{err: nil},
 			wantStatusCode: http.StatusNoContent,

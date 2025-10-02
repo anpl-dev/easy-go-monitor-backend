@@ -51,7 +51,7 @@ func TestCreateUserHandler_Execute(t *testing.T) {
 		wantBody       usecase.CreateUserOutput
 	}{
 		{
-			name:       "success: create user handler",
+			name:       "success: create user",
 			rawPayload: payload,
 			ucMock: &mockCreateUserUC{
 				result: usecase.CreateUserOutput{

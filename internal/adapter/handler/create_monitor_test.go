@@ -53,7 +53,7 @@ func TestCreateMonitorHandler_Execute(t *testing.T) {
 		wantBody       usecase.CreateMonitorOutput
 	}{
 		{
-			name:       "success: create user handler",
+			name:       "success: create user",
 			rawPayload: payload,
 			ucMock: &mockCreateMonitorUC{
 				result: usecase.CreateMonitorOutput{
@@ -74,21 +74,21 @@ func TestCreateMonitorHandler_Execute(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			r := gin.Default()
+			h := NewCreateMonitorHandler(tt.ucMock)
+			r.POST("/monitors", h.Handle)
+
 			req := httptest.NewRequest(http.MethodPost, "/monitors", bytes.NewBuffer(tt.rawPayload))
 			req.Header.Set("Content-Type", "application/json")
 			w := httptest.NewRecorder()
-			c, _ := gin.CreateTestContext(w)
-			c.Request = req
 
-			h := NewCreateMonitorHandler(tt.ucMock)
-			h.Handle(c)
+			r.ServeHTTP(w, req)
 
 			if w.Code != tt.wantStatusCode {
 				t.Errorf("[%s] status code: got %v, want %v", tt.name, w.Code, tt.wantStatusCode)
 			}
 
-			wantJSON, _ := json.Marshal(want)
-
+			wantJSON, _ := json.Marshal(tt.wantBody)
 			assert.JSONEq(t, string(wantJSON), w.Body.String())
 		})
 	}
