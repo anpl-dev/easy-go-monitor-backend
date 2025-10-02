@@ -74,7 +74,7 @@ func TestCreateMonitorHandler_Execute(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			req := httptest.NewRequest(http.MethodPost, "/users", bytes.NewBuffer(tt.rawPayload))
+			req := httptest.NewRequest(http.MethodPost, "/monitors", bytes.NewBuffer(tt.rawPayload))
 			req.Header.Set("Content-Type", "application/json")
 			w := httptest.NewRecorder()
 			c, _ := gin.CreateTestContext(w)
