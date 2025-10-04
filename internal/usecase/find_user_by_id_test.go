@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"reflect"
 	"testing"
 	"time"
 
@@ -10,6 +9,7 @@ import (
 	"go-monitor-tool/internal/errors"
 
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
 )
 
 // --- Mock Repository ---
@@ -37,7 +37,7 @@ func (m mockFindUserByIDPresenter) Output(_ *domain.User) FindUserByIDOutput {
 func TestFindUserByIDInteractor_Execute(t *testing.T) {
 	t.Parallel()
 
-	now := time.Now()
+	now := time.Date(2025, 4, 1, 0, 0, 0, 0, time.UTC)
 	user := &domain.User{
 		ID:           uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:         "Alice",
@@ -50,21 +50,20 @@ func TestFindUserByIDInteractor_Execute(t *testing.T) {
 	tests := []struct {
 		name          string
 		input         FindUserByIDInput
-		repository    domain.UserRepository
-		presenter     FindUserByIDPresenter
-		want      FindUserByIDOutput
-		wantError error
+		mockRepo      mockUserRepoFindByID
+		mockPresenter mockFindUserByIDPresenter
+		wantError     error
 	}{
 		{
 			name: "success: user found",
 			input: FindUserByIDInput{
 				ID: user.ID,
 			},
-			repository: mockUserRepoFindByID{
+			mockRepo: mockUserRepoFindByID{
 				result: user,
 				err:    nil,
 			},
-			presenter: mockFindUserByIDPresenter{
+			mockPresenter: mockFindUserByIDPresenter{
 				result: FindUserByIDOutput{
 					ID:        user.ID,
 					Name:      user.Name,
@@ -73,13 +72,6 @@ func TestFindUserByIDInteractor_Execute(t *testing.T) {
 					UpdatedAt: user.UpdatedAt,
 				},
 			},
-			want: FindUserByIDOutput{
-				ID:        user.ID,
-				Name:      user.Name,
-				Email:     user.Email,
-				CreatedAt: user.CreatedAt,
-				UpdatedAt: user.UpdatedAt,
-			},
 			wantError: nil,
 		},
 		{
@@ -87,32 +79,25 @@ func TestFindUserByIDInteractor_Execute(t *testing.T) {
 			input: FindUserByIDInput{
 				ID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 			},
-			repository: mockUserRepoFindByID{
+			mockRepo: mockUserRepoFindByID{
 				result: nil,
 				err:    errors.ErrNotFound,
 			},
-			presenter:     mockFindUserByIDPresenter{},
-			want:      FindUserByIDOutput{},
-			wantError: errors.ErrNotFound,
+			mockPresenter: mockFindUserByIDPresenter{},
+			wantError:     errors.ErrNotFound,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			uc := NewFindUserByIDInteractor(tt.repository, tt.presenter)
-
+			uc := NewFindUserByIDInteractor(&tt.mockRepo, &tt.mockPresenter)
 			got, err := uc.Execute(context.Background(), tt.input)
-			if tt.wantError == nil {
-				if err != nil {
-					t.Errorf("[TestCase '%s'] Unexpected error: %v", tt.name, err)
-				}
-				if !reflect.DeepEqual(got, tt.want) {
-					t.Errorf("[TestCase '%s'] Got: '%+v' , Want: '%+v'", tt.name, got, tt.want)
-				}
+
+			if tt.wantError != nil {
+				require.ErrorIs(t, err, tt.wantError, "[%s] unexpected err", tt.name)
 			} else {
-				if !errors.Is(err, tt.wantError) {
-					t.Errorf("[TestCase '%s'] Got error: '%v' , Want: '%v'", tt.name, err, tt.wantError)
-				}
+				require.NoError(t, err, "[%s] unexpected err", tt.name)
+				require.Equal(t, tt.mockPresenter.result, got, "[%s] result mismatch", tt.name)
 			}
 		})
 	}

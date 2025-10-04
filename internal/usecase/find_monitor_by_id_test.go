@@ -37,7 +37,7 @@ func (m mockFindMonitorByIDPresenter) Output(_ *domain.Monitor) FindMonitorByIDO
 func TestFindMonitorByIDInteractor_Execute(t *testing.T) {
 	t.Parallel()
 
-	now := time.Now()
+	now := time.Date(2025, 4, 1, 0, 0, 0, 0, time.UTC)
 	monitor := &domain.Monitor{
 		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
@@ -102,7 +102,6 @@ func TestFindMonitorByIDInteractor_Execute(t *testing.T) {
 				require.NoError(t, err, "[%s] unexpected err", tt.name)
 				require.Equal(t, tt.mockPresenter.result, got, "[%s] result mismatch", tt.name)
 			}
-
 		})
 	}
 }

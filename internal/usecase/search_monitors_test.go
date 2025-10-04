@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"reflect"
 	"testing"
 	"time"
 
@@ -10,6 +9,7 @@ import (
 	"go-monitor-tool/internal/errors"
 
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
 )
 
 // --- Mock Repository ---
@@ -37,7 +37,7 @@ func (m mockSearchMonitorsPresenter) Output(_ []*domain.Monitor) []SearchMonitor
 func TestSearchMonitorsInteractor_Execute(t *testing.T) {
 	t.Parallel()
 
-	now := time.Now()
+	now := time.Date(2025, 4, 1, 0, 0, 0, 0, time.UTC)
 	monitor := &domain.Monitor{
 		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
@@ -49,23 +49,22 @@ func TestSearchMonitorsInteractor_Execute(t *testing.T) {
 	}
 
 	tests := []struct {
-		name       string
-		input      SearchMonitorsInput
-		repository domain.MonitorRepository
-		presenter  SearchMonitorsPresenter
-		want       []SearchMonitorsOutput
-		wantError  error
+		name          string
+		input         SearchMonitorsInput
+		mockRepo      mockMonitorRepoSearch
+		mockPresenter mockSearchMonitorsPresenter
+		wantError     error
 	}{
 		{
 			name: "success: monitors found",
 			input: SearchMonitorsInput{
 				UserID: "11111111-1111-1111-1111-111111111111",
 			},
-			repository: mockMonitorRepoSearch{
+			mockRepo: mockMonitorRepoSearch{
 				result: []*domain.Monitor{monitor},
 				err:    nil,
 			},
-			presenter: mockSearchMonitorsPresenter{
+			mockPresenter: mockSearchMonitorsPresenter{
 				result: []SearchMonitorsOutput{
 					{
 						ID:             monitor.ID,
@@ -78,17 +77,6 @@ func TestSearchMonitorsInteractor_Execute(t *testing.T) {
 					},
 				},
 			},
-			want: []SearchMonitorsOutput{
-				{
-					ID:             monitor.ID,
-					UserID:         monitor.UserID,
-					Name:           monitor.Name,
-					URL:            monitor.URL,
-					IntervalSecond: monitor.IntervalSecond,
-					CreatedAt:      monitor.CreatedAt,
-					UpdatedAt:      monitor.UpdatedAt,
-				},
-			},
 			wantError: nil,
 		},
 		{
@@ -96,32 +84,25 @@ func TestSearchMonitorsInteractor_Execute(t *testing.T) {
 			input: SearchMonitorsInput{
 				UserID: "11111111-1111-1111-1111-111111111111",
 			},
-			repository: mockMonitorRepoSearch{
+			mockRepo: mockMonitorRepoSearch{
 				result: nil,
 				err:    errors.ErrNotFound,
 			},
-			presenter: mockSearchMonitorsPresenter{},
-			want:      nil,
-			wantError: errors.ErrNotFound,
+			mockPresenter: mockSearchMonitorsPresenter{},
+			wantError:     errors.ErrNotFound,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			uc := NewSearchMonitorsInteractor(tt.repository, tt.presenter)
-
+			uc := NewSearchMonitorsInteractor(&tt.mockRepo, &tt.mockPresenter)
 			got, err := uc.Execute(context.Background(), tt.input)
-			if tt.wantError == nil {
-				if err != nil {
-					t.Errorf("[TestCase '%s'] Unexpected error: %v", tt.name, err)
-				}
-				if !reflect.DeepEqual(got, tt.want) {
-					t.Errorf("[TestCase '%s'] Got: '%+v' , Want: '%+v'", tt.name, got, tt.want)
-				}
+
+			if tt.wantError != nil {
+				require.ErrorIs(t, err, tt.wantError, "[%s] unexpected err", tt.name)
 			} else {
-				if !errors.Is(err, tt.wantError) {
-					t.Errorf("[TestCase '%s'] Got error: '%v' , Want: '%v'", tt.name, err, tt.wantError)
-				}
+				require.NoError(t, err, "[%s] unexpected err", tt.name)
+				require.Equal(t, tt.mockPresenter.result, got, "[%s] result mismatch", tt.name)
 			}
 		})
 	}

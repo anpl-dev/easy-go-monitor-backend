@@ -37,7 +37,7 @@ func (m mockCreateUserPresenter) Output(_ *domain.User) CreateUserOutput {
 func TestCreateUserInteractor_Execute(t *testing.T) {
 	t.Parallel()
 
-	now := time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local)
+	now := time.Date(2025, 4, 1, 0, 0, 0, 0, time.UTC)
 	hashed, _ := domain.HashedPassword("plainPassword")
 
 	tests := []struct {

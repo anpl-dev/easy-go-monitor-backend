@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"reflect"
 	"testing"
 	"time"
 
@@ -10,6 +9,7 @@ import (
 	"go-monitor-tool/internal/errors"
 
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
 )
 
 // --- Mock Repository ---
@@ -37,7 +37,7 @@ func (m mockSearchUsersPresenter) Output(_ []*domain.User) []SearchUsersOutput {
 func TestSearchUsersInteractor_Execute(t *testing.T) {
 	t.Parallel()
 
-	now := time.Now()
+	now := time.Date(2025, 4, 1, 0, 0, 0, 0, time.UTC)
 	user := &domain.User{
 		ID:           uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:         "Alice",
@@ -50,10 +50,9 @@ func TestSearchUsersInteractor_Execute(t *testing.T) {
 	tests := []struct {
 		name          string
 		input         SearchUsersInput
-		repository    domain.UserRepository
-		presenter     SearchUsersPresenter
-		want      []SearchUsersOutput
-		wantError error
+		mockRepo      mockUserRepoSearch
+		mockPresenter mockSearchUsersPresenter
+		wantError     error
 	}{
 		{
 			name: "success: user found",
@@ -61,11 +60,11 @@ func TestSearchUsersInteractor_Execute(t *testing.T) {
 				Email: user.Email,
 				Name:  user.Name,
 			},
-			repository: mockUserRepoSearch{
+			mockRepo: mockUserRepoSearch{
 				result: user,
 				err:    nil,
 			},
-			presenter: mockSearchUsersPresenter{
+			mockPresenter: mockSearchUsersPresenter{
 				result: []SearchUsersOutput{
 					{
 						ID:        user.ID,
@@ -76,15 +75,6 @@ func TestSearchUsersInteractor_Execute(t *testing.T) {
 					},
 				},
 			},
-			want: []SearchUsersOutput{
-				{
-					ID:        user.ID,
-					Name:      user.Name,
-					Email:     user.Email,
-					CreatedAt: user.CreatedAt,
-					UpdatedAt: user.UpdatedAt,
-				},
-			},
 			wantError: nil,
 		},
 		{
@@ -92,32 +82,25 @@ func TestSearchUsersInteractor_Execute(t *testing.T) {
 			input: SearchUsersInput{
 				Email: "dummy@example.com",
 			},
-			repository: mockUserRepoSearch{
+			mockRepo: mockUserRepoSearch{
 				result: nil,
 				err:    errors.ErrNotFound,
 			},
-			presenter:     mockSearchUsersPresenter{},
-			want:      nil,
-			wantError: errors.ErrNotFound,
+			mockPresenter: mockSearchUsersPresenter{},
+			wantError:     errors.ErrNotFound,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			uc := NewSearchUsersInteractor(tt.repository, tt.presenter)
-
+			uc := NewSearchUsersInteractor(&tt.mockRepo, &tt.mockPresenter)
 			got, err := uc.Execute(context.Background(), tt.input)
-			if tt.wantError == nil {
-				if err != nil {
-					t.Errorf("[TestCase '%s'] Unexpected error: %v", tt.name, err)
-				}
-				if !reflect.DeepEqual(got, tt.want) {
-					t.Errorf("[TestCase '%s'] Got: '%+v' , Want: '%+v'", tt.name, got, tt.want)
-				}
+
+			if tt.wantError != nil {
+				require.ErrorIs(t, err, tt.wantError, "[%s] unexpected err", tt.name)
 			} else {
-				if !errors.Is(err, tt.wantError) {
-					t.Errorf("[TestCase '%s'] Got error: '%v' , Want: '%v'", tt.name, err, tt.wantError)
-				}
+				require.NoError(t, err, "[%s] unexpected err", tt.name)
+				require.Equal(t, tt.mockPresenter.result, got, "[%s] result mismatch", tt.name)
 			}
 		})
 	}
