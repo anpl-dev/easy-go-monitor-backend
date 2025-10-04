@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"reflect"
 	"testing"
 	"time"
 
@@ -10,6 +9,7 @@ import (
 	"go-monitor-tool/internal/errors"
 
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
 )
 
 // --- Mock Repository ---
@@ -37,113 +37,100 @@ func (m mockCreateUserPresenter) Output(_ *domain.User) CreateUserOutput {
 func TestCreateUserInteractor_Execute(t *testing.T) {
 	t.Parallel()
 
-	now := time.Now()
-	user := &domain.User{
-		ID:           uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-		Name:         "Alice",
-		Email:        "alice@example.com",
-		PasswordHash: "hashedPass",
-		CreatedAt:    now,
-		UpdatedAt:    now,
-	}
+	now := time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local)
+	hashed, _ := domain.HashedPassword("plainPassword")
 
 	tests := []struct {
-		name          string
-		input         CreateUserInput
-		repository    domain.UserRepository
-		presenter     CreateUserPresenter
-		want      CreateUserOutput
+		name      string
+		input     CreateUserInput
+		mockRepo  mockUserRepoCreate
+		presenter mockCreateUserPresenter
 		wantError error
 	}{
 		{
 			name: "success: create user",
 			input: CreateUserInput{
-				Name:         "Alice",
-				Email:        "alice@example.com",
-				PasswordHash: "hashedPass",
+				Name:     "Alice",
+				Email:    "alice@example.com",
+				Password: "plainPassword",
 			},
-			repository: mockUserRepoCreate{
-				result: user,
-				err:    nil,
+			mockRepo: mockUserRepoCreate{
+				result: &domain.User{
+					ID:           uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+					Name:         "Alice",
+					Email:        "alice@example.com",
+					PasswordHash: hashed,
+					CreatedAt:    now,
+					UpdatedAt:    now,
+				},
+				err: nil,
 			},
 			presenter: mockCreateUserPresenter{
 				result: CreateUserOutput{
-					ID:        user.ID,
-					Name:      user.Name,
-					Email:     user.Email,
-					CreatedAt: user.CreatedAt,
-					UpdatedAt: user.UpdatedAt,
+					ID:           uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+					Name:         "Alice",
+					Email:        "alice@example.com",
+					CreatedAt:    now,
+					UpdatedAt:    now,
 				},
-			},
-			want: CreateUserOutput{
-				ID:        user.ID,
-				Name:      user.Name,
-				Email:     user.Email,
-				CreatedAt: user.CreatedAt,
-				UpdatedAt: user.UpdatedAt,
 			},
 			wantError: nil,
 		},
 		{
 			name: "error: missing name",
 			input: CreateUserInput{
-				Name:         "",
-				Email:        "alice@exampel.com",
-				PasswordHash: "hashedPass",
+				Name:     "",
+				Email:    "alice@exampel.com",
+				Password: "plainPassword",
 			},
-			repository: mockUserRepoCreate{},
+			mockRepo: mockUserRepoCreate{},
 			presenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
 			wantError: errors.ErrInvalidUserName,
-			want:      CreateUserOutput{},
 		},
 		{
-			name: "error: missing email",
+			name: "error - missing email",
 			input: CreateUserInput{
-				Name:         "Alice",
-				Email:        "",
-				PasswordHash: "hashedPass",
+				Name:     "Alice",
+				Email:    "",
+				Password: "plainPassword",
 			},
-			repository: mockUserRepoCreate{},
+			mockRepo: mockUserRepoCreate{},
 			presenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
 			wantError: errors.ErrInvalidEmail,
-			want:      CreateUserOutput{},
 		},
 		{
 			name: "error: missing password",
 			input: CreateUserInput{
-				Name:         "Alice",
-				Email:        "alice@example.com",
-				PasswordHash: "",
+				Name:     "Alice",
+				Email:    "alice@example.com",
+				Password: "",
 			},
-			repository: mockUserRepoCreate{},
+			mockRepo: mockUserRepoCreate{},
 			presenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
 			wantError: errors.ErrInvalidPassword,
-			want:      CreateUserOutput{},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			uc := NewCreateUserInteractor(tt.repository, tt.presenter)
-
+			uc := NewCreateUserInteractor(&tt.mockRepo, tt.presenter)
 			got, err := uc.Execute(context.Background(), tt.input)
+
 			if tt.wantError == nil {
-				if err != nil {
-					t.Errorf("[TestCase '%s'] Unexpected error: '%v'", tt.name, err)
-				}
-				if !reflect.DeepEqual(got, tt.want) {
-					t.Errorf("[TestCase '%s'] Got: '%+v' , Want: '%+v'", tt.name, got, tt.want)
-				}
+				require.NoError(t, err, "[%s] unexpected error", tt.name)
+				require.Equal(t, tt.presenter.result, got, "[%s] output mismatch", tt.name)
+
+				// check hashed password
+				require.True(t, domain.CheckPasswordHash(tt.input.Password, tt.mockRepo.result.PasswordHash),
+					"[%s] password hash mismatch", tt.name)
 			} else {
-				if !errors.Is(err, tt.wantError) {
-					t.Errorf("[TestCase '%s'] Got error: '%v' , Want: '%v'", tt.name, err, tt.wantError)
-				}
+				require.ErrorIs(t, err, tt.wantError, "[%s] error mismatch", tt.name)
 			}
 		})
 	}

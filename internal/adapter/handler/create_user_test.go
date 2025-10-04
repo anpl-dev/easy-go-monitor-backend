@@ -29,18 +29,17 @@ func TestCreateUserHandler_Execute(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
 	payload, _ := json.Marshal(map[string]string{
-		"name":          "Alice",
-		"email":         "alice@example.com",
-		"password_hash": "hashedPass",
+		"name":     "Alice",
+		"email":    "alice@example.com",
+		"password": "plainPassword",
 	})
 
 	want := usecase.CreateUserOutput{
-		ID:           uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-		Name:         "Alice",
-		Email:        "alice@example.com",
-		PasswordHash: "hashedPass",
-		CreatedAt:    time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
-		UpdatedAt:    time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
+		ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+		Name:      "Alice",
+		Email:     "alice@example.com",
+		CreatedAt: time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
+		UpdatedAt: time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
 	}
 
 	tests := []struct {

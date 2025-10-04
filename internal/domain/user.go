@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type (
@@ -29,21 +30,35 @@ type (
 )
 
 // NewUser creates a new User entity with validation
-func NewUser(name, email, passwordHash string) (*User, error) {
+func NewUser(name, email, plainPassword string) (*User, error) {
 	if name == "" {
 		return nil, errors.ErrInvalidUserName
 	}
 	if !strings.Contains(email, "@") {
 		return nil, errors.ErrInvalidEmail
 	}
-	if passwordHash == "" {
+	if plainPassword == "" {
 		return nil, errors.ErrInvalidPassword
+	}
+
+	hashed, err := HashedPassword(plainPassword)
+	if err != nil {
+		return nil, err
 	}
 
 	return &User{
 		ID:           uuid.New(),
 		Name:         name,
 		Email:        email,
-		PasswordHash: passwordHash,
+		PasswordHash: hashed,
 	}, nil
+}
+
+func HashedPassword(plain string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(plain), bcrypt.DefaultCost)
+	return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) == nil
 }

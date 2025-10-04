@@ -16,9 +16,9 @@ type (
 
 	// CreateUserInput input data
 	CreateUserInput struct {
-		Name         string `json:"name" binding:"required"`
-		Email        string `json:"email" binding:"required"`
-		PasswordHash string `json:"password_hash" binding:"required"`
+		Name     string `json:"name" binding:"required"`
+		Email    string `json:"email" binding:"required"`
+		Password string `json:"password" binding:"required"`
 	}
 	// CreateUserPresenter output port
 	CreateUserPresenter interface {
@@ -30,7 +30,6 @@ type (
 		ID           uuid.UUID `json:"id"`
 		Name         string    `json:"name"`
 		Email        string    `json:"email"`
-		PasswordHash string    `json:"password_hash"`
 		CreatedAt    time.Time `json:"created_at"`
 		UpdatedAt    time.Time `json:"updated_at"`
 	}
@@ -55,11 +54,12 @@ func (i *createUserIteractor) Execute(ctx context.Context, input CreateUserInput
 	user, err := domain.NewUser(
 		input.Name,
 		input.Email,
-		input.PasswordHash,
+		input.Password,
 	)
 	if err != nil {
 		return CreateUserOutput{}, err
 	}
+
 	created, err := i.repo.Create(ctx, *user)
 	if err != nil {
 		return CreateUserOutput{}, err
