@@ -48,7 +48,7 @@ func TestDeleteUserHandler_Execute(t *testing.T) {
 			r.ServeHTTP(w, req)
 
 			if w.Code != tt.wantStatusCode {
-				t.Errorf("[%s] status code: got %v, want %v", tt.name, w.Code, tt.wantStatusCode)
+				t.Errorf("[TestCase %s] status code: Got %v, Want %v", tt.name, w.Code, tt.wantStatusCode)
 			}
 		})
 	}

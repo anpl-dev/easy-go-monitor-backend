@@ -3,7 +3,6 @@ package presenter
 import (
 	"go-monitor-tool/internal/domain"
 	"go-monitor-tool/internal/usecase"
-	"reflect"
 	"testing"
 	"time"
 
@@ -40,10 +39,8 @@ func TestCreateUserPresenter_Output(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			presenter := NewCreateUserPresenter()
-			if got := presenter.Output(&tt.args); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("[TestCase '%s'] Got: '%+v' | Want: '%+v'", tt.name, got, tt.want)
-			}
+			p := NewCreateUserPresenter()
+			got := p.Output(&tt.args)
 			assert.Equal(t, tt.want, got, "[TestCase '%s'] Got: '%+v' | Want: '%+v'")
 		})
 	}
