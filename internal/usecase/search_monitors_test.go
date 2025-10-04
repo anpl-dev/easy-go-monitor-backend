@@ -113,14 +113,14 @@ func TestSearchMonitorsInteractor_Execute(t *testing.T) {
 			got, err := uc.Execute(context.Background(), tt.input)
 			if tt.wantError == nil {
 				if err != nil {
-					t.Errorf("[TestCase '%s'] unwant error: %v", tt.name, err)
+					t.Errorf("[TestCase '%s'] Unexpected error: %v", tt.name, err)
 				}
 				if !reflect.DeepEqual(got, tt.want) {
-					t.Errorf("[TestCase '%s'] got: '%+v' , want: '%+v'", tt.name, got, tt.want)
+					t.Errorf("[TestCase '%s'] Got: '%+v' , Want: '%+v'", tt.name, got, tt.want)
 				}
 			} else {
 				if !errors.Is(err, tt.wantError) {
-					t.Errorf("[TestCase '%s'] got error: '%v' , want: '%v'", tt.name, err, tt.wantError)
+					t.Errorf("[TestCase '%s'] Got error: '%v' , Want: '%v'", tt.name, err, tt.wantError)
 				}
 			}
 		})

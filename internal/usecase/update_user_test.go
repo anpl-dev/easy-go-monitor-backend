@@ -103,16 +103,16 @@ func TestUpdateUserInteractor_Execute(t *testing.T) {
 
 			if tt.expectedError == nil {
 				if err != nil {
-					t.Errorf("[TestCase '%s'] unexpected error: %v", tt.name, err)
+					t.Errorf("[TestCase '%s'] Unexpected error: %v", tt.name, err)
 				}
 				if !reflect.DeepEqual(result, tt.expected) {
-					t.Errorf("[TestCase '%s'] got: '%+v' | want: '%+v'", tt.name, result, tt.expected)
+					t.Errorf("[TestCase '%s'] Got: '%+v' , Want: '%+v'", tt.name, result, tt.expected)
 				}
 			} else {
 				if !errors.Is(err, tt.expectedError) {
-					t.Errorf("[TestCase '%s'] got error: '%v' | want: '%v'", tt.name, err, tt.expectedError)
+					t.Errorf("[TestCase '%s'] Got error: '%v' , Want: '%v'", tt.name, err, tt.expectedError)
 				}
 			}
-	})
+		})
 	}
 }
