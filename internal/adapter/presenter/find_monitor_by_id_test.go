@@ -34,19 +34,19 @@ func TestFindMonitorByIDPresenter_Output(t *testing.T) {
 
 	tests := []struct {
 		name string
-		args domain.Monitor
+		args *domain.Monitor
 		want usecase.FindMonitorByIDOutput
 	}{
 		{
 			name: "success: find monitor by id",
-			args: monitor,
+			args: &monitor,
 			want: want,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := NewFindMonitorByIDPresenter()
-			got := p.Output(&tt.args)
+			got := p.Output(tt.args)
 			assert.Equal(t, tt.want, got, "[TestCase '%s']", tt.name)
 		})
 	}

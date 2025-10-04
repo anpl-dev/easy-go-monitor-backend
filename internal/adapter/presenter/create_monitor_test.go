@@ -23,12 +23,12 @@ func TestCreateMonitorPresenter_Output(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		args domain.Monitor
+		args *domain.Monitor
 		want usecase.CreateMonitorOutput
 	}{
 		{
 			name: "success: create user",
-			args: user,
+			args: &user,
 			want: usecase.CreateMonitorOutput{
 				ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 				Name:           "test-monitor",
@@ -42,7 +42,7 @@ func TestCreateMonitorPresenter_Output(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := NewCreateMonitorPresenter()
-			got := p.Output(&tt.args)
+			got := p.Output(tt.args)
 			assert.Equal(t, tt.want, got, "[TestCase '%s']", tt.name)
 		})
 	}

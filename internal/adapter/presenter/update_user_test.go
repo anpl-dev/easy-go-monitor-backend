@@ -10,36 +10,40 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateUserPresenter_Output(t *testing.T) {
+func TestUpdateUserPresenter_Output(t *testing.T) {
 
 	now := time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local)
+
 	user := domain.User{
+		ID:           uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+		Name:         "Alice",
+		Email:        "alice@example.com",
+		PasswordHash: "hashedPass",
+		CreatedAt:    now,
+		UpdatedAt:    now,
+	}
+
+	want := usecase.UpdateUserOutput{
 		ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:      "Alice",
 		Email:     "alice@example.com",
-		CreatedAt: now,
 		UpdatedAt: now,
 	}
+
 	tests := []struct {
 		name string
 		args *domain.User
-		want usecase.CreateUserOutput
+		want usecase.UpdateUserOutput
 	}{
 		{
-			name: "success: create user",
+			name: "success: update user",
 			args: &user,
-			want: usecase.CreateUserOutput{
-				ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-				Name:      "Alice",
-				Email:     "alice@example.com",
-				CreatedAt: now,
-				UpdatedAt: now,
-			},
+			want: want,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := NewCreateUserPresenter()
+			p := NewUpdateUserPresenter()
 			got := p.Output(tt.args)
 			assert.Equal(t, tt.want, got, "[TestCase '%s']", tt.name)
 		})

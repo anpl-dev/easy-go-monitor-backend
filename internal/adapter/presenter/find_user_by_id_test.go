@@ -33,19 +33,19 @@ func TestFindUserByIDPresenter_Output(t *testing.T) {
 
 	tests := []struct {
 		name string
-		args domain.User
+		args *domain.User
 		want usecase.FindUserByIDOutput
 	}{
 		{
 			name: "success: find user by id",
-			args: user,
+			args: &user,
 			want: want,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := NewFindUserByIDPresenter()
-			got := p.Output(&tt.args)
+			got := p.Output(tt.args)
 			assert.Equal(t, tt.want, got, "[TestCase '%s']", tt.name)
 		})
 	}
