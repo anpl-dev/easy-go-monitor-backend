@@ -16,8 +16,8 @@ type (
 
 	// SearchMonitorsInput input data
 	SearchMonitorsInput struct {
-		UserID uuid.UUID `json:"user_id,omitempty" `
-		Name   uuid.UUID `json:"name,omitempty" `
+		UserID string `json:"user_id,omitempty" binding:"uuid"`
+		Name   string `json:"name,omitempty" `
 	}
 
 	// SearchMonitorsPresenter output port
@@ -53,7 +53,12 @@ func NewSearchMonitorsInteractor(
 }
 
 func (i *searchMonitorsInteractor) Execute(ctx context.Context, input SearchMonitorsInput) ([]SearchMonitorsOutput, error) {
-	monitors, err := i.repo.FindByUserID(ctx, input.UserID)
+	userID, err := uuid.Parse(input.UserID)
+	if err != nil {
+		return nil, err
+	}
+
+	monitors, err := i.repo.FindByUserID(ctx, userID)
 	if err != nil {
 		return nil, err
 	}

@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type SearchMonitorsHandler struct {
@@ -19,13 +18,12 @@ func NewSearchMonitorsHandler(uc usecase.SearchMonitorsUseCase) *SearchMonitorsH
 }
 
 func (h *SearchMonitorsHandler) Handle(c *gin.Context) {
-	userIDStr := c.Param("id")
-	userID, err := uuid.Parse(userIDStr)
-	if err != nil {
+	userIDStr := c.Query("user_id")
+	if userIDStr == "" {
 		response.NewHTTPError(errors.ErrInvalidUUID).Send(c)
 		return
 	}
-	output, err := h.uc.Execute(c.Request.Context(), usecase.SearchMonitorsInput{UserID: userID})
+	output, err := h.uc.Execute(c.Request.Context(), usecase.SearchMonitorsInput{UserID: userIDStr})
 	if err != nil {
 		response.NewHTTPError(errors.ErrNotFound).Send(c)
 		return

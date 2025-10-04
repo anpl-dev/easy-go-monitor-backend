@@ -49,17 +49,17 @@ func TestSearchMonitorsInteractor_Execute(t *testing.T) {
 	}
 
 	tests := []struct {
-		name          string
-		input         SearchMonitorsInput
-		repository    domain.MonitorRepository
-		presenter     SearchMonitorsPresenter
-		want      []SearchMonitorsOutput
-		wantError error
+		name       string
+		input      SearchMonitorsInput
+		repository domain.MonitorRepository
+		presenter  SearchMonitorsPresenter
+		want       []SearchMonitorsOutput
+		wantError  error
 	}{
 		{
 			name: "success: monitors found",
 			input: SearchMonitorsInput{
-				UserID: monitor.UserID,
+				UserID: "11111111-1111-1111-1111-111111111111",
 			},
 			repository: mockMonitorRepoSearch{
 				result: []*domain.Monitor{monitor},
@@ -92,13 +92,15 @@ func TestSearchMonitorsInteractor_Execute(t *testing.T) {
 			wantError: nil,
 		},
 		{
-			name:  "error: monitor not found",
-			input: SearchMonitorsInput{},
+			name: "error: monitor not found",
+			input: SearchMonitorsInput{
+				UserID: "11111111-1111-1111-1111-111111111111",
+			},
 			repository: mockMonitorRepoSearch{
 				result: nil,
 				err:    errors.ErrNotFound,
 			},
-			presenter:     mockSearchMonitorsPresenter{},
+			presenter: mockSearchMonitorsPresenter{},
 			want:      nil,
 			wantError: errors.ErrNotFound,
 		},
