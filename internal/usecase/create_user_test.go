@@ -41,11 +41,11 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 	hashed, _ := domain.HashedPassword("plainPassword")
 
 	tests := []struct {
-		name      string
-		input     CreateUserInput
-		mockRepo  mockUserRepoCreate
-		presenter mockCreateUserPresenter
-		wantError error
+		name          string
+		input         CreateUserInput
+		mockRepo      mockUserRepoCreate
+		mockPresenter mockCreateUserPresenter
+		wantError     error
 	}{
 		{
 			name: "success: create user",
@@ -65,13 +65,13 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 				},
 				err: nil,
 			},
-			presenter: mockCreateUserPresenter{
+			mockPresenter: mockCreateUserPresenter{
 				result: CreateUserOutput{
-					ID:           uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-					Name:         "Alice",
-					Email:        "alice@example.com",
-					CreatedAt:    now,
-					UpdatedAt:    now,
+					ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+					Name:      "Alice",
+					Email:     "alice@example.com",
+					CreatedAt: now,
+					UpdatedAt: now,
 				},
 			},
 			wantError: nil,
@@ -84,20 +84,20 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 				Password: "plainPassword",
 			},
 			mockRepo: mockUserRepoCreate{},
-			presenter: mockCreateUserPresenter{
+			mockPresenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
 			wantError: errors.ErrInvalidUserName,
 		},
 		{
-			name: "error - missing email",
+			name: "error: missing email",
 			input: CreateUserInput{
 				Name:     "Alice",
 				Email:    "",
 				Password: "plainPassword",
 			},
 			mockRepo: mockUserRepoCreate{},
-			presenter: mockCreateUserPresenter{
+			mockPresenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
 			wantError: errors.ErrInvalidEmail,
@@ -110,7 +110,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 				Password: "",
 			},
 			mockRepo: mockUserRepoCreate{},
-			presenter: mockCreateUserPresenter{
+			mockPresenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
 			wantError: errors.ErrInvalidPassword,
@@ -119,18 +119,18 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			uc := NewCreateUserInteractor(&tt.mockRepo, tt.presenter)
+			uc := NewCreateUserInteractor(&tt.mockRepo, &tt.mockPresenter)
 			got, err := uc.Execute(context.Background(), tt.input)
 
-			if tt.wantError == nil {
+			if tt.wantError != nil {
+				require.ErrorIs(t, err, tt.wantError, "[%s] error mismatch", tt.name)
+			} else {
 				require.NoError(t, err, "[%s] unexpected error", tt.name)
-				require.Equal(t, tt.presenter.result, got, "[%s] output mismatch", tt.name)
+				require.Equal(t, tt.mockPresenter.result, got, "[%s] output mismatch", tt.name)
 
 				// check hashed password
 				require.True(t, domain.CheckPasswordHash(tt.input.Password, tt.mockRepo.result.PasswordHash),
 					"[%s] password hash mismatch", tt.name)
-			} else {
-				require.ErrorIs(t, err, tt.wantError, "[%s] error mismatch", tt.name)
 			}
 		})
 	}

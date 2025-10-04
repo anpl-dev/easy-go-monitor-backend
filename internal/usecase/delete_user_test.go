@@ -8,6 +8,7 @@ import (
 	"go-monitor-tool/internal/errors"
 
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
 )
 
 // --- Mock Repository ---
@@ -30,9 +31,9 @@ func TestDeleteUserInteractor_Execute(t *testing.T) {
 	}
 
 	tests := []struct {
-		name          string
-		input         DeleteUserInput
-		repository    domain.UserRepository
+		name      string
+		input     DeleteUserInput
+		mockRepo  mockUserRepoDelete
 		wantError error
 	}{
 		{
@@ -40,7 +41,7 @@ func TestDeleteUserInteractor_Execute(t *testing.T) {
 			input: DeleteUserInput{
 				ID: user.ID,
 			},
-			repository:    mockUserRepoDelete{err: nil},
+			mockRepo:  mockUserRepoDelete{err: nil},
 			wantError: nil,
 		},
 		{
@@ -48,24 +49,20 @@ func TestDeleteUserInteractor_Execute(t *testing.T) {
 			input: DeleteUserInput{
 				ID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 			},
-			repository:    mockUserRepoDelete{err: errors.ErrNotFound},
+			mockRepo:  mockUserRepoDelete{err: errors.ErrNotFound},
 			wantError: errors.ErrNotFound,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			uc := NewDeleteUserInteractor(tt.repository)
-
+			uc := NewDeleteUserInteractor(&tt.mockRepo)
 			err := uc.Execute(context.Background(), tt.input)
-			if tt.wantError == nil {
-				if err != nil {
-					t.Errorf("[TestCase '%s'] Unexpected error: %v", tt.name, err)
-				}
+
+			if tt.wantError != nil {
+				require.ErrorIs(t, err, tt.wantError, "[%s] error mismatch", tt.name)
 			} else {
-				if !errors.Is(err, tt.wantError) {
-					t.Errorf("[TestCase '%s'] Got error: '%v', Want: '%v'", tt.name, err, tt.wantError)
-				}
+				require.NoError(t, err, "[%s] unexpected error", tt.name)
 			}
 		})
 	}

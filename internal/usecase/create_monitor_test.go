@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"reflect"
 	"testing"
 	"time"
 
@@ -10,6 +9,7 @@ import (
 	"go-monitor-tool/internal/errors"
 
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
 )
 
 // --- Mock Repository ---
@@ -42,19 +42,19 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:           "test-monitor",
-		URL:            "https://examaple.com",
+		URL:            "https://example.com",
 		IntervalSecond: 60,
 		CreatedAt:      now,
 		UpdatedAt:      now,
 	}
 
 	tests := []struct {
-		name       string
-		input      CreateMonitorInput
-		repository domain.MonitorRepository
-		presenter  CreateMonitorPresenter
-		want       CreateMonitorOutput
-		wantError  error
+		name          string
+		input         CreateMonitorInput
+		mockRepo      mockMonitorRepoCreate
+		mockPresenter mockCreateMonitorPresenter
+		want          CreateMonitorOutput
+		wantError     error
 	}{
 		{
 			name: "success: create monitor",
@@ -64,11 +64,11 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				URL:            "https://example.com",
 				IntervalSecond: 60,
 			},
-			repository: mockMonitorRepoCreate{
+			mockRepo: mockMonitorRepoCreate{
 				result: monitor,
 				err:    nil,
 			},
-			presenter: mockCreateMonitorPresenter{
+			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{
 					ID:             monitor.ID,
 					UserID:         monitor.UserID,
@@ -97,8 +97,8 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				URL:            "https://example.com",
 				IntervalSecond: 60,
 			},
-			repository: mockMonitorRepoCreate{},
-			presenter: mockCreateMonitorPresenter{
+			mockRepo: mockMonitorRepoCreate{},
+			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
@@ -112,11 +112,11 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				URL:            "https://example.com",
 				IntervalSecond: 60,
 			},
-			repository: mockMonitorRepoCreate{
+			mockRepo: mockMonitorRepoCreate{
 				result: nil,
 				err:    errors.ErrNotFound,
 			},
-			presenter: mockCreateMonitorPresenter{
+			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
@@ -129,8 +129,8 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				URL:            "https://example.com",
 				IntervalSecond: 60,
 			},
-			repository: mockMonitorRepoCreate{},
-			presenter: mockCreateMonitorPresenter{
+			mockRepo: mockMonitorRepoCreate{},
+			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
@@ -143,8 +143,8 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				Name:           "test-monitor",
 				IntervalSecond: 60,
 			},
-			repository: mockMonitorRepoCreate{},
-			presenter: mockCreateMonitorPresenter{
+			mockRepo: mockMonitorRepoCreate{},
+			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
@@ -157,8 +157,8 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				Name:   "test-monitor",
 				URL:    "https://example.com",
 			},
-			repository: mockMonitorRepoCreate{},
-			presenter: mockCreateMonitorPresenter{
+			mockRepo: mockMonitorRepoCreate{},
+			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
@@ -172,8 +172,8 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				URL:            "https://example.com",
 				IntervalSecond: -5,
 			},
-			repository: mockMonitorRepoCreate{},
-			presenter: mockCreateMonitorPresenter{
+			mockRepo: mockMonitorRepoCreate{},
+			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
@@ -183,21 +183,17 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			uc := NewCreateMonitorInteractor(tt.repository, tt.presenter)
+			uc := NewCreateMonitorInteractor(&tt.mockRepo, &tt.mockPresenter)
 
 			got, err := uc.Execute(context.Background(), tt.input)
-			if tt.wantError == nil {
-				if err != nil {
-					t.Errorf("[TestCase '%s'] Unexpected error: '%v'", tt.name, err)
-				}
-				if !reflect.DeepEqual(got, tt.want) {
-					t.Errorf("[TestCase '%s'] Got: '%+v' , Want: '%+v'", tt.name, got, tt.want)
-				}
+
+			if tt.wantError != nil {
+				require.ErrorIs(t, err, tt.wantError, "[%s] unexpected err", tt.name)
 			} else {
-				if !errors.Is(err, tt.wantError) {
-					t.Errorf("[TestCase '%s'] Got error: '%v' , Want: '%v'", tt.name, err, tt.wantError)
-				}
+				require.NoError(t, err, "[%s] unexpected err", tt.name)
+				require.Equal(t, tt.mockPresenter.result, got, "[%s] result mismatch", tt.name)
 			}
+
 		})
 	}
 }

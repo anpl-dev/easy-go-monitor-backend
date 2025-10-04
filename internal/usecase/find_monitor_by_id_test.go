@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"reflect"
 	"testing"
 	"time"
 
@@ -10,6 +9,7 @@ import (
 	"go-monitor-tool/internal/errors"
 
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
 )
 
 // --- Mock Repository ---
@@ -51,39 +51,29 @@ func TestFindMonitorByIDInteractor_Execute(t *testing.T) {
 	tests := []struct {
 		name          string
 		input         FindMonitorByIDInput
-		repository    domain.MonitorRepository
-		presenter     FindMonitorByIDPresenter
-		want      FindMonitorByIDOutput
-		wantError error
+		mockRepo      mockMonitorRepoFindByID
+		mockPresenter mockFindMonitorByIDPresenter
+		wantError     error
 	}{
 		{
 			name: "success: monitor found",
 			input: FindMonitorByIDInput{
 				ID: monitor.ID,
 			},
-			repository: mockMonitorRepoFindByID{
+			mockRepo: mockMonitorRepoFindByID{
 				result: monitor,
 				err:    nil,
 			},
-			presenter: mockFindMonitorByIDPresenter{
+			mockPresenter: mockFindMonitorByIDPresenter{
 				result: FindMonitorByIDOutput{
-						ID:             monitor.ID,
-						UserID:         monitor.UserID,
-						Name:           monitor.Name,
-						URL:            monitor.URL,
-						IntervalSecond: monitor.IntervalSecond,
-						CreatedAt:      monitor.CreatedAt,
-						UpdatedAt:      monitor.UpdatedAt,
+					ID:             monitor.ID,
+					UserID:         monitor.UserID,
+					Name:           monitor.Name,
+					URL:            monitor.URL,
+					IntervalSecond: monitor.IntervalSecond,
+					CreatedAt:      monitor.CreatedAt,
+					UpdatedAt:      monitor.UpdatedAt,
 				},
-			},
-			want: FindMonitorByIDOutput{
-						ID:             monitor.ID,
-						UserID:         monitor.UserID,
-						Name:           monitor.Name,
-						URL:            monitor.URL,
-						IntervalSecond: monitor.IntervalSecond,
-						CreatedAt:      monitor.CreatedAt,
-						UpdatedAt:      monitor.UpdatedAt,
 			},
 			wantError: nil,
 		},
@@ -92,33 +82,27 @@ func TestFindMonitorByIDInteractor_Execute(t *testing.T) {
 			input: FindMonitorByIDInput{
 				ID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 			},
-			repository: mockMonitorRepoFindByID{
+			mockRepo: mockMonitorRepoFindByID{
 				result: nil,
 				err:    errors.ErrNotFound,
 			},
-			presenter:     mockFindMonitorByIDPresenter{},
-			want:      FindMonitorByIDOutput{},
-			wantError: errors.ErrNotFound,
+			mockPresenter: mockFindMonitorByIDPresenter{},
+			wantError:     errors.ErrNotFound,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			uc := NewFindMonitorByIDInteractor(tt.repository, tt.presenter)
-
+			uc := NewFindMonitorByIDInteractor(&tt.mockRepo, &tt.mockPresenter)
 			got, err := uc.Execute(context.Background(), tt.input)
-			if tt.wantError == nil {
-				if err != nil {
-					t.Errorf("[TestCase '%s'] Unexpected error: %v", tt.name, err)
-				}
-				if !reflect.DeepEqual(got, tt.want) {
-					t.Errorf("[TestCase '%s'] Got: '%+v' , Want: '%+v'", tt.name, got, tt.want)
-				}
+
+			if tt.wantError != nil {
+				require.ErrorIs(t, err, tt.wantError, "[%s] unexpected err", tt.name)
 			} else {
-				if !errors.Is(err, tt.wantError) {
-					t.Errorf("[TestCase '%s'] Got error: '%v' , Want: '%v'", tt.name, err, tt.wantError)
-				}
+				require.NoError(t, err, "[%s] unexpected err", tt.name)
+				require.Equal(t, tt.mockPresenter.result, got, "[%s] result mismatch", tt.name)
 			}
+
 		})
 	}
 }

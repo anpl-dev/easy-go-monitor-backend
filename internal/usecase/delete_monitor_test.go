@@ -8,6 +8,7 @@ import (
 	"go-monitor-tool/internal/errors"
 
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
 )
 
 // --- Mock Repository ---
@@ -30,42 +31,38 @@ func TestDeleteMonitorInteractor_Execute(t *testing.T) {
 	}
 
 	tests := []struct {
-		name       string
-		input      DeleteMonitorInput
-		repository domain.MonitorRepository
-		wantError  error
+		name      string
+		input     DeleteMonitorInput
+		mockRepo  mockMonitorRepoDelete
+		wantError error
 	}{
 		{
 			name: "success: monitor deleted",
 			input: DeleteMonitorInput{
 				ID: monitor.ID,
 			},
-			repository: mockMonitorRepoDelete{err: nil},
-			wantError:  nil,
+			mockRepo:  mockMonitorRepoDelete{err: nil},
+			wantError: nil,
 		},
 		{
 			name: "error: monitor not deleted",
 			input: DeleteMonitorInput{
 				ID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 			},
-			repository: mockMonitorRepoDelete{err: errors.ErrNotFound},
-			wantError:  errors.ErrNotFound,
+			mockRepo:  mockMonitorRepoDelete{err: errors.ErrNotFound},
+			wantError: errors.ErrNotFound,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			uc := NewDeleteMonitorInteractor(tt.repository)
-
+			uc := NewDeleteMonitorInteractor(&tt.mockRepo)
 			err := uc.Execute(context.Background(), tt.input)
-			if tt.wantError == nil {
-				if err != nil {
-					t.Errorf("[TestCase '%s'] Unexpected error: %v", tt.name, err)
-				}
+
+			if tt.wantError != nil {
+				require.ErrorIs(t, err, tt.wantError, "[%s] error mismatch", tt.name)
 			} else {
-				if !errors.Is(err, tt.wantError) {
-					t.Errorf("[TestCase '%s'] Got error: '%v', Want: '%v'", tt.name, err, tt.wantError)
-				}
+				require.NoError(t, err, "[%s] unexpected error", tt.name)
 			}
 		})
 	}
