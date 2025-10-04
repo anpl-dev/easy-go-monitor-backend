@@ -19,6 +19,7 @@ func (p *FindMonitorByIDPresenter) Output(monitor *domain.Monitor) usecase.FindM
 		ID:             monitor.ID,
 		UserID:         monitor.UserID,
 		Name:           monitor.Name,
+		URL:            monitor.URL,
 		IntervalSecond: monitor.IntervalSecond,
 		CreatedAt:      monitor.CreatedAt,
 		UpdatedAt:      monitor.UpdatedAt,
