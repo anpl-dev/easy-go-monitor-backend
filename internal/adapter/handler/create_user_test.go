@@ -54,15 +54,8 @@ func TestCreateUserHandler_Execute(t *testing.T) {
 			name:       "success: create user",
 			rawPayload: payload,
 			ucMock: &mockCreateUserUC{
-				result: usecase.CreateUserOutput{
-					ID:           uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-					Name:         "Alice",
-					Email:        "alice@example.com",
-					PasswordHash: "hashedPass",
-					CreatedAt:    time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
-					UpdatedAt:    time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
-				},
-				err: nil,
+				result: want,
+				err:    nil,
 			},
 			wantStatusCode: http.StatusCreated,
 			wantBody:       want,

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"go-monitor-tool/internal/usecase"
@@ -14,40 +15,47 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockFindMonitorByIDUC struct {
-	result usecase.FindMonitorByIDOutput
+type mockUpdateMonitorUC struct {
+	result usecase.UpdateMonitorOutput
 	err    error
 }
 
-func (m *mockFindMonitorByIDUC) Execute(_ context.Context, _ usecase.FindMonitorByIDInput) (usecase.FindMonitorByIDOutput, error) {
+func (m *mockUpdateMonitorUC) Execute(_ context.Context, _ usecase.UpdateMonitorInput) (usecase.UpdateMonitorOutput, error) {
 	return m.result, m.err
 }
 
-func TestFindMonitorByIDHandler_Execute(t *testing.T) {
+func TestUpdateMonitorHandler_Execute(t *testing.T) {
 	t.Parallel()
 	gin.SetMode(gin.TestMode)
 
-	want := usecase.FindMonitorByIDOutput{
+	targetID := "11111111-1111-1111-1111-111111111111"
+
+	payload, _ := json.Marshal(map[string]interface{}{
+		"name":            "Alice",
+		"url":             "https://example.com",
+		"interval_second": 60,
+	})
+
+	want := usecase.UpdateMonitorOutput{
 		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:           "Alice",
 		URL:            "https://example.com",
 		IntervalSecond: 60,
-		CreatedAt:      time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
 		UpdatedAt:      time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
 	}
 
 	tests := []struct {
 		name           string
-		targetID       string
-		ucMock         usecase.FindMonitorByIDUseCase
+		rawPayload     []byte
+		ucMock         usecase.UpdateMonitorUseCase
 		wantStatusCode int
-		wantBody       usecase.FindMonitorByIDOutput
+		wantBody       usecase.UpdateMonitorOutput
 	}{
 		{
-			name:     "success: find monitor by id",
-			targetID: "11111111-1111-1111-1111-111111111111",
-			ucMock: &mockFindMonitorByIDUC{
+			name:       "success: update monitor",
+			rawPayload: payload,
+			ucMock: &mockUpdateMonitorUC{
 				result: want,
 				err:    nil,
 			},
@@ -59,10 +67,11 @@ func TestFindMonitorByIDHandler_Execute(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.Default()
-			h := NewFindMonitorByIDHandler(tt.ucMock)
-			r.GET("/monitors/:id", h.Handle)
+			h := NewUpdateMonitorHandler(tt.ucMock)
+			r.PUT("/monitors/:id", h.Handle)
 
-			req := httptest.NewRequest(http.MethodGet, "/monitors/"+tt.targetID, nil)
+			req := httptest.NewRequest(http.MethodPut, "/monitors/"+targetID, bytes.NewBuffer(tt.rawPayload))
+			req.Header.Set("Content-Type", "application/json")
 			w := httptest.NewRecorder()
 
 			r.ServeHTTP(w, req)

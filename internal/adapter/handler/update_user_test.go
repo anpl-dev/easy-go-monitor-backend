@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"go-monitor-tool/internal/usecase"
@@ -14,38 +15,45 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockFindUserByIDUC struct {
-	result usecase.FindUserByIDOutput
+type mockUpdateUserUC struct {
+	result usecase.UpdateUserOutput
 	err    error
 }
 
-func (m *mockFindUserByIDUC) Execute(_ context.Context, _ usecase.FindUserByIDInput) (usecase.FindUserByIDOutput, error) {
+func (m *mockUpdateUserUC) Execute(_ context.Context, _ usecase.UpdateUserInput) (usecase.UpdateUserOutput, error) {
 	return m.result, m.err
 }
 
-func TestFindUserByIDHandler_Execute(t *testing.T) {
+func TestUpdateUserHandler_Execute(t *testing.T) {
 	t.Parallel()
 	gin.SetMode(gin.TestMode)
 
-	want := usecase.FindUserByIDOutput{
+	targetID := "11111111-1111-1111-1111-111111111111"
+
+	payload, _ := json.Marshal(map[string]interface{}{
+		"name":          "Alice",
+		"email":         "alice@example.com",
+		"password_hash": "hashedPass",
+	})
+
+	want := usecase.UpdateUserOutput{
 		ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:      "Alice",
 		Email:     "alice@example.com",
-		CreatedAt: time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
 		UpdatedAt: time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
 	}
 
 	tests := []struct {
 		name           string
-		targetID       string
-		ucMock         usecase.FindUserByIDUseCase
+		rawPayload     []byte
+		ucMock         usecase.UpdateUserUseCase
 		wantStatusCode int
-		wantBody       usecase.FindUserByIDOutput
+		wantBody       usecase.UpdateUserOutput
 	}{
 		{
-			name:     "success: find user by id",
-			targetID: "11111111-1111-1111-1111-111111111111",
-			ucMock: &mockFindUserByIDUC{
+			name:       "success: update monitor",
+			rawPayload: payload,
+			ucMock: &mockUpdateUserUC{
 				result: want,
 				err:    nil,
 			},
@@ -57,10 +65,11 @@ func TestFindUserByIDHandler_Execute(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.Default()
-			h := NewFindUserByIDHandler(tt.ucMock)
-			r.GET("/users/:id", h.Handle)
+			h := NewUpdateUserHandler(tt.ucMock)
+			r.PUT("/users/:id", h.Handle)
 
-			req := httptest.NewRequest(http.MethodGet, "/users/"+tt.targetID, nil)
+			req := httptest.NewRequest(http.MethodPut, "/users/"+targetID, bytes.NewBuffer(tt.rawPayload))
+			req.Header.Set("Content-Type", "application/json")
 			w := httptest.NewRecorder()
 
 			r.ServeHTTP(w, req)
