@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"go-monitor-tool/internal/response"
-	"go-monitor-tool/internal/errors"
+	"go-monitor-tool/internal/api/response"
+	"go-monitor-tool/internal/apperr"
 	"go-monitor-tool/internal/monitor/usecase"
 	"net/http"
 
@@ -20,13 +20,13 @@ func NewSearchMonitorsHandler(uc usecase.SearchMonitorsUseCase) *SearchMonitorsH
 func (h *SearchMonitorsHandler) Handle(c *gin.Context) {
 	userIDStr := c.Query("user_id")
 	if userIDStr == "" {
-		response.NewHTTPError(errors.ErrInvalidUUID).Send(c)
+		response.HandleError(c, apperr.ErrInvalidUUID)
 		return
 	}
 	output, err := h.uc.Execute(c.Request.Context(), usecase.SearchMonitorsInput{UserID: userIDStr})
 	if err != nil {
-		response.NewHTTPError(errors.ErrNotFound).Send(c)
+		response.HandleError(c, apperr.ErrNotFound)
 		return
 	}
-	c.JSON(http.StatusOK, output)
+	response.Success(c, http.StatusOK, output)
 }

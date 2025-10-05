@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"go-monitor-tool/internal/response"
-	"go-monitor-tool/internal/errors"
+	"go-monitor-tool/internal/api/response"
+	"go-monitor-tool/internal/apperr"
 	"go-monitor-tool/internal/monitor/usecase"
 	"net/http"
 
@@ -22,14 +22,14 @@ func (h *DeleteMonitorHandler) Handle(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {
-		response.NewHTTPError(errors.ErrInvalidUUID).Send(c)
+		response.HandleError(c, apperr.ErrInvalidUUID)
 		return
 	}
 
 	err = h.uc.Execute(c.Request.Context(), usecase.DeleteMonitorInput{ID: id})
 	if err != nil {
-		response.NewHTTPError(err).Send(c)
+		response.HandleError(c, err)
 		return
 	}
-	c.Status(http.StatusNoContent)
+	response.Success(c, http.StatusNoContent, nil)
 }

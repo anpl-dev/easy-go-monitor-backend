@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"go-monitor-tool/internal/errors"
+	"go-monitor-tool/internal/apperr"
 	"go-monitor-tool/internal/monitor/domain"
 
 	"github.com/google/uuid"
@@ -102,7 +102,7 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: errors.ErrInvalidUUID,
+			wantError: apperr.ErrInvalidUUID,
 		},
 		{
 			name: "error: user not found",
@@ -114,13 +114,13 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 			},
 			mockRepo: mockMonitorRepoCreate{
 				result: nil,
-				err:    errors.ErrNotFound,
+				err:    apperr.ErrNotFound,
 			},
 			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: errors.ErrNotFound,
+			wantError: apperr.ErrNotFound,
 		},
 		{
 			name: "error: missing name",
@@ -134,7 +134,7 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: errors.ErrInvalidMonitorName,
+			wantError: apperr.ErrInvalidMonitorName,
 		},
 		{
 			name: "error: missing url",
@@ -148,7 +148,7 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: errors.ErrInvalidMonitorURL,
+			wantError: apperr.ErrInvalidMonitorURL,
 		},
 		{
 			name: "error: missing interval",
@@ -162,7 +162,7 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: errors.ErrInvalidMonitorInterval,
+			wantError: apperr.ErrInvalidMonitorInterval,
 		},
 		{
 			name: "error: invalid interval",
@@ -177,7 +177,7 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: errors.ErrInvalidMonitorInterval,
+			wantError: apperr.ErrInvalidMonitorInterval,
 		},
 	}
 

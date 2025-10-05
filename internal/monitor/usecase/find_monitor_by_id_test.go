@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"go-monitor-tool/internal/errors"
+	"go-monitor-tool/internal/apperr"
 	"go-monitor-tool/internal/monitor/domain"
 
 	"github.com/google/uuid"
@@ -84,10 +84,10 @@ func TestFindMonitorByIDInteractor_Execute(t *testing.T) {
 			},
 			mockRepo: mockMonitorRepoFindByID{
 				result: nil,
-				err:    errors.ErrNotFound,
+				err:    apperr.ErrNotFound,
 			},
 			mockPresenter: mockFindMonitorByIDPresenter{},
-			wantError:     errors.ErrNotFound,
+			wantError:     apperr.ErrNotFound,
 		},
 	}
 

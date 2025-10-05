@@ -1,14 +1,12 @@
 package response
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 )
 
-func Success(c *gin.Context, data interface{}) {
-	c.JSON(http.StatusOK, APIResponse{
-		Code:    http.StatusOK,
+func Success(c *gin.Context, status int, data interface{}) {
+	c.JSON(status, APIResponse{
+		Code:    status,
 		Message: "success",
 		Data:    data,
 	})

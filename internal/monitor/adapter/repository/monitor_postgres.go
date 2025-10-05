@@ -3,8 +3,9 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"go-monitor-tool/internal/apperr"
 	"go-monitor-tool/internal/monitor/adapter/repository/sqlcgen"
-	"go-monitor-tool/internal/errors"
 	"go-monitor-tool/internal/monitor/domain"
 
 	"github.com/google/uuid"
@@ -41,8 +42,8 @@ func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor
 	})
 	if err != nil {
 		if pgErr, ok := err.(*pgconn.PgError); ok {
-			if pgErr.Code == errors.ForeignKeyViolation {
-				return nil, errors.ErrNotFound
+			if pgErr.Code == apperr.ForeignKeyViolation {
+				return nil, apperr.ErrNotFound
 			}
 		}
 		return nil, err
@@ -54,7 +55,7 @@ func (r *MonitorPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) 
 	row, err := r.queries.FindMonitorByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, errors.ErrNotFound
+			return nil, apperr.ErrNotFound
 		}
 		return nil, err
 	}
@@ -65,7 +66,7 @@ func (r *MonitorPostgresRepository) FindByUserID(ctx context.Context, userID uui
 	rows, err := r.queries.FindMonitorsByUser(ctx, userID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, errors.ErrNotFound
+			return nil, apperr.ErrNotFound
 		}
 		return nil, err
 	}
@@ -86,7 +87,7 @@ func (r *MonitorPostgresRepository) Update(ctx context.Context, m domain.Monitor
 	})
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, errors.ErrNotFound
+			return nil, apperr.ErrNotFound
 		}
 		return nil, err
 	}
@@ -94,5 +95,12 @@ func (r *MonitorPostgresRepository) Update(ctx context.Context, m domain.Monitor
 }
 
 func (r *MonitorPostgresRepository) Delete(ctx context.Context, id uuid.UUID) error {
-	return r.queries.DeleteMonitor(ctx, id)
+	err := r.queries.DeleteMonitor(ctx, id)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return apperr.ErrNotFound
+		}
+		return err
+	}
+	return nil
 }

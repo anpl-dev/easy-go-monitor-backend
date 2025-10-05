@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"go-monitor-tool/internal/errors"
+	"go-monitor-tool/internal/apperr"
 	"go-monitor-tool/internal/monitor/domain"
 
 	"github.com/google/uuid"
@@ -49,8 +49,8 @@ func TestDeleteMonitorInteractor_Execute(t *testing.T) {
 			input: DeleteMonitorInput{
 				ID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 			},
-			mockRepo:  mockMonitorRepoDelete{err: errors.ErrNotFound},
-			wantError: errors.ErrNotFound,
+			mockRepo:  mockMonitorRepoDelete{err: apperr.ErrNotFound},
+			wantError: apperr.ErrNotFound,
 		},
 	}
 

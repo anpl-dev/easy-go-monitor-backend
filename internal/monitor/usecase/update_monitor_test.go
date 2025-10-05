@@ -2,14 +2,14 @@ package usecase
 
 import (
 	"context"
-	"reflect"
 	"testing"
 	"time"
 
-	"go-monitor-tool/internal/errors"
+	"go-monitor-tool/internal/apperr"
 	"go-monitor-tool/internal/monitor/domain"
 
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
 )
 
 // --- Mock Repository ---
@@ -51,21 +51,20 @@ func TestUpdateMonitorInteractor_Execute(t *testing.T) {
 	tests := []struct {
 		name          string
 		input         UpdateMonitorInput
-		repository    domain.MonitorRepository
-		presenter     UpdateMonitorPresenter
-		expected      UpdateMonitorOutput
-		expectedError error
+		mockRepo      mockMonitorRepoUpdate
+		mockPresenter mockUpdateMonitorPresenter
+		wantError     error
 	}{
 		{
 			name: "success: monitor updated",
 			input: UpdateMonitorInput{
 				ID: monitor.ID,
 			},
-			repository: mockMonitorRepoUpdate{
+			mockRepo: mockMonitorRepoUpdate{
 				result: monitor,
 				err:    nil,
 			},
-			presenter: mockUpdateMonitorPresenter{
+			mockPresenter: mockUpdateMonitorPresenter{
 				result: UpdateMonitorOutput{
 					ID:             monitor.ID,
 					UserID:         monitor.UserID,
@@ -75,48 +74,32 @@ func TestUpdateMonitorInteractor_Execute(t *testing.T) {
 					UpdatedAt:      monitor.UpdatedAt,
 				},
 			},
-			expected: UpdateMonitorOutput{
-				ID:             monitor.ID,
-				UserID:         monitor.UserID,
-				Name:           monitor.Name,
-				URL:            monitor.URL,
-				IntervalSecond: monitor.IntervalSecond,
-				UpdatedAt:      monitor.UpdatedAt,
-			},
-			expectedError: nil,
+			wantError: nil,
 		},
 		{
 			name: "error: monitor not updated",
 			input: UpdateMonitorInput{
 				ID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 			},
-			repository: mockMonitorRepoUpdate{
+			mockRepo: mockMonitorRepoUpdate{
 				result: nil,
-				err:    errors.ErrNotFound,
+				err:    apperr.ErrNotFound,
 			},
-			presenter:     mockUpdateMonitorPresenter{},
-			expected:      UpdateMonitorOutput{},
-			expectedError: errors.ErrNotFound,
+			mockPresenter: mockUpdateMonitorPresenter{},
+			wantError:     apperr.ErrNotFound,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			uc := NewUpdateMonitorInteractor(tt.repository, tt.presenter)
+			uc := NewUpdateMonitorInteractor(&tt.mockRepo, &tt.mockPresenter)
+			got, err := uc.Execute(context.Background(), tt.input)
 
-			result, err := uc.Execute(context.Background(), tt.input)
-
-			if tt.expectedError == nil {
-				if err != nil {
-					t.Errorf("[TestCase '%s'] Unexpected error: %v", tt.name, err)
-				}
-				if !reflect.DeepEqual(result, tt.expected) {
-					t.Errorf("[TestCase '%s'] Got: '%+v' , Want: '%+v'", tt.name, result, tt.expected)
-				}
+			if tt.wantError != nil {
+				require.ErrorIs(t, err, tt.wantError, "[%s] unexpected err", tt.name)
 			} else {
-				if !errors.Is(err, tt.expectedError) {
-					t.Errorf("[TestCase '%s'] Got error: '%v' , Want: '%v'", tt.name, err, tt.expectedError)
-				}
+				require.NoError(t, err, "[%s] unexpected err", tt.name)
+				require.Equal(t, tt.mockPresenter.result, got, "[%s] result mismatch", tt.name)
 			}
 		})
 	}
