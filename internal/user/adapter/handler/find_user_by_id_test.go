@@ -27,12 +27,23 @@ func TestFindUserByIDHandler_Execute(t *testing.T) {
 	t.Parallel()
 	gin.SetMode(gin.TestMode)
 
-	want := usecase.FindUserByIDOutput{
+	wantOutput := usecase.FindUserByIDOutput{
 		ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:      "Alice",
 		Email:     "alice@example.com",
 		CreatedAt: time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
 		UpdatedAt: time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
+	}
+	wantBody := map[string]interface{}{
+		"code":    float64(200),
+		"message": "success",
+		"data": map[string]interface{}{
+			"id":         "11111111-1111-1111-1111-111111111111",
+			"name":       "Alice",
+			"email":      "alice@example.com",
+			"created_at": "2025-04-01T00:00:00+09:00",
+			"updated_at": "2025-04-01T00:00:00+09:00",
+		},
 	}
 
 	tests := []struct {
@@ -40,17 +51,17 @@ func TestFindUserByIDHandler_Execute(t *testing.T) {
 		targetID       string
 		ucMock         usecase.FindUserByIDUseCase
 		wantStatusCode int
-		wantBody       usecase.FindUserByIDOutput
+		wantBody       map[string]interface{}
 	}{
 		{
 			name:     "success: find user by id",
 			targetID: "11111111-1111-1111-1111-111111111111",
 			ucMock: &mockFindUserByIDUC{
-				result: want,
+				result: wantOutput,
 				err:    nil,
 			},
 			wantStatusCode: http.StatusOK,
-			wantBody:       want,
+			wantBody:       wantBody,
 		},
 	}
 
@@ -65,9 +76,7 @@ func TestFindUserByIDHandler_Execute(t *testing.T) {
 
 			r.ServeHTTP(w, req)
 
-			if w.Code != tt.wantStatusCode {
-				t.Errorf("[TestCase %s] status code: Got %v, Want %v", tt.name, w.Code, tt.wantStatusCode)
-			}
+			assert.Equal(t, tt.wantStatusCode, w.Code)
 			wantJSON, _ := json.Marshal(tt.wantBody)
 			assert.JSONEq(t, string(wantJSON), w.Body.String())
 		})

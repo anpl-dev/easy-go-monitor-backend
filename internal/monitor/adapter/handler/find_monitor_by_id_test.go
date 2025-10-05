@@ -30,11 +30,24 @@ func TestFindMonitorByIDHandler_Execute(t *testing.T) {
 	want := usecase.FindMonitorByIDOutput{
 		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-		Name:           "Alice",
+		Name:           "test-monitor",
 		URL:            "https://example.com",
 		IntervalSecond: 60,
 		CreatedAt:      time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
 		UpdatedAt:      time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
+	}
+	wantBody := map[string]interface{}{
+		"code":    float64(200),
+		"message": "success",
+		"data": map[string]interface{}{
+			"id":              "11111111-1111-1111-1111-111111111111",
+			"user_id":         "11111111-1111-1111-1111-111111111111",
+			"name":            "test-monitor",
+			"url":             "https://example.com",
+			"interval_second": float64(60),
+			"created_at":      "2025-04-01T00:00:00+09:00",
+			"updated_at":      "2025-04-01T00:00:00+09:00",
+		},
 	}
 
 	tests := []struct {
@@ -42,7 +55,7 @@ func TestFindMonitorByIDHandler_Execute(t *testing.T) {
 		targetID       string
 		ucMock         usecase.FindMonitorByIDUseCase
 		wantStatusCode int
-		wantBody       usecase.FindMonitorByIDOutput
+		wantBody       map[string]interface{}
 	}{
 		{
 			name:     "success: find monitor by id",
@@ -52,7 +65,7 @@ func TestFindMonitorByIDHandler_Execute(t *testing.T) {
 				err:    nil,
 			},
 			wantStatusCode: http.StatusOK,
-			wantBody:       want,
+			wantBody:       wantBody,
 		},
 	}
 
@@ -67,9 +80,7 @@ func TestFindMonitorByIDHandler_Execute(t *testing.T) {
 
 			r.ServeHTTP(w, req)
 
-			if w.Code != tt.wantStatusCode {
-				t.Errorf("[TestCase %s] status code: Got %v, Want %v", tt.name, w.Code, tt.wantStatusCode)
-			}
+			assert.Equal(t, tt.wantStatusCode, w.Code)
 			wantJSON, _ := json.Marshal(tt.wantBody)
 			assert.JSONEq(t, string(wantJSON), w.Body.String())
 		})

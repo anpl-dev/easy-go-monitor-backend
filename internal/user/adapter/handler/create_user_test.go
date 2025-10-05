@@ -33,13 +33,23 @@ func TestCreateUserHandler_Execute(t *testing.T) {
 		"email":    "alice@example.com",
 		"password": "plainPassword",
 	})
-
-	want := usecase.CreateUserOutput{
+	wantOutput := usecase.CreateUserOutput{
 		ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:      "Alice",
 		Email:     "alice@example.com",
 		CreatedAt: time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
 		UpdatedAt: time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
+	}
+	wantBody := map[string]interface{}{
+		"code":    float64(201),
+		"message": "success",
+		"data": map[string]interface{}{
+			"id":         "11111111-1111-1111-1111-111111111111",
+			"name":       "Alice",
+			"email":      "alice@example.com",
+			"created_at": "2025-04-01T00:00:00+09:00",
+			"updated_at": "2025-04-01T00:00:00+09:00",
+		},
 	}
 
 	tests := []struct {
@@ -47,17 +57,17 @@ func TestCreateUserHandler_Execute(t *testing.T) {
 		rawPayload     []byte
 		ucMock         usecase.CreateUserUseCase
 		wantStatusCode int
-		wantBody       usecase.CreateUserOutput
+		wantBody       map[string]interface{}
 	}{
 		{
 			name:       "success: create user",
 			rawPayload: payload,
 			ucMock: &mockCreateUserUC{
-				result: want,
+				result: wantOutput,
 				err:    nil,
 			},
 			wantStatusCode: http.StatusCreated,
-			wantBody:       want,
+			wantBody:       wantBody,
 		},
 	}
 
@@ -73,10 +83,7 @@ func TestCreateUserHandler_Execute(t *testing.T) {
 
 			r.ServeHTTP(w, req)
 
-			if w.Code != tt.wantStatusCode {
-				t.Errorf("[TestCase %s] status code: Got %v, Want %v", tt.name, w.Code, tt.wantStatusCode)
-			}
-
+			assert.Equal(t, tt.wantStatusCode, w.Code)
 			wantJSON, _ := json.Marshal(tt.wantBody)
 			assert.JSONEq(t, string(wantJSON), w.Body.String())
 		})

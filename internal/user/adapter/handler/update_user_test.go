@@ -29,18 +29,26 @@ func TestUpdateUserHandler_Execute(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
 	targetID := "11111111-1111-1111-1111-111111111111"
-
 	payload, _ := json.Marshal(map[string]interface{}{
 		"name":          "Alice",
 		"email":         "alice@example.com",
 		"password_hash": "hashedPass",
 	})
-
-	want := usecase.UpdateUserOutput{
+	wantOutput := usecase.UpdateUserOutput{
 		ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:      "Alice",
 		Email:     "alice@example.com",
 		UpdatedAt: time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
+	}
+	wantBody := map[string]interface{}{
+		"code":    float64(200),
+		"message": "success",
+		"data": map[string]interface{}{
+			"id":         "11111111-1111-1111-1111-111111111111",
+			"name":       "Alice",
+			"email":      "alice@example.com",
+			"updated_at": "2025-04-01T00:00:00+09:00",
+		},
 	}
 
 	tests := []struct {
@@ -48,17 +56,17 @@ func TestUpdateUserHandler_Execute(t *testing.T) {
 		rawPayload     []byte
 		ucMock         usecase.UpdateUserUseCase
 		wantStatusCode int
-		wantBody       usecase.UpdateUserOutput
+		wantBody       map[string]interface{}
 	}{
 		{
 			name:       "success: update monitor",
 			rawPayload: payload,
 			ucMock: &mockUpdateUserUC{
-				result: want,
+				result: wantOutput,
 				err:    nil,
 			},
 			wantStatusCode: http.StatusOK,
-			wantBody:       want,
+			wantBody:       wantBody,
 		},
 	}
 
@@ -74,9 +82,7 @@ func TestUpdateUserHandler_Execute(t *testing.T) {
 
 			r.ServeHTTP(w, req)
 
-			if w.Code != tt.wantStatusCode {
-				t.Errorf("[TestCase %s] status code: Got %v, Want %v", tt.name, w.Code, tt.wantStatusCode)
-			}
+			assert.Equal(t, tt.wantStatusCode, w.Code)
 			wantJSON, _ := json.Marshal(tt.wantBody)
 			assert.JSONEq(t, string(wantJSON), w.Body.String())
 		})
