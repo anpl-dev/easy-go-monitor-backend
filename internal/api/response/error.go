@@ -14,7 +14,7 @@ type APIResponse struct {
 	Error   interface{} `json:"error,omitempty"`
 }
 
-func Error(err error) (int, APIResponse) {
+func ErrorResponse(err error) (int, APIResponse) {
 	if res, ok := err.(*apperr.AppError); ok {
 		status := toHTTPStatus(res.Code)
 		return status, APIResponse{
@@ -32,8 +32,9 @@ func Error(err error) (int, APIResponse) {
 }
 
 func HandleError(c *gin.Context, err error) {
-	status, res := Error(err)
+	status, res := ErrorResponse(err)
 	c.JSON(status, res)
+	c.Abort()
 }
 
 func toHTTPStatus(code int) int {
@@ -48,5 +49,3 @@ func toHTTPStatus(code int) int {
 		return http.StatusInternalServerError
 	}
 }
-
-
