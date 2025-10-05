@@ -42,7 +42,7 @@ func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor
 	})
 	if err != nil {
 		if pgErr, ok := err.(*pgconn.PgError); ok {
-			if pgErr.Code == apperr.ForeignKeyViolation {
+			if pgErr.Code == apperr.PostgresForeignKeyViolation {
 				return nil, apperr.ErrNotFound
 			}
 		}

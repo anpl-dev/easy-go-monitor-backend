@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"go-monitor-tool/internal/response"
-	"go-monitor-tool/internal/errors"
+	"go-monitor-tool/internal/api/response"
+	"go-monitor-tool/internal/apperr"
 	"go-monitor-tool/internal/user/usecase"
 	"net/http"
 
@@ -23,13 +23,13 @@ func (h *SearchUsersHandler) Handle(c *gin.Context) {
 		Name:  c.Query("name"),
 	}
 	if input.Email == "" && input.Name == "" {
-		response.NewHTTPError(errors.ErrSearchParameters).Send(c)
+		response.HandleError(c, apperr.ErrSearchParameters)
 		return
 	}
 	output, err := h.uc.Execute(c.Request.Context(), input)
 	if err != nil {
-		response.NewHTTPError(errors.ErrNotFound).Send(c)
+		response.HandleError(c, apperr.ErrNotFound)
 		return
 	}
-	c.JSON(http.StatusOK, output)
+	response.Success(c, http.StatusOK, output)
 }

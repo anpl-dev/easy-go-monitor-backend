@@ -3,8 +3,9 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"go-monitor-tool/internal/apperr"
 	"go-monitor-tool/internal/user/adapter/repository/sqlcgen"
-	"go-monitor-tool/internal/errors"
 	"go-monitor-tool/internal/user/domain"
 
 	"github.com/google/uuid"
@@ -47,7 +48,7 @@ func (r *UserPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) (*d
 	row, err := r.queries.FindUserByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, errors.ErrNotFound
+			return nil, apperr.ErrNotFound
 		}
 		return nil, err
 	}
@@ -58,7 +59,7 @@ func (r *UserPostgresRepository) FindByEmail(ctx context.Context, email string) 
 	row, err := r.queries.FindUserByEmail(ctx, email)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, errors.ErrNotFound
+			return nil, apperr.ErrNotFound
 		}
 		return nil, err
 	}
@@ -74,7 +75,7 @@ func (r *UserPostgresRepository) Update(ctx context.Context, u domain.User) (*do
 	})
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, errors.ErrNotFound
+			return nil, apperr.ErrNotFound
 		}
 		return nil, err
 	}
@@ -82,5 +83,12 @@ func (r *UserPostgresRepository) Update(ctx context.Context, u domain.User) (*do
 }
 
 func (r *UserPostgresRepository) Delete(ctx context.Context, id uuid.UUID) error {
-	return r.queries.DeleteUser(ctx, id)
+	err := r.queries.DeleteUser(ctx, id)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return apperr.ErrNotFound
+		}
+		return err
+	}
+	return nil
 }

@@ -1,7 +1,8 @@
 package handler
 
 import (
-	"go-monitor-tool/internal/response"
+	"go-monitor-tool/internal/api/response"
+	"go-monitor-tool/internal/apperr"
 	"go-monitor-tool/internal/user/usecase"
 	"net/http"
 
@@ -19,15 +20,14 @@ func NewCreateUserHandler(uc usecase.CreateUserUseCase) *CreateUserHandler {
 func (h *CreateUserHandler) Handle(c *gin.Context) {
 	var input usecase.CreateUserInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		response.NewError(http.StatusBadRequest, err).Send(c)
+		response.HandleError(c, apperr.ErrBadRequest)
 		return
 	}
 
 	output, err := h.uc.Execute(c.Request.Context(), input)
 	if err != nil {
-		response.NewHTTPError(err).Send(c)
+		response.HandleError(c, err)
 		return
 	}
-	c.JSON(http.StatusCreated, output)
-
+	response.Success(c, http.StatusCreated, output)
 }

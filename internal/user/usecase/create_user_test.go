@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"go-monitor-tool/internal/errors"
+	"go-monitor-tool/internal/apperr"
 	"go-monitor-tool/internal/user/domain"
 
 	"github.com/google/uuid"
@@ -87,7 +87,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			mockPresenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			wantError: errors.ErrInvalidUserName,
+			wantError: apperr.ErrInvalidUserName,
 		},
 		{
 			name: "error: missing email",
@@ -100,7 +100,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			mockPresenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			wantError: errors.ErrInvalidEmail,
+			wantError: apperr.ErrInvalidEmail,
 		},
 		{
 			name: "error: missing password",
@@ -113,7 +113,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			mockPresenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			wantError: errors.ErrInvalidPassword,
+			wantError: apperr.ErrInvalidPassword,
 		},
 	}
 

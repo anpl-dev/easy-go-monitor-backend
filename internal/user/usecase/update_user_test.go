@@ -2,14 +2,14 @@ package usecase
 
 import (
 	"context"
-	"reflect"
 	"testing"
 	"time"
 
-	"go-monitor-tool/internal/errors"
+	"go-monitor-tool/internal/apperr"
 	"go-monitor-tool/internal/user/domain"
 
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
 )
 
 // --- Mock Repository ---
@@ -37,7 +37,7 @@ func (m mockUpdateUserPresenter) Output(_ *domain.User) UpdateUserOutput {
 func TestUpdateUserInteractor_Execute(t *testing.T) {
 	t.Parallel()
 
-	now := time.Now()
+	now := time.Date(2025, 4, 1, 0, 0, 0, 0, time.UTC)
 	user := &domain.User{
 		ID:           uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:         "Alice",
@@ -50,21 +50,20 @@ func TestUpdateUserInteractor_Execute(t *testing.T) {
 	tests := []struct {
 		name          string
 		input         UpdateUserInput
-		repository    domain.UserRepository
-		presenter     UpdateUserPresenter
-		expected      UpdateUserOutput
-		expectedError error
+		mockRepo      mockUserRepoUpdate
+		mockPresenter mockUpdateUserPresenter
+		wantError     error
 	}{
 		{
 			name: "success: user updated",
 			input: UpdateUserInput{
 				ID: user.ID,
 			},
-			repository: mockUserRepoUpdate{
+			mockRepo: mockUserRepoUpdate{
 				result: user,
 				err:    nil,
 			},
-			presenter: mockUpdateUserPresenter{
+			mockPresenter: mockUpdateUserPresenter{
 				result: UpdateUserOutput{
 					ID:        user.ID,
 					Name:      user.Name,
@@ -72,46 +71,32 @@ func TestUpdateUserInteractor_Execute(t *testing.T) {
 					UpdatedAt: user.UpdatedAt,
 				},
 			},
-			expected: UpdateUserOutput{
-				ID:        user.ID,
-				Name:      user.Name,
-				Email:     user.Email,
-				UpdatedAt: user.UpdatedAt,
-			},
-			expectedError: nil,
+			wantError: nil,
 		},
 		{
 			name: "error: user not updated",
 			input: UpdateUserInput{
 				ID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 			},
-			repository: mockUserRepoUpdate{
+			mockRepo: mockUserRepoUpdate{
 				result: nil,
-				err:    errors.ErrNotFound,
+				err:    apperr.ErrNotFound,
 			},
-			presenter:     mockUpdateUserPresenter{},
-			expected:      UpdateUserOutput{},
-			expectedError: errors.ErrNotFound,
+			mockPresenter: mockUpdateUserPresenter{},
+			wantError:     apperr.ErrNotFound,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			uc := NewUpdateUserInteractor(tt.repository, tt.presenter)
+			uc := NewUpdateUserInteractor(&tt.mockRepo, &tt.mockPresenter)
+			got, err := uc.Execute(context.Background(), tt.input)
 
-			result, err := uc.Execute(context.Background(), tt.input)
-
-			if tt.expectedError == nil {
-				if err != nil {
-					t.Errorf("[TestCase '%s'] Unexpected error: %v", tt.name, err)
-				}
-				if !reflect.DeepEqual(result, tt.expected) {
-					t.Errorf("[TestCase '%s'] Got: '%+v' , Want: '%+v'", tt.name, result, tt.expected)
-				}
+			if tt.wantError != nil {
+				require.ErrorIs(t, err, tt.wantError, "[%s] unexpected err", tt.name)
 			} else {
-				if !errors.Is(err, tt.expectedError) {
-					t.Errorf("[TestCase '%s'] Got error: '%v' , Want: '%v'", tt.name, err, tt.expectedError)
-				}
+				require.NoError(t, err, "[%s] unexpected err", tt.name)
+				require.Equal(t, tt.mockPresenter.result, got, "[%s] result mismatch", tt.name)
 			}
 		})
 	}
