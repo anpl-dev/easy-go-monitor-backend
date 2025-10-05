@@ -1,54 +1,60 @@
 package router
 
 import (
-	uhandler "go-monitor-tool/internal/user/adapter/handler"
-	mhandler "go-monitor-tool/internal/monitor/adapter/handler"
+	"go-monitor-tool/internal/api/middleware"
+	"go-monitor-tool/internal/infra/jwt"
+	monitorHandler "go-monitor-tool/internal/monitor/adapter/handler"
+	userHandler "go-monitor-tool/internal/user/adapter/handler"
 
 	"github.com/gin-gonic/gin"
 )
 
 type (
 	UserHandlers struct {
-		Create   *uhandler.CreateUserHandler
-		FindByID *uhandler.FindUserByIDHandler
-		Search   *uhandler.SearchUsersHandler
-		Update   *uhandler.UpdateUserHandler
-		Delete   *uhandler.DeleteUserHandler
+		Create   *userHandler.CreateUserHandler
+		FindByID *userHandler.FindUserByIDHandler
+		Search   *userHandler.SearchUsersHandler
+		Update   *userHandler.UpdateUserHandler
+		Delete   *userHandler.DeleteUserHandler
+		Login    *userHandler.LoginUserHandler
 	}
 
 	MonitorHandlers struct {
-		Create   *mhandler.CreateMonitorHandler
-		FindByID *mhandler.FindMonitorByIDHandler
-		Search   *mhandler.SearchMonitorsHandler
-		Update   *mhandler.UpdateMonitorHandler
-		Delete   *mhandler.DeleteMonitorHandler
+		Create   *monitorHandler.CreateMonitorHandler
+		FindByID *monitorHandler.FindMonitorByIDHandler
+		Search   *monitorHandler.SearchMonitorsHandler
+		Update   *monitorHandler.UpdateMonitorHandler
+		Delete   *monitorHandler.DeleteMonitorHandler
 	}
 )
 
-func NewGinRouter(users UserHandlers, monitors MonitorHandlers) *gin.Engine {
+func NewGinRouter(users UserHandlers, monitors MonitorHandlers, jwtService jwt.JWTService) *gin.Engine {
 	r := gin.Default()
 
 	api := r.Group("/api/v1")
 
+	api.POST("/login", users.Login.Handle)
+	api.POST("/users", users.Create.Handle)
+
+	auth := api.Group("/")
+	auth.Use(middleware.AuthMiddleWare(jwtService))
 	{
-		usersApi := api.Group("/users")
+		usersApi := auth.Group("/users")
 		{
-			usersApi.POST("", users.Create.Handle)
 			usersApi.GET("/:id", users.FindByID.Handle)
 			usersApi.GET("/search", users.Search.Handle)
 			usersApi.PUT("/:id", users.Update.Handle)
 			usersApi.DELETE("/:id", users.Delete.Handle)
 		}
 
-		monitorsApi := api.Group("/monitors")
+		monitorsApi := auth.Group("/monitors")
 		{
 			monitorsApi.POST("", monitors.Create.Handle)
 			monitorsApi.GET("/:id", monitors.FindByID.Handle)
-			usersApi.GET("/search", monitors.Search.Handle)
+			monitorsApi.GET("/search", monitors.Search.Handle)
 			monitorsApi.PUT("/:id", monitors.Update.Handle)
 			monitorsApi.DELETE("/:id", monitors.Delete.Handle)
 		}
-
 	}
 
 	// Health Check

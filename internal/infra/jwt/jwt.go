@@ -1,6 +1,8 @@
 package jwt
 
 import (
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -9,7 +11,7 @@ import (
 
 type JWTService interface {
 	GenerateToken(userID uuid.UUID) (string, error)
-	ValidateToken(tokenStr string) (*jwt.Token, error)
+	ValidateToken(tokenStr string) (uuid.UUID, error)
 }
 
 type jwtService struct {
@@ -35,11 +37,31 @@ func (j *jwtService) GenerateToken(userID uuid.UUID) (string, error) {
 	return token.SignedString([]byte(j.secretKey))
 }
 
-func (s *jwtService) ValidateToken(tokenStr string) (*jwt.Token, error) {
-	return jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, jwt.ErrSignatureInvalid
+func (j *jwtService) ValidateToken(tokenStr string) (uuid.UUID, error) {
+	token, err := jwt.Parse(tokenStr, func(t *jwt.Token) (interface{}, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
 		}
-		return []byte(s.secretKey), nil
+		return []byte(j.secretKey), nil
 	})
+	if err != nil {
+		return uuid.Nil, err
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+
+		if exp, ok := claims["exp"].(float64); ok {
+			if time.Now().Unix() > int64(exp) {
+				return uuid.Nil, errors.New("token expired")
+			}
+		}
+
+		idStr, ok := claims["user_id"].(string)
+		if !ok {
+			return uuid.Nil, errors.New("invalid token payload")
+		}
+		return uuid.Parse(idStr)
+	}
+
+	return uuid.Nil, errors.New("invalid token")
 }

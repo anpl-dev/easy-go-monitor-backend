@@ -2,6 +2,7 @@ package main
 
 import (
 	"go-monitor-tool/internal/infra/database"
+	"go-monitor-tool/internal/infra/jwt"
 	"go-monitor-tool/internal/infra/router"
 	monitorHandler "go-monitor-tool/internal/monitor/adapter/handler"
 	monitorPresenter "go-monitor-tool/internal/monitor/adapter/presenter"
@@ -13,6 +14,8 @@ import (
 	userUC "go-monitor-tool/internal/user/usecase"
 	"log"
 	"os"
+	"strconv"
+	"time"
 
 	"github.com/joho/godotenv"
 )
@@ -24,7 +27,6 @@ func init() {
 }
 
 func main() {
-	// TODO: Middleware: auth
 	db_cfg := database.Config{
 		Host:      os.Getenv("POSTGRES_HOST"),
 		Port:      os.Getenv("POSTGRES_PORT"),
@@ -39,6 +41,10 @@ func main() {
 		log.Fatalf("failed to connect database: %v", err)
 	}
 	defer db.Close()
+
+	// --- JWT Service ---
+	expHour, _ := strconv.Atoi(os.Getenv("JWT_EXPIRE_HOUR"))
+	jwtService := jwt.NewService(os.Getenv("JWT_SECRET"), time.Duration(expHour)*time.Hour)
 
 	// --- Repository ---
 	userRepo := userRepo.NewUserPostgresRepository(db)
@@ -61,6 +67,7 @@ func main() {
 	searchUsersUC := userUC.NewSearchUsersInteractor(userRepo, searchUsersPresenter)
 	updateUserUC := userUC.NewUpdateUserInteractor(userRepo, updateUserPresenter)
 	deleteUserUC := userUC.NewDeleteUserInteractor(userRepo)
+	loginUserUC := userUC.NewLoginUserInteractor(userRepo, jwtService)
 
 	createMonitorUC := monitorUC.NewCreateMonitorInteractor(monitorRepo, createMonitorPresenter)
 	findMointorByIDUC := monitorUC.NewFindMonitorByIDInteractor(monitorRepo, findMonitorByIDPresenter)
@@ -75,6 +82,7 @@ func main() {
 		Search:   userHandler.NewSearchUsersHandler(searchUsersUC),
 		Update:   userHandler.NewUpdateUserHandler(updateUserUC),
 		Delete:   userHandler.NewDeleteUserHandler(deleteUserUC),
+		Login:    userHandler.NewLoginUserHandler(loginUserUC),
 	}
 
 	monitorHandlers := router.MonitorHandlers{
@@ -86,7 +94,7 @@ func main() {
 	}
 
 	// --- Router ---
-	r := router.NewGinRouter(userHandlers, monitorHandlers)
+	r := router.NewGinRouter(userHandlers, monitorHandlers, jwtService)
 
 	// --- Run Server ---
 	if err := r.Run(":8080"); err != nil {
