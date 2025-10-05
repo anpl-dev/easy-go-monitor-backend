@@ -39,10 +39,7 @@ type (
 	}
 )
 
-func NewFindUserByIDInteractor(
-	repo domain.UserRepository,
-	presenter FindUserByIDPresenter,
-) FindUserByIDUseCase {
+func NewFindUserByIDInteractor(repo domain.UserRepository, presenter FindUserByIDPresenter) FindUserByIDUseCase {
 	return &findUserByIDIntatactor{
 		repo:      repo,
 		presenter: presenter,

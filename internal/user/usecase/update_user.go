@@ -34,7 +34,7 @@ type (
 		UpdatedAt time.Time `json:"updated_at"`
 	}
 
-	updateUserIteractor struct {
+	updateUserInteractor struct {
 		repo      domain.UserRepository
 		presenter UpdateUserPresenter
 	}
@@ -44,13 +44,13 @@ func NewUpdateUserInteractor(
 	repo domain.UserRepository,
 	presenter UpdateUserPresenter,
 ) UpdateUserUseCase {
-	return &updateUserIteractor{
+	return &updateUserInteractor{
 		repo:      repo,
 		presenter: presenter,
 	}
 }
 
-func (i *updateUserIteractor) Execute(ctx context.Context, input UpdateUserInput) (UpdateUserOutput, error) {
+func (i *updateUserInteractor) Execute(ctx context.Context, input UpdateUserInput) (UpdateUserOutput, error) {
 	updated, err := i.repo.Update(ctx, domain.User{
 		ID:           input.ID,
 		Name:         input.Name,

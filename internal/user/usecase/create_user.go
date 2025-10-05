@@ -34,23 +34,20 @@ type (
 		UpdatedAt time.Time `json:"updated_at"`
 	}
 
-	createUserIteractor struct {
+	createUserInteractor struct {
 		repo      domain.UserRepository
 		presenter CreateUserPresenter
 	}
 )
 
-func NewCreateUserInteractor(
-	repo domain.UserRepository,
-	presenter CreateUserPresenter,
-) CreateUserUseCase {
-	return &createUserIteractor{
+func NewCreateUserInteractor(repo domain.UserRepository, presenter CreateUserPresenter) CreateUserUseCase {
+	return &createUserInteractor{
 		repo:      repo,
 		presenter: presenter,
 	}
 }
 
-func (i *createUserIteractor) Execute(ctx context.Context, input CreateUserInput) (CreateUserOutput, error) {
+func (i *createUserInteractor) Execute(ctx context.Context, input CreateUserInput) (CreateUserOutput, error) {
 	user, err := domain.NewUser(
 		input.Name,
 		input.Email,

@@ -7,8 +7,9 @@ import (
 // Domain
 var (
 	// Common errors
-	ErrNotFound    = errors.New("not found")
-	ErrInvalidUUID = errors.New("invalid uuid")
+	ErrNotFound           = errors.New("not found")
+	ErrInvalidUUID        = errors.New("invalid uuid")
+	ErrInvalidCredentials = errors.New("invalid credentials")
 
 	// User errors
 	ErrInvalidUserName = errors.New("invalid user name")
@@ -33,4 +34,3 @@ func New(message string) error {
 func Is(err, target error) bool {
 	return errors.Is(err, target)
 }
-

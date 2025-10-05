@@ -62,3 +62,10 @@ func HashedPassword(plain string) (string, error) {
 func CheckPasswordHash(password, hash string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) == nil
 }
+
+func (u *User) Authenticate(password string) error {
+	if !CheckPasswordHash(password, u.PasswordHash) {
+		return errors.ErrInvalidPassword
+	}
+	return nil
+}

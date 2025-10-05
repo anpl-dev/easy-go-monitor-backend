@@ -18,15 +18,15 @@ type (
 		ID uuid.UUID `json:"-"`
 	}
 
-	deleteMonitorIteractor struct {
+	deleteMonitorInteractor struct {
 		repo domain.MonitorRepository
 	}
 )
 
 func NewDeleteMonitorInteractor(repo domain.MonitorRepository) DeleteMonitorUseCase {
-	return &deleteMonitorIteractor{repo: repo}
+	return &deleteMonitorInteractor{repo: repo}
 }
 
-func (i *deleteMonitorIteractor) Execute(ctx context.Context, input DeleteMonitorInput) error {
+func (i *deleteMonitorInteractor) Execute(ctx context.Context, input DeleteMonitorInput) error {
 	return i.repo.Delete(ctx, input.ID)
 }

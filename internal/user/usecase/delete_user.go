@@ -18,15 +18,15 @@ type (
 		ID uuid.UUID `json:"-"`
 	}
 
-	deleteUserIteractor struct {
+	deleteUserInteractor struct {
 		repo domain.UserRepository
 	}
 )
 
 func NewDeleteUserInteractor(repo domain.UserRepository) DeleteUserUseCase {
-	return &deleteUserIteractor{repo: repo}
+	return &deleteUserInteractor{repo: repo}
 }
 
-func (i *deleteUserIteractor) Execute(ctx context.Context, input DeleteUserInput) error {
+func (i *deleteUserInteractor) Execute(ctx context.Context, input DeleteUserInput) error {
 	return i.repo.Delete(ctx, input.ID)
 }
