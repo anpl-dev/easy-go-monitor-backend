@@ -34,7 +34,7 @@ func TestUpdateMonitorHandler_Execute(t *testing.T) {
 		"url":             "https://example.com",
 		"interval_second": 60,
 	})
-	want := usecase.UpdateMonitorOutput{
+	wantOutput := usecase.UpdateMonitorOutput{
 		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:           "test-monitor",
@@ -66,7 +66,7 @@ func TestUpdateMonitorHandler_Execute(t *testing.T) {
 			name:       "success: update monitor",
 			rawPayload: payload,
 			ucMock: &mockUpdateMonitorUC{
-				result: want,
+				result: wantOutput,
 				err:    nil,
 			},
 			wantStatusCode: http.StatusOK,

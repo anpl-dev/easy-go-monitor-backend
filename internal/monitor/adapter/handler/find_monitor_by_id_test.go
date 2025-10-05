@@ -27,7 +27,7 @@ func TestFindMonitorByIDHandler_Execute(t *testing.T) {
 	t.Parallel()
 	gin.SetMode(gin.TestMode)
 
-	want := usecase.FindMonitorByIDOutput{
+	wantOUtput := usecase.FindMonitorByIDOutput{
 		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:           "test-monitor",
@@ -61,7 +61,7 @@ func TestFindMonitorByIDHandler_Execute(t *testing.T) {
 			name:     "success: find monitor by id",
 			targetID: "11111111-1111-1111-1111-111111111111",
 			ucMock: &mockFindMonitorByIDUC{
-				result: want,
+				result: wantOUtput,
 				err:    nil,
 			},
 			wantStatusCode: http.StatusOK,

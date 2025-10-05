@@ -28,7 +28,7 @@ func TestSearchMonitorsHandler_Execute(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
 	queryParam := "?user_id=11111111-1111-1111-1111-111111111111"
-	want := usecase.SearchMonitorsOutput{
+	wantOutput := usecase.SearchMonitorsOutput{
 		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:           "test-monitor",
@@ -64,7 +64,7 @@ func TestSearchMonitorsHandler_Execute(t *testing.T) {
 			name:       "success: search monitors",
 			queryParam: queryParam,
 			ucMock: &mockSearchMonitorsUC{
-				result: []usecase.SearchMonitorsOutput{want},
+				result: []usecase.SearchMonitorsOutput{wantOutput},
 				err:    nil,
 			},
 			wantStatusCode: http.StatusOK,

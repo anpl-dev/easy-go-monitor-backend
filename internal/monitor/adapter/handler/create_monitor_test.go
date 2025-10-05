@@ -34,7 +34,7 @@ func TestCreateMonitorHandler_Execute(t *testing.T) {
 		"url":             "https://example.com",
 		"interval_second": 60,
 	})
-	want := usecase.CreateMonitorOutput{
+	wantOutput := usecase.CreateMonitorOutput{
 		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:           "test-monitor",
@@ -68,7 +68,7 @@ func TestCreateMonitorHandler_Execute(t *testing.T) {
 			name:       "success: create user",
 			rawPayload: payload,
 			ucMock: &mockCreateMonitorUC{
-				result: want,
+				result: wantOutput,
 				err:    nil,
 			},
 			wantStatusCode: http.StatusCreated,
