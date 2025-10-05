@@ -4,10 +4,11 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 type JWTService interface {
-	GenerateToken(userID string) (string, error)
+	GenerateToken(userID uuid.UUID) (string, error)
 	ValidateToken(tokenStr string) (*jwt.Token, error)
 }
 
@@ -23,9 +24,9 @@ func NewService(secret string, duration time.Duration) JWTService {
 	}
 }
 
-func (j *jwtService) GenerateToken(userID string) (string, error) {
+func (j *jwtService) GenerateToken(userID uuid.UUID) (string, error) {
 	claims := jwt.MapClaims{
-		"user_id": userID,
+		"user_id": userID.String(),
 		"exp":     time.Now().Add(j.tokenDuration).Unix(),
 		"iat":     time.Now().Unix(),
 	}

@@ -22,7 +22,7 @@ type (
 
 	// LoginUserOutput output data
 	LoginUserOutput struct {
-		Token string
+		Token string `json:"token"`
 	}
 
 	loginUserInteractor struct {
@@ -53,7 +53,7 @@ func (i *loginUserInteractor) Execute(ctx context.Context, input LoginUserInput)
 		return LoginUserOutput{}, apperr.ErrInvalidCredentials
 	}
 
-	token, err := i.jwt.GenerateToken(user.ID.String())
+	token, err := i.jwt.GenerateToken(user.ID)
 	if err != nil {
 		return LoginUserOutput{}, err
 	}
