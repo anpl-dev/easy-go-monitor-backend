@@ -1,26 +1,27 @@
 package router
 
 import (
-	"go-monitor-tool/internal/adapter/handler"
+	uhandler "go-monitor-tool/internal/user/adapter/handler"
+	mhandler "go-monitor-tool/internal/monitor/adapter/handler"
 
 	"github.com/gin-gonic/gin"
 )
 
 type (
 	UserHandlers struct {
-		Create   *handler.CreateUserHandler
-		FindByID *handler.FindUserByIDHandler
-		Search   *handler.SearchUsersHandler
-		Update   *handler.UpdateUserHandler
-		Delete   *handler.DeleteUserHandler
+		Create   *uhandler.CreateUserHandler
+		FindByID *uhandler.FindUserByIDHandler
+		Search   *uhandler.SearchUsersHandler
+		Update   *uhandler.UpdateUserHandler
+		Delete   *uhandler.DeleteUserHandler
 	}
 
 	MonitorHandlers struct {
-		Create   *handler.CreateMonitorHandler
-		FindByID *handler.FindMonitorByIDHandler
-		Search   *handler.SearchMonitorsHandler
-		Update   *handler.UpdateMonitorHandler
-		Delete   *handler.DeleteMonitorHandler
+		Create   *mhandler.CreateMonitorHandler
+		FindByID *mhandler.FindMonitorByIDHandler
+		Search   *mhandler.SearchMonitorsHandler
+		Update   *mhandler.UpdateMonitorHandler
+		Delete   *mhandler.DeleteMonitorHandler
 	}
 )
 
