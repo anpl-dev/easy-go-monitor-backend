@@ -5,7 +5,6 @@ import (
 	"go-monitor-tool/internal/infra/jwt"
 	monitorHandler "go-monitor-tool/internal/monitor/adapter/handler"
 	userHandler "go-monitor-tool/internal/user/adapter/handler"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,6 +29,8 @@ type (
 
 func NewGinRouter(users UserHandlers, monitors MonitorHandlers, jwtService jwt.JWTService) *gin.Engine {
 	r := gin.Default()
+
+	r.Use(middleware.CORSMiddleware())
 
 	api := r.Group("/api/v1")
 

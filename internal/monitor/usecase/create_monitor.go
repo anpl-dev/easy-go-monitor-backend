@@ -16,7 +16,7 @@ type (
 
 	// CreateMonitorInput input data
 	CreateMonitorInput struct {
-		UserID         uuid.UUID `json:"user_id" binding:"required"`
+		UserID         uuid.UUID `json:"user_id"`
 		Name           string    `json:"name" binding:"required"`
 		URL            string    `json:"url" binding:"required"`
 		IntervalSecond int       `json:"interval_second" binding:"required,min=1"`
