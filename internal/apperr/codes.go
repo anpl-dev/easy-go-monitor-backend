@@ -10,7 +10,7 @@ var (
 
 	// Common
 	ErrInvalidUUID        = New(4001, "invalid uuid")
-	ErrInvalidCredentials = New(4002, "invalid credentials")
+	ErrInvalidCredentials = New(4002, "invalid login or password")
 
 	// User
 	ErrInvalidUserName = New(4101, "invalid user name")
