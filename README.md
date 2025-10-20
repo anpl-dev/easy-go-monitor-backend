@@ -35,7 +35,7 @@ db/migrations/
 
 ```bash
 migrate -path db/migrations \
-  -database "postgres://<user>:<password>@localhost:5432/monitor_db?sslmode=disable" up
+  -database "postgres://<user>:<password>@localhost:55432/monitor_db?sslmode=disable" up
 ```
 
 ### マイグレーションのロールバック
@@ -44,14 +44,14 @@ migrate -path db/migrations \
 
 ```bash
 migrate -path db/migrations \
-  -database "postgres://<user>:<password>@localhost:5432/monitor_db?sslmode=disable" down 1
+  -database "postgres://<user>:<password>@localhost:55432/monitor_db?sslmode=disable" down 1
 ```
 
 すべて戻す:
 
 ```bash
 migrate -path db/migrations \
-  -database "postgres://<user>:<password>@localhost:5432/monitor_db?sslmode=disable" down
+  -database "postgres://<user>:<password>@localhost:55432/monitor_db?sslmode=disable" down
 ```
 
 ### 確認
