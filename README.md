@@ -5,8 +5,7 @@
 このプロジェクトは外形監視をGUIから気軽にできるようにするGolang製のプロジェクトです。
 
 ## ER図
-
-![alt text](ER_easy-go-monitor.svg)
+![alt text](<ER図_easy-go-monitor-backend.svg>)
 
 ## データベースマイグレーション
 
