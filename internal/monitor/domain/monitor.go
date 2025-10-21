@@ -2,7 +2,7 @@ package domain
 
 import (
 	"context"
-	"go-monitor-tool/internal/apperr"
+	"go-monitor-tool/internal/constraints"
 	"net/url"
 	"time"
 
@@ -32,16 +32,16 @@ type (
 // NewMonitor creates a new Monitor entity with validation.
 func NewMonitor(userID uuid.UUID, name string, rawURL string, interval int) (*Monitor, error) {
 	if userID == uuid.Nil {
-		return nil, apperr.ErrInvalidUUID
+		return nil, constraints.ErrInvalidUUID
 	}
 	if name == "" {
-		return nil, apperr.ErrInvalidMonitorName
+		return nil, constraints.ErrInvalidMonitorName
 	}
 	if interval <= 0 {
-		return nil, apperr.ErrInvalidMonitorInterval
+		return nil, constraints.ErrInvalidMonitorInterval
 	}
 	if _, err := url.ParseRequestURI(rawURL); err != nil {
-		return nil, apperr.ErrInvalidMonitorURL
+		return nil, constraints.ErrInvalidMonitorURL
 	}
 
 	return &Monitor{

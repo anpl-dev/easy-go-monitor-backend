@@ -2,7 +2,7 @@ package handler
 
 import (
 	"go-monitor-tool/internal/api/response"
-	"go-monitor-tool/internal/apperr"
+	"go-monitor-tool/internal/constraints"
 	"go-monitor-tool/internal/user/usecase"
 	"net/http"
 
@@ -22,7 +22,7 @@ func (h *DeleteUserHandler) Handle(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {
-		response.HandleError(c, apperr.ErrInvalidUUID)
+		response.HandleError(c, constraints.ErrInvalidUUID)
 		return
 	}
 

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"go-monitor-tool/internal/apperr"
+	"go-monitor-tool/internal/constraints"
 	"go-monitor-tool/internal/monitor/domain"
 
 	"github.com/google/uuid"
@@ -102,7 +102,7 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: apperr.ErrInvalidUUID,
+			wantError: constraints.ErrInvalidUUID,
 		},
 		{
 			name: "error: user not found",
@@ -114,13 +114,13 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 			},
 			mockRepo: mockMonitorRepoCreate{
 				result: nil,
-				err:    apperr.ErrNotFound,
+				err:    constraints.ErrNotFound,
 			},
 			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: apperr.ErrNotFound,
+			wantError: constraints.ErrNotFound,
 		},
 		{
 			name: "error: missing name",
@@ -134,7 +134,7 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: apperr.ErrInvalidMonitorName,
+			wantError: constraints.ErrInvalidMonitorName,
 		},
 		{
 			name: "error: missing url",
@@ -148,7 +148,7 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: apperr.ErrInvalidMonitorURL,
+			wantError: constraints.ErrInvalidMonitorURL,
 		},
 		{
 			name: "error: missing interval",
@@ -162,7 +162,7 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: apperr.ErrInvalidMonitorInterval,
+			wantError: constraints.ErrInvalidMonitorInterval,
 		},
 		{
 			name: "error: invalid interval",
@@ -177,7 +177,7 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: apperr.ErrInvalidMonitorInterval,
+			wantError: constraints.ErrInvalidMonitorInterval,
 		},
 	}
 

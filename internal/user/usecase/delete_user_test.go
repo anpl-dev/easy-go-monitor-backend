@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"go-monitor-tool/internal/apperr"
+	"go-monitor-tool/internal/constraints"
 	"go-monitor-tool/internal/user/domain"
 
 	"github.com/google/uuid"
@@ -49,8 +49,8 @@ func TestDeleteUserInteractor_Execute(t *testing.T) {
 			input: DeleteUserInput{
 				ID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 			},
-			mockRepo:  mockUserRepoDelete{err: apperr.ErrNotFound},
-			wantError: apperr.ErrNotFound,
+			mockRepo:  mockUserRepoDelete{err: constraints.ErrNotFound},
+			wantError: constraints.ErrNotFound,
 		},
 	}
 

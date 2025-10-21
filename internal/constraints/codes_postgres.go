@@ -1,4 +1,4 @@
-package apperr
+package constraints
 
 // Postgres error codes (https://www.postgresql.jp/document/15/html/errcodes-appendix.html)
 const (

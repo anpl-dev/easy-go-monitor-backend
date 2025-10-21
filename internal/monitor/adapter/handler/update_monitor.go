@@ -2,7 +2,7 @@ package handler
 
 import (
 	"go-monitor-tool/internal/api/response"
-	"go-monitor-tool/internal/apperr"
+	"go-monitor-tool/internal/constraints"
 	"go-monitor-tool/internal/monitor/usecase"
 	"net/http"
 
@@ -22,13 +22,13 @@ func (h *UpdateMonitorHandler) Handle(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {
-		response.HandleError(c, apperr.ErrInvalidUUID)
+		response.HandleError(c, constraints.ErrInvalidUUID)
 		return
 	}
 
 	var input usecase.UpdateMonitorInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		response.HandleError(c, apperr.ErrBadRequest)
+		response.HandleError(c, constraints.ErrBadRequest)
 		return
 	}
 

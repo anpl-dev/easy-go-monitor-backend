@@ -1,4 +1,4 @@
-package apperr
+package constraints
 
 import "fmt"
 
@@ -17,7 +17,7 @@ func (e *AppError) Error() string {
 
 func New(code int, message string) *AppError {
 	return &AppError{
-		Code: code, 
+		Code:    code,
 		Message: message,
 	}
 }

@@ -2,7 +2,7 @@ package handler
 
 import (
 	"go-monitor-tool/internal/api/response"
-	"go-monitor-tool/internal/apperr"
+	"go-monitor-tool/internal/constraints"
 	"go-monitor-tool/internal/monitor/usecase"
 	"net/http"
 
@@ -22,12 +22,12 @@ func (h *FindMonitorByIDHandler) Handle(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {
-		response.HandleError(c, apperr.ErrInvalidUUID)
+		response.HandleError(c, constraints.ErrInvalidUUID)
 		return
 	}
 	output, err := h.uc.Execute(c.Request.Context(), usecase.FindMonitorByIDInput{ID: id})
 	if err != nil {
-		response.HandleError(c, apperr.ErrNotFound)
+		response.HandleError(c, constraints.ErrNotFound)
 		return
 	}
 	response.Success(c, http.StatusOK, output)

@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"go-monitor-tool/internal/apperr"
+	"go-monitor-tool/internal/constraints"
 	"go-monitor-tool/internal/user/adapter/repository/sqlcgen"
 	"go-monitor-tool/internal/user/domain"
 
@@ -48,7 +48,7 @@ func (r *UserPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) (*d
 	row, err := r.queries.FindUserByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, apperr.ErrNotFound
+			return nil, constraints.ErrNotFound
 		}
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (r *UserPostgresRepository) FindByEmail(ctx context.Context, email string) 
 	row, err := r.queries.FindUserByEmail(ctx, email)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, apperr.ErrNotFound
+			return nil, constraints.ErrNotFound
 		}
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (r *UserPostgresRepository) Update(ctx context.Context, u domain.User) (*do
 	})
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, apperr.ErrNotFound
+			return nil, constraints.ErrNotFound
 		}
 		return nil, err
 	}
@@ -86,7 +86,7 @@ func (r *UserPostgresRepository) Delete(ctx context.Context, id uuid.UUID) error
 	err := r.queries.DeleteUser(ctx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return apperr.ErrNotFound
+			return constraints.ErrNotFound
 		}
 		return err
 	}

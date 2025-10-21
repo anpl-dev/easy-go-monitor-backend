@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"go-monitor-tool/internal/apperr"
+	"go-monitor-tool/internal/constraints"
 	"go-monitor-tool/internal/user/domain"
 
 	"github.com/google/uuid"
@@ -84,10 +84,10 @@ func TestSearchUsersInteractor_Execute(t *testing.T) {
 			},
 			mockRepo: mockUserRepoSearch{
 				result: nil,
-				err:    apperr.ErrNotFound,
+				err:    constraints.ErrNotFound,
 			},
 			mockPresenter: mockSearchUsersPresenter{},
-			wantError:     apperr.ErrNotFound,
+			wantError:     constraints.ErrNotFound,
 		},
 	}
 

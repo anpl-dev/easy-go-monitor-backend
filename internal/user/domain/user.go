@@ -2,7 +2,7 @@ package domain
 
 import (
 	"context"
-	"go-monitor-tool/internal/apperr"
+	"go-monitor-tool/internal/constraints"
 	"strings"
 	"time"
 
@@ -32,13 +32,13 @@ type (
 // NewUser creates a new User entity with validation
 func NewUser(name, email, plainPassword string) (*User, error) {
 	if name == "" {
-		return nil, apperr.ErrInvalidUserName
+		return nil, constraints.ErrInvalidUserName
 	}
 	if !strings.Contains(email, "@") {
-		return nil, apperr.ErrInvalidEmail
+		return nil, constraints.ErrInvalidEmail
 	}
 	if plainPassword == "" {
-		return nil, apperr.ErrInvalidPassword
+		return nil, constraints.ErrInvalidPassword
 	}
 
 	hashed, err := HashedPassword(plainPassword)
@@ -65,7 +65,7 @@ func CheckPasswordHash(password, hash string) bool {
 
 func (u *User) Authenticate(password string) error {
 	if !CheckPasswordHash(password, u.PasswordHash) {
-		return apperr.ErrInvalidPassword
+		return constraints.ErrInvalidPassword
 	}
 	return nil
 }

@@ -1,7 +1,7 @@
 version: "2"
 sql:
   - engine: "postgresql"
-    schema: "db/migration"
+    schema: "db/migrations"
     queries: "internal/user/adapter/repository/sql"
     gen:
       go:
@@ -31,7 +31,37 @@ sql:
             nullable: true
 
   - engine: "postgresql"
-    schema: "db/migration"
+    schema: "db/migrations"
+    queries: "internal/monitor/adapter/repository/sql"
+    gen:
+      go:
+        package: "sqlcgen"
+        out: "internal/monitor/adapter/repository/sqlcgen"
+        sql_package: "pgx/v5"
+        emit_pointers_for_null_types: true
+        overrides:
+          - db_type: "uuid"
+            go_type:
+              import: "github.com/google/uuid"
+              type: "UUID"
+          - db_type: "uuid"
+            go_type:
+              import: "github.com/google/uuid"
+              type: "UUID"
+            nullable: true
+          - db_type: "pg_catalog.timestamptz"
+            go_type:
+              import: "time"
+              type: "Time"
+          - db_type: "pg_catalog.timestamptz"
+            go_type:
+              import: "time"
+              type: "Time"
+              pointer: true
+            nullable: true
+
+  - engine: "postgresql"
+    schema: "db/migrations"
     queries: "internal/monitor/adapter/repository/sql"
     gen:
       go:
