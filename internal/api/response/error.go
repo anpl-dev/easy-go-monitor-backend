@@ -15,7 +15,7 @@ type APIResponse struct {
 }
 
 func ErrorResponse(err error) (int, APIResponse) {
-	if res, ok := err.(*constraints.AppError); ok {
+	if res, ok := err.(*constraints.Error); ok {
 		status := toHTTPStatus(res.Code)
 		return status, APIResponse{
 			Code:    res.Code,
