@@ -1,17 +1,19 @@
+# Easy Go Monitorプロジェクト
+
+## このプロジェクトについて
+
+このプロジェクトは
+
+## ER図
+
+![alt text](<er_easy-go-monitor.svg>)
+
 ## Database Migration
 
 このプロジェクトは [golang-migrate](https://github.com/golang-migrate/migrate) を使用して
 PostgreSQL のマイグレーションを管理しています。
 
 ### インストール
-
-macOS/Linux:
-
-```bash
-brew install golang-migrate
-```
-
-Go経由でインストールする場合:
 
 ```bash
 go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
