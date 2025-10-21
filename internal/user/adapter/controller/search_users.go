@@ -1,4 +1,4 @@
-package handler
+package controller
 
 import (
 	"go-monitor-tool/internal/api/response"
@@ -9,15 +9,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type SearchUsersHandler struct {
+type SearchUsersController struct {
 	uc usecase.SearchUsersUseCase
 }
 
-func NewSearchUsersHandler(uc usecase.SearchUsersUseCase) *SearchUsersHandler {
-	return &SearchUsersHandler{uc: uc}
+func NewSearchUsersController(uc usecase.SearchUsersUseCase) *SearchUsersController {
+	return &SearchUsersController{uc: uc}
 }
 
-func (h *SearchUsersHandler) Handle(c *gin.Context) {
+func (h *SearchUsersController) Handle(c *gin.Context) {
 	input := usecase.SearchUsersInput{
 		Email: c.Query("email"),
 		Name:  c.Query("name"),

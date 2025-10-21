@@ -3,31 +3,32 @@ package router
 import (
 	"go-monitor-tool/internal/api/middleware"
 	"go-monitor-tool/internal/infra/jwt"
-	monitorHandler "go-monitor-tool/internal/monitor/adapter/handler"
-	userHandler "go-monitor-tool/internal/user/adapter/handler"
+	monitorController "go-monitor-tool/internal/monitor/adapter/controller"
+	userController "go-monitor-tool/internal/user/adapter/controller"
+
 	"github.com/gin-gonic/gin"
 )
 
 type (
-	UserHandlers struct {
-		Create   *userHandler.CreateUserHandler
-		FindByID *userHandler.FindUserByIDHandler
-		Search   *userHandler.SearchUsersHandler
-		Update   *userHandler.UpdateUserHandler
-		Delete   *userHandler.DeleteUserHandler
-		Login    *userHandler.LoginUserHandler
+	UserControllers struct {
+		Create   *userController.CreateUserController
+		FindByID *userController.FindUserByIDController
+		Search   *userController.SearchUsersController
+		Update   *userController.UpdateUserController
+		Delete   *userController.DeleteUserController
+		Login    *userController.LoginUserController
 	}
 
-	MonitorHandlers struct {
-		Create   *monitorHandler.CreateMonitorHandler
-		FindByID *monitorHandler.FindMonitorByIDHandler
-		Search   *monitorHandler.SearchMonitorsHandler
-		Update   *monitorHandler.UpdateMonitorHandler
-		Delete   *monitorHandler.DeleteMonitorHandler
+	MonitorControllers struct {
+		Create   *monitorController.CreateMonitorController
+		FindByID *monitorController.FindMonitorByIDController
+		Search   *monitorController.SearchMonitorsController
+		Update   *monitorController.UpdateMonitorController
+		Delete   *monitorController.DeleteMonitorController
 	}
 )
 
-func NewGinRouter(users UserHandlers, monitors MonitorHandlers, jwtService jwt.JWTService) *gin.Engine {
+func NewGinRouter(users UserControllers, monitors MonitorControllers, jwtService jwt.JWTService) *gin.Engine {
 	r := gin.Default()
 
 	r.Use(middleware.CORSMiddleware())

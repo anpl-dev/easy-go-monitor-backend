@@ -1,4 +1,4 @@
-package handler
+package controller
 
 import (
 	"context"
@@ -23,7 +23,7 @@ func (m *mockSearchMonitorsUC) Execute(_ context.Context, _ usecase.SearchMonito
 	return m.result, m.err
 }
 
-func TestSearchMonitorsHandler_Execute(t *testing.T) {
+func TestSearchMonitorsController_Execute(t *testing.T) {
 	t.Parallel()
 	gin.SetMode(gin.TestMode)
 
@@ -75,7 +75,7 @@ func TestSearchMonitorsHandler_Execute(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.Default()
-			h := NewSearchMonitorsHandler(tt.ucMock)
+			h := NewSearchMonitorsController(tt.ucMock)
 			r.GET("/monitors/search", h.Handle)
 
 			req := httptest.NewRequest(http.MethodGet, "/monitors/search"+tt.queryParam, nil)

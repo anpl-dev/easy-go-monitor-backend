@@ -22,7 +22,7 @@ var (
 	ErrInvalidMonitorURL      = New(4202, "invalid monitor url")
 	ErrInvalidMonitorInterval = New(4203, "invalid monitor interval")
 
-	// Handler / Request
+	// Controller / Request
 	ErrSearchParameters = New(4301, "no search parameters")
 
 	// Auth

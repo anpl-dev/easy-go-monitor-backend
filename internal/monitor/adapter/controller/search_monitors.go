@@ -1,4 +1,4 @@
-package handler
+package controller
 
 import (
 	"go-monitor-tool/internal/api/response"
@@ -9,15 +9,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type SearchMonitorsHandler struct {
+type SearchMonitorsController struct {
 	uc usecase.SearchMonitorsUseCase
 }
 
-func NewSearchMonitorsHandler(uc usecase.SearchMonitorsUseCase) *SearchMonitorsHandler {
-	return &SearchMonitorsHandler{uc: uc}
+func NewSearchMonitorsController(uc usecase.SearchMonitorsUseCase) *SearchMonitorsController {
+	return &SearchMonitorsController{uc: uc}
 }
 
-func (h *SearchMonitorsHandler) Handle(c *gin.Context) {
+func (h *SearchMonitorsController) Handle(c *gin.Context) {
 	userIDStr := c.Query("user_id")
 	if userIDStr == "" {
 		response.HandleError(c, constraints.ErrInvalidUUID)

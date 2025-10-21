@@ -1,7 +1,6 @@
-package handler
+package controller
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"go-monitor-tool/internal/user/usecase"
@@ -15,25 +14,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockCreateUserUC struct {
-	result usecase.CreateUserOutput
+type mockFindUserByIDUC struct {
+	result usecase.FindUserByIDOutput
 	err    error
 }
 
-func (m *mockCreateUserUC) Execute(_ context.Context, _ usecase.CreateUserInput) (usecase.CreateUserOutput, error) {
+func (m *mockFindUserByIDUC) Execute(_ context.Context, _ usecase.FindUserByIDInput) (usecase.FindUserByIDOutput, error) {
 	return m.result, m.err
 }
 
-func TestCreateUserHandler_Execute(t *testing.T) {
+func TestFindUserByIDController_Execute(t *testing.T) {
 	t.Parallel()
 	gin.SetMode(gin.TestMode)
 
-	payload, _ := json.Marshal(map[string]string{
-		"name":     "Alice",
-		"email":    "alice@example.com",
-		"password": "plainPassword",
-	})
-	wantOutput := usecase.CreateUserOutput{
+	wantOutput := usecase.FindUserByIDOutput{
 		ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:      "Alice",
 		Email:     "alice@example.com",
@@ -41,7 +35,7 @@ func TestCreateUserHandler_Execute(t *testing.T) {
 		UpdatedAt: time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
 	}
 	wantBody := map[string]interface{}{
-		"code":    float64(201),
+		"code":    float64(200),
 		"message": "success",
 		"data": map[string]interface{}{
 			"id":         "11111111-1111-1111-1111-111111111111",
@@ -54,19 +48,19 @@ func TestCreateUserHandler_Execute(t *testing.T) {
 
 	tests := []struct {
 		name           string
-		rawPayload     []byte
-		ucMock         usecase.CreateUserUseCase
+		targetID       string
+		ucMock         usecase.FindUserByIDUseCase
 		wantStatusCode int
 		wantBody       map[string]interface{}
 	}{
 		{
-			name:       "success: create user",
-			rawPayload: payload,
-			ucMock: &mockCreateUserUC{
+			name:     "success: find user by id",
+			targetID: "11111111-1111-1111-1111-111111111111",
+			ucMock: &mockFindUserByIDUC{
 				result: wantOutput,
 				err:    nil,
 			},
-			wantStatusCode: http.StatusCreated,
+			wantStatusCode: http.StatusOK,
 			wantBody:       wantBody,
 		},
 	}
@@ -74,11 +68,10 @@ func TestCreateUserHandler_Execute(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.Default()
-			h := NewCreateUserHandler(tt.ucMock)
-			r.POST("/users", h.Handle)
+			h := NewFindUserByIDController(tt.ucMock)
+			r.GET("/users/:id", h.Handle)
 
-			req := httptest.NewRequest(http.MethodPost, "/users", bytes.NewBuffer(tt.rawPayload))
-			req.Header.Set("Content-Type", "application/json")
+			req := httptest.NewRequest(http.MethodGet, "/users/"+tt.targetID, nil)
 			w := httptest.NewRecorder()
 
 			r.ServeHTTP(w, req)

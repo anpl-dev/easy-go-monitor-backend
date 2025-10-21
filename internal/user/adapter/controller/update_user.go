@@ -1,4 +1,4 @@
-package handler
+package controller
 
 import (
 	"go-monitor-tool/internal/api/response"
@@ -10,15 +10,15 @@ import (
 	"github.com/google/uuid"
 )
 
-type UpdateUserHandler struct {
+type UpdateUserController struct {
 	uc usecase.UpdateUserUseCase
 }
 
-func NewUpdateUserHandler(uc usecase.UpdateUserUseCase) *UpdateUserHandler {
-	return &UpdateUserHandler{uc: uc}
+func NewUpdateUserController(uc usecase.UpdateUserUseCase) *UpdateUserController {
+	return &UpdateUserController{uc: uc}
 }
 
-func (h *UpdateUserHandler) Handle(c *gin.Context) {
+func (h *UpdateUserController) Handle(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {

@@ -1,4 +1,4 @@
-package handler
+package controller
 
 import (
 	"go-monitor-tool/internal/api/response"
@@ -10,15 +10,15 @@ import (
 	"github.com/google/uuid"
 )
 
-type DeleteUserHandler struct {
+type DeleteUserController struct {
 	uc usecase.DeleteUserUseCase
 }
 
-func NewDeleteUserHandler(uc usecase.DeleteUserUseCase) *DeleteUserHandler {
-	return &DeleteUserHandler{uc: uc}
+func NewDeleteUserController(uc usecase.DeleteUserUseCase) *DeleteUserController {
+	return &DeleteUserController{uc: uc}
 }
 
-func (h *DeleteUserHandler) Handle(c *gin.Context) {
+func (h *DeleteUserController) Handle(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {

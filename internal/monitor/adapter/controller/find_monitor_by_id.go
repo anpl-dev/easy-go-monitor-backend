@@ -1,4 +1,4 @@
-package handler
+package controller
 
 import (
 	"go-monitor-tool/internal/api/response"
@@ -10,15 +10,15 @@ import (
 	"github.com/google/uuid"
 )
 
-type FindMonitorByIDHandler struct {
+type FindMonitorByIDController struct {
 	uc usecase.FindMonitorByIDUseCase
 }
 
-func NewFindMonitorByIDHandler(uc usecase.FindMonitorByIDUseCase) *FindMonitorByIDHandler {
-	return &FindMonitorByIDHandler{uc: uc}
+func NewFindMonitorByIDController(uc usecase.FindMonitorByIDUseCase) *FindMonitorByIDController {
+	return &FindMonitorByIDController{uc: uc}
 }
 
-func (h *FindMonitorByIDHandler) Handle(c *gin.Context) {
+func (h *FindMonitorByIDController) Handle(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {

@@ -1,4 +1,4 @@
-package handler
+package controller
 
 import (
 	"go-monitor-tool/internal/api/response"
@@ -8,15 +8,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type LoginUserHandler struct {
+type LoginUserController struct {
 	uc usecase.LoginUserUseCase
 }
 
-func NewLoginUserHandler(uc usecase.LoginUserUseCase) *LoginUserHandler {
-	return &LoginUserHandler{uc: uc}
+func NewLoginUserController(uc usecase.LoginUserUseCase) *LoginUserController {
+	return &LoginUserController{uc: uc}
 }
 
-func (h *LoginUserHandler) Handle(c *gin.Context) {
+func (h *LoginUserController) Handle(c *gin.Context) {
 	var input usecase.LoginUserInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		response.HandleError(c, err)

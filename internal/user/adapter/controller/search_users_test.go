@@ -1,4 +1,4 @@
-package handler
+package controller
 
 import (
 	"context"
@@ -23,7 +23,7 @@ func (m *mockSearchUsersUC) Execute(_ context.Context, _ usecase.SearchUsersInpu
 	return m.result, m.err
 }
 
-func TestSearchUsersHandler_Execute(t *testing.T) {
+func TestSearchUsersController_Execute(t *testing.T) {
 	t.Parallel()
 	gin.SetMode(gin.TestMode)
 
@@ -71,7 +71,7 @@ func TestSearchUsersHandler_Execute(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.Default()
-			h := NewSearchUsersHandler(tt.ucMock)
+			h := NewSearchUsersController(tt.ucMock)
 			r.GET("/users/search/", h.Handle)
 
 			req := httptest.NewRequest(http.MethodGet, "/users/search/"+tt.queryParam, nil)

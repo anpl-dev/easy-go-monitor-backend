@@ -1,8 +1,8 @@
-package handler
+package controller
 
 import (
 	"context"
-	"go-monitor-tool/internal/user/usecase"
+	"go-monitor-tool/internal/monitor/usecase"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -11,28 +11,28 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockDeleteUserUC struct {
+type mockDeleteMonitorUC struct {
 	err error
 }
 
-func (m *mockDeleteUserUC) Execute(_ context.Context, _ usecase.DeleteUserInput) error {
+func (m *mockDeleteMonitorUC) Execute(_ context.Context, _ usecase.DeleteMonitorInput) error {
 	return m.err
 }
 
-func TestDeleteUserHandler_Execute(t *testing.T) {
+func TestDeleteMonitorController_Execute(t *testing.T) {
 	t.Parallel()
 	gin.SetMode(gin.TestMode)
 
 	tests := []struct {
 		name           string
 		targetID       string
-		ucMock         usecase.DeleteUserUseCase
+		ucMock         usecase.DeleteMonitorUseCase
 		wantStatusCode int
 	}{
 		{
-			name:           "success: delete user",
+			name:           "success: delete monitor",
 			targetID:       "11111111-1111-1111-1111-111111111111",
-			ucMock:         &mockDeleteUserUC{err: nil},
+			ucMock:         &mockDeleteMonitorUC{err: nil},
 			wantStatusCode: http.StatusNoContent,
 		},
 	}
@@ -40,10 +40,10 @@ func TestDeleteUserHandler_Execute(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.Default()
-			h := NewDeleteUserHandler(tt.ucMock)
-			r.DELETE("/users/:id", h.Handle)
+			h := NewDeleteMonitorController(tt.ucMock)
+			r.DELETE("/monitors/:id", h.Handle)
 
-			req := httptest.NewRequest(http.MethodDelete, "/users/"+tt.targetID, nil)
+			req := httptest.NewRequest(http.MethodDelete, "/monitors/"+tt.targetID, nil)
 			w := httptest.NewRecorder()
 
 			r.ServeHTTP(w, req)

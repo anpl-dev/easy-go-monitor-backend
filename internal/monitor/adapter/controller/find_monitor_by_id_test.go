@@ -1,7 +1,6 @@
-package handler
+package controller
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"go-monitor-tool/internal/monitor/usecase"
@@ -15,31 +14,26 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockUpdateMonitorUC struct {
-	result usecase.UpdateMonitorOutput
+type mockFindMonitorByIDUC struct {
+	result usecase.FindMonitorByIDOutput
 	err    error
 }
 
-func (m *mockUpdateMonitorUC) Execute(_ context.Context, _ usecase.UpdateMonitorInput) (usecase.UpdateMonitorOutput, error) {
+func (m *mockFindMonitorByIDUC) Execute(_ context.Context, _ usecase.FindMonitorByIDInput) (usecase.FindMonitorByIDOutput, error) {
 	return m.result, m.err
 }
 
-func TestUpdateMonitorHandler_Execute(t *testing.T) {
+func TestFindMonitorByIDController_Execute(t *testing.T) {
 	t.Parallel()
 	gin.SetMode(gin.TestMode)
 
-	targetID := "11111111-1111-1111-1111-111111111111"
-	payload, _ := json.Marshal(map[string]interface{}{
-		"name":            "test-monitor",
-		"url":             "https://example.com",
-		"interval_second": 60,
-	})
-	wantOutput := usecase.UpdateMonitorOutput{
+	wantOUtput := usecase.FindMonitorByIDOutput{
 		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:           "test-monitor",
 		URL:            "https://example.com",
 		IntervalSecond: 60,
+		CreatedAt:      time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
 		UpdatedAt:      time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
 	}
 	wantBody := map[string]interface{}{
@@ -51,22 +45,23 @@ func TestUpdateMonitorHandler_Execute(t *testing.T) {
 			"name":            "test-monitor",
 			"url":             "https://example.com",
 			"interval_second": float64(60),
+			"created_at":      "2025-04-01T00:00:00+09:00",
 			"updated_at":      "2025-04-01T00:00:00+09:00",
 		},
 	}
 
 	tests := []struct {
 		name           string
-		rawPayload     []byte
-		ucMock         usecase.UpdateMonitorUseCase
+		targetID       string
+		ucMock         usecase.FindMonitorByIDUseCase
 		wantStatusCode int
 		wantBody       map[string]interface{}
 	}{
 		{
-			name:       "success: update monitor",
-			rawPayload: payload,
-			ucMock: &mockUpdateMonitorUC{
-				result: wantOutput,
+			name:     "success: find monitor by id",
+			targetID: "11111111-1111-1111-1111-111111111111",
+			ucMock: &mockFindMonitorByIDUC{
+				result: wantOUtput,
 				err:    nil,
 			},
 			wantStatusCode: http.StatusOK,
@@ -77,11 +72,10 @@ func TestUpdateMonitorHandler_Execute(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.Default()
-			h := NewUpdateMonitorHandler(tt.ucMock)
-			r.PUT("/monitors/:id", h.Handle)
+			h := NewFindMonitorByIDController(tt.ucMock)
+			r.GET("/monitors/:id", h.Handle)
 
-			req := httptest.NewRequest(http.MethodPut, "/monitors/"+targetID, bytes.NewBuffer(tt.rawPayload))
-			req.Header.Set("Content-Type", "application/json")
+			req := httptest.NewRequest(http.MethodGet, "/monitors/"+tt.targetID, nil)
 			w := httptest.NewRecorder()
 
 			r.ServeHTTP(w, req)

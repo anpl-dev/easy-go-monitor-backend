@@ -1,4 +1,4 @@
-package handler
+package controller
 
 import (
 	"bytes"
@@ -15,38 +15,39 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockUpdateUserUC struct {
-	result usecase.UpdateUserOutput
+type mockCreateUserUC struct {
+	result usecase.CreateUserOutput
 	err    error
 }
 
-func (m *mockUpdateUserUC) Execute(_ context.Context, _ usecase.UpdateUserInput) (usecase.UpdateUserOutput, error) {
+func (m *mockCreateUserUC) Execute(_ context.Context, _ usecase.CreateUserInput) (usecase.CreateUserOutput, error) {
 	return m.result, m.err
 }
 
-func TestUpdateUserHandler_Execute(t *testing.T) {
+func TestCreateUserController_Execute(t *testing.T) {
 	t.Parallel()
 	gin.SetMode(gin.TestMode)
 
-	targetID := "11111111-1111-1111-1111-111111111111"
-	payload, _ := json.Marshal(map[string]interface{}{
-		"name":          "Alice",
-		"email":         "alice@example.com",
-		"password_hash": "hashedPass",
+	payload, _ := json.Marshal(map[string]string{
+		"name":     "Alice",
+		"email":    "alice@example.com",
+		"password": "plainPassword",
 	})
-	wantOutput := usecase.UpdateUserOutput{
+	wantOutput := usecase.CreateUserOutput{
 		ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:      "Alice",
 		Email:     "alice@example.com",
+		CreatedAt: time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
 		UpdatedAt: time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
 	}
 	wantBody := map[string]interface{}{
-		"code":    float64(200),
+		"code":    float64(201),
 		"message": "success",
 		"data": map[string]interface{}{
 			"id":         "11111111-1111-1111-1111-111111111111",
 			"name":       "Alice",
 			"email":      "alice@example.com",
+			"created_at": "2025-04-01T00:00:00+09:00",
 			"updated_at": "2025-04-01T00:00:00+09:00",
 		},
 	}
@@ -54,18 +55,18 @@ func TestUpdateUserHandler_Execute(t *testing.T) {
 	tests := []struct {
 		name           string
 		rawPayload     []byte
-		ucMock         usecase.UpdateUserUseCase
+		ucMock         usecase.CreateUserUseCase
 		wantStatusCode int
 		wantBody       map[string]interface{}
 	}{
 		{
-			name:       "success: update monitor",
+			name:       "success: create user",
 			rawPayload: payload,
-			ucMock: &mockUpdateUserUC{
+			ucMock: &mockCreateUserUC{
 				result: wantOutput,
 				err:    nil,
 			},
-			wantStatusCode: http.StatusOK,
+			wantStatusCode: http.StatusCreated,
 			wantBody:       wantBody,
 		},
 	}
@@ -73,10 +74,10 @@ func TestUpdateUserHandler_Execute(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.Default()
-			h := NewUpdateUserHandler(tt.ucMock)
-			r.PUT("/users/:id", h.Handle)
+			h := NewCreateUserController(tt.ucMock)
+			r.POST("/users", h.Handle)
 
-			req := httptest.NewRequest(http.MethodPut, "/users/"+targetID, bytes.NewBuffer(tt.rawPayload))
+			req := httptest.NewRequest(http.MethodPost, "/users", bytes.NewBuffer(tt.rawPayload))
 			req.Header.Set("Content-Type", "application/json")
 			w := httptest.NewRecorder()
 

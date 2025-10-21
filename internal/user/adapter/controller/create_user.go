@@ -1,4 +1,4 @@
-package handler
+package controller
 
 import (
 	"go-monitor-tool/internal/api/response"
@@ -9,15 +9,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type CreateUserHandler struct {
+type CreateUserController struct {
 	uc usecase.CreateUserUseCase
 }
 
-func NewCreateUserHandler(uc usecase.CreateUserUseCase) *CreateUserHandler {
-	return &CreateUserHandler{uc: uc}
+func NewCreateUserController(uc usecase.CreateUserUseCase) *CreateUserController {
+	return &CreateUserController{uc: uc}
 }
 
-func (h *CreateUserHandler) Handle(c *gin.Context) {
+func (h *CreateUserController) Handle(c *gin.Context) {
 	var input usecase.CreateUserInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		response.HandleError(c, constraints.ErrBadRequest)

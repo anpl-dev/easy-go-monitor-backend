@@ -4,11 +4,11 @@ import (
 	"go-monitor-tool/internal/infra/database"
 	"go-monitor-tool/internal/infra/jwt"
 	"go-monitor-tool/internal/infra/router"
-	monitorHandler "go-monitor-tool/internal/monitor/adapter/handler"
+	monitorController "go-monitor-tool/internal/monitor/adapter/controller"
 	monitorPresenter "go-monitor-tool/internal/monitor/adapter/presenter"
 	monitorRepo "go-monitor-tool/internal/monitor/adapter/repository"
 	monitorUC "go-monitor-tool/internal/monitor/usecase"
-	userHandler "go-monitor-tool/internal/user/adapter/handler"
+	userController "go-monitor-tool/internal/user/adapter/controller"
 	userPresenter "go-monitor-tool/internal/user/adapter/presenter"
 	userRepo "go-monitor-tool/internal/user/adapter/repository"
 	userUC "go-monitor-tool/internal/user/usecase"
@@ -75,26 +75,26 @@ func main() {
 	updateMonitorUC := monitorUC.NewUpdateMonitorInteractor(monitorRepo, updateMonitorPresenter)
 	deleteMonitorUC := monitorUC.NewDeleteMonitorInteractor(monitorRepo)
 
-	// --- Handler ---
-	userHandlers := router.UserHandlers{
-		Create:   userHandler.NewCreateUserHandler(createUserUC),
-		FindByID: userHandler.NewFindUserByIDHandler(findUserByIDUC),
-		Search:   userHandler.NewSearchUsersHandler(searchUsersUC),
-		Update:   userHandler.NewUpdateUserHandler(updateUserUC),
-		Delete:   userHandler.NewDeleteUserHandler(deleteUserUC),
-		Login:    userHandler.NewLoginUserHandler(loginUserUC),
+	// --- Controller ---
+	userControllers := router.UserControllers{
+		Create:   userController.NewCreateUserController(createUserUC),
+		FindByID: userController.NewFindUserByIDController(findUserByIDUC),
+		Search:   userController.NewSearchUsersController(searchUsersUC),
+		Update:   userController.NewUpdateUserController(updateUserUC),
+		Delete:   userController.NewDeleteUserController(deleteUserUC),
+		Login:    userController.NewLoginUserController(loginUserUC),
 	}
 
-	monitorHandlers := router.MonitorHandlers{
-		Create:   monitorHandler.NewCreateMonitorHandler(createMonitorUC),
-		FindByID: monitorHandler.NewFindMonitorByIDHandler(findMointorByIDUC),
-		Search:   monitorHandler.NewSearchMonitorsHandler(searchMonitorsUC),
-		Update:   monitorHandler.NewUpdateMonitorHandler(updateMonitorUC),
-		Delete:   monitorHandler.NewDeleteMonitorHandler(deleteMonitorUC),
+	monitorControllers := router.MonitorControllers{
+		Create:   monitorController.NewCreateMonitorController(createMonitorUC),
+		FindByID: monitorController.NewFindMonitorByIDController(findMointorByIDUC),
+		Search:   monitorController.NewSearchMonitorsController(searchMonitorsUC),
+		Update:   monitorController.NewUpdateMonitorController(updateMonitorUC),
+		Delete:   monitorController.NewDeleteMonitorController(deleteMonitorUC),
 	}
 
 	// --- Router ---
-	r := router.NewGinRouter(userHandlers, monitorHandlers, jwtService)
+	r := router.NewGinRouter(userControllers, monitorControllers, jwtService)
 
 	// --- Run Server ---
 	if err := r.Run(":8080"); err != nil {

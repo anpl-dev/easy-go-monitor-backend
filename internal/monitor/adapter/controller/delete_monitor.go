@@ -1,4 +1,4 @@
-package handler
+package controller
 
 import (
 	"go-monitor-tool/internal/api/response"
@@ -10,15 +10,15 @@ import (
 	"github.com/google/uuid"
 )
 
-type DeleteMonitorHandler struct {
+type DeleteMonitorController struct {
 	uc usecase.DeleteMonitorUseCase
 }
 
-func NewDeleteMonitorHandler(uc usecase.DeleteMonitorUseCase) *DeleteMonitorHandler {
-	return &DeleteMonitorHandler{uc: uc}
+func NewDeleteMonitorController(uc usecase.DeleteMonitorUseCase) *DeleteMonitorController {
+	return &DeleteMonitorController{uc: uc}
 }
 
-func (h *DeleteMonitorHandler) Handle(c *gin.Context) {
+func (h *DeleteMonitorController) Handle(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {

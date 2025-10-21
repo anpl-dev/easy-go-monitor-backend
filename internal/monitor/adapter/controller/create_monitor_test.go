@@ -1,4 +1,4 @@
-package handler
+package controller
 
 import (
 	"bytes"
@@ -24,7 +24,7 @@ func (m *mockCreateMonitorUC) Execute(_ context.Context, _ usecase.CreateMonitor
 	return m.result, m.err
 }
 
-func TestCreateMonitorHandler_Execute(t *testing.T) {
+func TestCreateMonitorController_Execute(t *testing.T) {
 	t.Parallel()
 	gin.SetMode(gin.TestMode)
 
@@ -79,7 +79,7 @@ func TestCreateMonitorHandler_Execute(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.Default()
-			h := NewCreateMonitorHandler(tt.ucMock)
+			h := NewCreateMonitorController(tt.ucMock)
 			r.POST("/monitors", h.Handle)
 
 			req := httptest.NewRequest(http.MethodPost, "/monitors", bytes.NewBuffer(tt.rawPayload))
