@@ -6,7 +6,7 @@
 
 ## ER 図
 
-![alt text](ER図_easy-go-monitor-backend.svg)
+![alt text](ER図_easy-go-monitor.svg)
 
 ## データベースマイグレーション
 
