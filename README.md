@@ -2,13 +2,13 @@
 
 ## このプロジェクトについて
 
-このプロジェクトは
+このプロジェクトは外形監視をGUIから気軽にできるようにするGolang製のプロジェクトです。
 
 ## ER図
 
-![alt text](<er_easy-go-monitor.svg>)
+![alt text](ER_easy-go-monitor.svg)
 
-## Database Migration
+## データベースマイグレーション
 
 このプロジェクトは [golang-migrate](https://github.com/golang-migrate/migrate) を使用して
 PostgreSQL のマイグレーションを管理しています。
