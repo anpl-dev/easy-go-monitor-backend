@@ -1,10 +1,11 @@
-# Easy Go Monitorプロジェクト
+# Easy Go Monitor プロジェクト
 
 ## このプロジェクトについて
 
-このプロジェクトは外形監視をGUIから気軽にできるようにするGolang製のプロジェクトです。
+このプロジェクトは外形監視を GUI から気軽にできるようにする Golang 製のプロジェクトです。
 
-## ER図
+## ER 図
+
 ![alt text](ER図_easy-go-monitor-backend.svg)
 
 ## データベースマイグレーション
@@ -41,7 +42,7 @@ migrate -path db/migrations \
 
 ### マイグレーションのロールバック
 
-直近の1つを戻す:
+直近の 1 つを戻す:
 
 ```bash
 migrate -path db/migrations \
@@ -57,7 +58,7 @@ migrate -path db/migrations \
 
 ### 確認
 
-PostgreSQLにログインしてテーブルを確認:
+PostgreSQL にログインしてテーブルを確認:
 
 ```sql
 \d users;
