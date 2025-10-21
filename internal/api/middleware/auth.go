@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"easy-go-monitor/internal/api/response"
-	"easy-go-monitor/internal/constraints"
+	"easy-go-monitor/internal/constraint"
 	"easy-go-monitor/internal/infra/jwt"
 	"strings"
 
@@ -13,14 +13,14 @@ func AuthMiddleWare(jwtService jwt.JWTService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if !strings.HasPrefix(authHeader, "Bearer ") {
-			response.HandleError(c, constraints.ErrAuthFailed)
+			response.HandleError(c, constraint.ErrAuthFailed)
 			return
 		}
 
 		tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
 		userID, err := jwtService.ValidateToken(tokenStr)
 		if err != nil {
-			response.HandleError(c, constraints.ErrAuthFailed)
+			response.HandleError(c, constraint.ErrAuthFailed)
 			return
 		}
 

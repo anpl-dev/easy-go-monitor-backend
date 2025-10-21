@@ -2,7 +2,7 @@ package controller
 
 import (
 	"easy-go-monitor/internal/api/response"
-	"easy-go-monitor/internal/constraints"
+	"easy-go-monitor/internal/constraint"
 	"easy-go-monitor/internal/user/usecase"
 	"net/http"
 
@@ -22,7 +22,7 @@ func (h *DeleteUserController) Handle(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {
-		response.HandleError(c, constraints.ErrInvalidUUID)
+		response.HandleError(c, constraint.ErrInvalidUUID)
 		return
 	}
 

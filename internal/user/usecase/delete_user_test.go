@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"easy-go-monitor/internal/constraints"
+	"easy-go-monitor/internal/constraint"
 	"easy-go-monitor/internal/user/domain"
 
 	"github.com/google/uuid"
@@ -49,8 +49,8 @@ func TestDeleteUserInteractor_Execute(t *testing.T) {
 			input: DeleteUserInput{
 				ID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 			},
-			mockRepo:  mockUserRepoDelete{err: constraints.ErrNotFound},
-			wantError: constraints.ErrNotFound,
+			mockRepo:  mockUserRepoDelete{err: constraint.ErrNotFound},
+			wantError: constraint.ErrNotFound,
 		},
 	}
 

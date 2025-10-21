@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"easy-go-monitor/internal/constraints"
+	"easy-go-monitor/internal/constraint"
 	"easy-go-monitor/internal/user/domain"
 
 	"github.com/google/uuid"
@@ -84,10 +84,10 @@ func TestSearchUsersInteractor_Execute(t *testing.T) {
 			},
 			mockRepo: mockUserRepoSearch{
 				result: nil,
-				err:    constraints.ErrNotFound,
+				err:    constraint.ErrNotFound,
 			},
 			mockPresenter: mockSearchUsersPresenter{},
-			wantError:     constraints.ErrNotFound,
+			wantError:     constraint.ErrNotFound,
 		},
 	}
 

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"easy-go-monitor/internal/constraints"
+	"easy-go-monitor/internal/constraint"
 	"easy-go-monitor/internal/user/domain"
 
 	"github.com/google/uuid"
@@ -87,7 +87,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			mockPresenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			wantError: constraints.ErrInvalidUserName,
+			wantError: constraint.ErrInvalidUserName,
 		},
 		{
 			name: "error: missing email",
@@ -100,7 +100,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			mockPresenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			wantError: constraints.ErrInvalidEmail,
+			wantError: constraint.ErrInvalidEmail,
 		},
 		{
 			name: "error: missing password",
@@ -113,7 +113,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			mockPresenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			wantError: constraints.ErrInvalidPassword,
+			wantError: constraint.ErrInvalidPassword,
 		},
 	}
 

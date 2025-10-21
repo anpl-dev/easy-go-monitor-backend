@@ -2,7 +2,7 @@ package controller
 
 import (
 	"easy-go-monitor/internal/api/response"
-	"easy-go-monitor/internal/constraints"
+	"easy-go-monitor/internal/constraint"
 	"easy-go-monitor/internal/user/usecase"
 	"net/http"
 
@@ -20,7 +20,7 @@ func NewCreateUserController(uc usecase.CreateUserUseCase) *CreateUserController
 func (h *CreateUserController) Handle(c *gin.Context) {
 	var input usecase.CreateUserInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		response.HandleError(c, constraints.ErrBadRequest)
+		response.HandleError(c, constraint.ErrBadRequest)
 		return
 	}
 

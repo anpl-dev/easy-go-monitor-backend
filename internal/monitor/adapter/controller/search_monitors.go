@@ -2,7 +2,7 @@ package controller
 
 import (
 	"easy-go-monitor/internal/api/response"
-	"easy-go-monitor/internal/constraints"
+	"easy-go-monitor/internal/constraint"
 	"easy-go-monitor/internal/monitor/usecase"
 	"net/http"
 
@@ -20,12 +20,12 @@ func NewSearchMonitorsController(uc usecase.SearchMonitorsUseCase) *SearchMonito
 func (h *SearchMonitorsController) Handle(c *gin.Context) {
 	userIDStr := c.Query("user_id")
 	if userIDStr == "" {
-		response.HandleError(c, constraints.ErrInvalidUUID)
+		response.HandleError(c, constraint.ErrInvalidUUID)
 		return
 	}
 	output, err := h.uc.Execute(c.Request.Context(), usecase.SearchMonitorsInput{UserID: userIDStr})
 	if err != nil {
-		response.HandleError(c, constraints.ErrNotFound)
+		response.HandleError(c, constraint.ErrNotFound)
 		return
 	}
 	response.Success(c, http.StatusOK, output)

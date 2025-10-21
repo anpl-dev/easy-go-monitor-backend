@@ -3,7 +3,7 @@ package usecase
 import (
 	"context"
 
-	"easy-go-monitor/internal/constraints"
+	"easy-go-monitor/internal/constraint"
 	"easy-go-monitor/internal/infra/jwt"
 	"easy-go-monitor/internal/user/domain"
 )
@@ -41,16 +41,16 @@ func NewLoginUserInteractor(repo domain.UserRepository, jwt jwt.JWTService) Logi
 func (i *loginUserInteractor) Execute(ctx context.Context, input LoginUserInput) (LoginUserOutput, error) {
 
 	if input.Email == "" || input.Password == "" {
-		return LoginUserOutput{}, constraints.ErrInvalidCredentials
+		return LoginUserOutput{}, constraint.ErrInvalidCredentials
 	}
 
 	user, err := i.repo.FindByEmail(ctx, input.Email)
 	if err != nil {
-		return LoginUserOutput{}, constraints.ErrInvalidCredentials
+		return LoginUserOutput{}, constraint.ErrInvalidCredentials
 	}
 
 	if err := user.Authenticate(input.Password); err != nil {
-		return LoginUserOutput{}, constraints.ErrInvalidCredentials
+		return LoginUserOutput{}, constraint.ErrInvalidCredentials
 	}
 
 	token, err := i.jwt.GenerateToken(user.ID)

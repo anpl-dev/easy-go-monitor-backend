@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"easy-go-monitor/internal/constraints"
+	"easy-go-monitor/internal/constraint"
 	"easy-go-monitor/internal/user/adapter/repository/sqlcgen"
 	"easy-go-monitor/internal/user/domain"
 	"errors"
@@ -48,7 +48,7 @@ func (r *UserPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) (*d
 	row, err := r.queries.FindUserByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, constraints.ErrNotFound
+			return nil, constraint.ErrNotFound
 		}
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (r *UserPostgresRepository) FindByEmail(ctx context.Context, email string) 
 	row, err := r.queries.FindUserByEmail(ctx, email)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, constraints.ErrNotFound
+			return nil, constraint.ErrNotFound
 		}
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (r *UserPostgresRepository) Update(ctx context.Context, u domain.User) (*do
 	})
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, constraints.ErrNotFound
+			return nil, constraint.ErrNotFound
 		}
 		return nil, err
 	}
@@ -86,7 +86,7 @@ func (r *UserPostgresRepository) Delete(ctx context.Context, id uuid.UUID) error
 	err := r.queries.DeleteUser(ctx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return constraints.ErrNotFound
+			return constraint.ErrNotFound
 		}
 		return err
 	}
