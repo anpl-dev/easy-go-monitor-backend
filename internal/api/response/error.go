@@ -1,7 +1,7 @@
 package response
 
 import (
-	"go-monitor-tool/internal/constraints"
+	"easy-go-monitor/internal/constraints"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

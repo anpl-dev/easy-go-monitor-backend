@@ -3,9 +3,9 @@ package usecase
 import (
 	"context"
 
-	"go-monitor-tool/internal/constraints"
-	"go-monitor-tool/internal/infra/jwt"
-	"go-monitor-tool/internal/user/domain"
+	"easy-go-monitor/internal/constraints"
+	"easy-go-monitor/internal/infra/jwt"
+	"easy-go-monitor/internal/user/domain"
 )
 
 type (

@@ -2,7 +2,7 @@ package domain
 
 import (
 	"context"
-	"go-monitor-tool/internal/constraints"
+	"easy-go-monitor/internal/constraints"
 	"net/url"
 	"time"
 

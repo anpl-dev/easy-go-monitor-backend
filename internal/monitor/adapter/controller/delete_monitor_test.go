@@ -2,7 +2,7 @@ package controller
 
 import (
 	"context"
-	"go-monitor-tool/internal/monitor/usecase"
+	"easy-go-monitor/internal/monitor/usecase"
 	"net/http"
 	"net/http/httptest"
 	"testing"

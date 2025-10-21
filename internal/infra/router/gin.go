@@ -1,10 +1,10 @@
 package router
 
 import (
-	"go-monitor-tool/internal/api/middleware"
-	"go-monitor-tool/internal/infra/jwt"
-	monitorController "go-monitor-tool/internal/monitor/adapter/controller"
-	userController "go-monitor-tool/internal/user/adapter/controller"
+	"easy-go-monitor/internal/api/middleware"
+	"easy-go-monitor/internal/infra/jwt"
+	monitorController "easy-go-monitor/internal/monitor/adapter/controller"
+	userController "easy-go-monitor/internal/user/adapter/controller"
 
 	"github.com/gin-gonic/gin"
 )

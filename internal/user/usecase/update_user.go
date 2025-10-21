@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"context"
-	"go-monitor-tool/internal/user/domain"
+	"easy-go-monitor/internal/user/domain"
 	"time"
 
 	"github.com/google/uuid"

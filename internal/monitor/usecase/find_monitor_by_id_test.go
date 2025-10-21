@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"go-monitor-tool/internal/constraints"
-	"go-monitor-tool/internal/monitor/domain"
+	"easy-go-monitor/internal/constraints"
+	"easy-go-monitor/internal/monitor/domain"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"

@@ -1,4 +1,4 @@
-module go-monitor-tool
+module easy-go-monitor
 
 go 1.24.6
 

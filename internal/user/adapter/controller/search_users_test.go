@@ -2,8 +2,8 @@ package controller
 
 import (
 	"context"
+	"easy-go-monitor/internal/user/usecase"
 	"encoding/json"
-	"go-monitor-tool/internal/user/usecase"
 	"net/http"
 	"net/http/httptest"
 	"testing"

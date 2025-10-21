@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"go-monitor-tool/internal/api/response"
-	"go-monitor-tool/internal/constraints"
-	"go-monitor-tool/internal/monitor/usecase"
+	"easy-go-monitor/internal/api/response"
+	"easy-go-monitor/internal/constraints"
+	"easy-go-monitor/internal/monitor/usecase"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

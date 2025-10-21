@@ -1,8 +1,8 @@
 package presenter
 
 import (
-	"go-monitor-tool/internal/monitor/usecase"
-	"go-monitor-tool/internal/monitor/domain"
+	"easy-go-monitor/internal/monitor/domain"
+	"easy-go-monitor/internal/monitor/usecase"
 )
 
 type FindMonitorByIDPresenter struct{}

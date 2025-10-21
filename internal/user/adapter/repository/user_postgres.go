@@ -3,10 +3,10 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"easy-go-monitor/internal/constraints"
+	"easy-go-monitor/internal/user/adapter/repository/sqlcgen"
+	"easy-go-monitor/internal/user/domain"
 	"errors"
-	"go-monitor-tool/internal/constraints"
-	"go-monitor-tool/internal/user/adapter/repository/sqlcgen"
-	"go-monitor-tool/internal/user/domain"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"

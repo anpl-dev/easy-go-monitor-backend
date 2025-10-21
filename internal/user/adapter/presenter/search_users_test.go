@@ -1,8 +1,8 @@
 package presenter
 
 import (
-	"go-monitor-tool/internal/user/domain"
-	"go-monitor-tool/internal/user/usecase"
+	"easy-go-monitor/internal/user/domain"
+	"easy-go-monitor/internal/user/usecase"
 	"testing"
 	"time"
 
