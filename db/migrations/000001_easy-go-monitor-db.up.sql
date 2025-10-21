@@ -1,3 +1,4 @@
+---- Initial Schema
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -82,3 +83,10 @@ CREATE TABLE IF NOT EXISTS notifications (
 CREATE INDEX idx_monitors_user_id ON monitors(user_id);
 CREATE INDEX idx_runners_user_id ON runners(user_id);
 CREATE INDEX idx_runner_histories_runner_id ON runner_histories(runner_id);
+-------
+
+INSERT INTO notifiers (id, type, display_name) VALUES
+(1, 'email', 'Email'),
+(2, 'slack', 'Slack'),
+(3, 'webhook', 'Webhook')
+ON CONFLICT DO NOTHING;
