@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS monitors (
     url TEXT NOT NULL,
     method VARCHAR(10) NOT NULL CHECK (method IN ('GET', 'POST', 'PUT', 'DELETE', 'HEAD')),
     timeout_ms int DEFAULT 5000,
-    is_active BOOLEAN DEFAULT false,
+    is_active BOOLEAN DEFAULT true,
     header JSONB,
     body text,
     expected_status INT DEFAULT 200,
