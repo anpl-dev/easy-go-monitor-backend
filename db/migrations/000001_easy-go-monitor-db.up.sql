@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY,
-    name TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    password_hash TEXT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
@@ -25,10 +25,10 @@ CREATE TABLE IF NOT EXISTS monitors (
     name VARCHAR(100) NOT NULL UNIQUE,
     url TEXT NOT NULL,
     method VARCHAR(10) NOT NULL CHECK (method IN ('GET', 'POST', 'PUT', 'DELETE', 'HEAD')),
-    timeout_ms int DEFAULT 5000,
+    timeout_ms INT DEFAULT 5000,
     is_active BOOLEAN DEFAULT true,
     header JSONB,
-    body text,
+    body TEXT,
     expected_status INT DEFAULT 200,
     description TEXT DEFAULT NULL,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
@@ -40,10 +40,10 @@ CREATE TABLE IF NOT EXISTS runners (
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     monitor_id UUID NULL REFERENCES monitors(id) ON DELETE SET NULL,
     name VARCHAR(100) NOT NULL,
-    description TEXT DEFAULT NULL,
     region VARCHAR(50) NOT NULL,
-    interval_second int NOT NULL,
+    interval_second INT NOT NULL,
     is_active BOOLEAN DEFAULT false,
+    description TEXT DEFAULT NULL,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
@@ -53,28 +53,28 @@ CREATE TABLE IF NOT EXISTS runner_histories (
     runner_id uuid NOT NULL REFERENCES runners(id),
     status VARCHAR(32) NOT NULL CHECK (status IN ('success', 'failure', 'timeout', 'error')),
     message TEXT,
-    started_at TIMESTAMPTZ DEFAULT now() ,
+    started_at TIMESTAMPTZ NOT NULL,
     ended_at TIMESTAMPTZ NULL,
-    duration_ms int NULL,
-    response_time_ms int NULL,
+    duration_ms INT NULL,
+    response_time_ms INT NULL,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS notifiers (
-    id int PRIMARY KEY,
+    id INT PRIMARY KEY,
     type VARCHAR(50) NOT NULL UNIQUE,
     display_name VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS notifications (
     id UUID PRIMARY KEY,
-    runner_id uuid NOT NULL REFERENCES runners(id) ON DELETE CASCADE,
-    notifier_id int NOT NULL REFERENCES notifiers(id) ON DELETE CASCADE,
+    runner_id UUID NOT NULL REFERENCES runners(id) ON DELETE CASCADE,
+    notifier_id INT NOT NULL REFERENCES notifiers(id) ON DELETE CASCADE,
     type VARCHAR(50) NOT NULL,
     trigger VARCHAR(50) NOT NULL DEFAULT 'on_failure' CHECK (trigger IN ('on_failure', 'on_recovery', 'always')),
     message TEXT NOT NULL,
-    description TEXT DEFAULT NULL,
     is_active BOOLEAN DEFAULT true,
+    description TEXT DEFAULT NULL,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
