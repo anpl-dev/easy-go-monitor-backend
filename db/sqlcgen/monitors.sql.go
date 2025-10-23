@@ -9,6 +9,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createMonitor = `-- name: CreateMonitor :one
@@ -16,20 +17,20 @@ INSERT INTO monitors (
     id, user_id, group_id, name, url, type, is_active, settings
 )
 VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8::jsonb
+    $1, $2, $3, $4, $5, $6, $7, $8
 )
 RETURNING id, user_id, group_id, name, url, type, is_active, settings, created_at, updated_at
 `
 
 type CreateMonitorParams struct {
-	ID       uuid.UUID
-	UserID   uuid.UUID
-	GroupID  uuid.UUID
-	Name     string
-	Url      string
-	Type     string
-	IsActive *bool
-	Column8  []byte
+	ID       uuid.UUID   `json:"id"`
+	UserID   uuid.UUID   `json:"user_id"`
+	GroupID  pgtype.UUID `json:"group_id"`
+	Name     string      `json:"name"`
+	Url      string      `json:"url"`
+	Type     string      `json:"type"`
+	IsActive *bool       `json:"is_active"`
+	Settings []byte      `json:"settings"`
 }
 
 func (q *Queries) CreateMonitor(ctx context.Context, arg CreateMonitorParams) (Monitor, error) {
@@ -41,7 +42,7 @@ func (q *Queries) CreateMonitor(ctx context.Context, arg CreateMonitorParams) (M
 		arg.Url,
 		arg.Type,
 		arg.IsActive,
-		arg.Column8,
+		arg.Settings,
 	)
 	var i Monitor
 	err := row.Scan(
@@ -136,23 +137,21 @@ UPDATE monitors
 SET 
     name = $2,
     group_id = $3,
-    name = $4,
-    url = $5,
-    is_active = $6,
-    settings = $7::jsonb,
+    url = $4,
+    is_active = $5,
+    settings = $6,
     updated_at = now()
 WHERE id = $1
 RETURNING id, user_id, group_id, name, url, type, is_active, settings, created_at, updated_at
 `
 
 type UpdateMonitorParams struct {
-	ID       uuid.UUID
-	Name     string
-	GroupID  uuid.UUID
-	Name_2   string
-	Url      string
-	IsActive *bool
-	Column7  []byte
+	ID       uuid.UUID   `json:"id"`
+	Name     string      `json:"name"`
+	GroupID  pgtype.UUID `json:"group_id"`
+	Url      string      `json:"url"`
+	IsActive *bool       `json:"is_active"`
+	Settings []byte      `json:"settings"`
 }
 
 func (q *Queries) UpdateMonitor(ctx context.Context, arg UpdateMonitorParams) (Monitor, error) {
@@ -160,10 +159,9 @@ func (q *Queries) UpdateMonitor(ctx context.Context, arg UpdateMonitorParams) (M
 		arg.ID,
 		arg.Name,
 		arg.GroupID,
-		arg.Name_2,
 		arg.Url,
 		arg.IsActive,
-		arg.Column7,
+		arg.Settings,
 	)
 	var i Monitor
 	err := row.Scan(

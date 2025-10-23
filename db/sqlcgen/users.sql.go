@@ -18,10 +18,10 @@ RETURNING id, name, email, password, created_at, updated_at
 `
 
 type CreateUserParams struct {
-	ID       uuid.UUID
-	Name     string
-	Email    string
-	Password string
+	ID       uuid.UUID `json:"id"`
+	Name     string    `json:"name"`
+	Email    string    `json:"email"`
+	Password string    `json:"password"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
@@ -134,10 +134,10 @@ RETURNING id, name, email, password, created_at, updated_at
 `
 
 type UpdateUserParams struct {
-	ID       uuid.UUID
-	Name     string
-	Email    string
-	Password string
+	ID       uuid.UUID `json:"id"`
+	Name     string    `json:"name"`
+	Email    string    `json:"email"`
+	Password string    `json:"password"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {

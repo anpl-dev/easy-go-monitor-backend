@@ -10,74 +10,74 @@ import (
 )
 
 type Monitor struct {
-	ID        uuid.UUID
-	UserID    uuid.UUID
-	GroupID   uuid.UUID
-	Name      string
-	Url       string
-	Type      string
-	IsActive  *bool
-	Settings  []byte
-	CreatedAt pgtype.Timestamptz
-	UpdatedAt pgtype.Timestamptz
+	ID        uuid.UUID          `json:"id"`
+	UserID    uuid.UUID          `json:"user_id"`
+	GroupID   pgtype.UUID        `json:"group_id"`
+	Name      string             `json:"name"`
+	Url       string             `json:"url"`
+	Type      string             `json:"type"`
+	IsActive  *bool              `json:"is_active"`
+	Settings  []byte             `json:"settings"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
 }
 
 type MonitorGroup struct {
-	ID        uuid.UUID
-	UserID    uuid.UUID
-	Name      string
-	IsActive  *bool
-	CreatedAt pgtype.Timestamptz
-	UpdatedAt pgtype.Timestamptz
+	ID        uuid.UUID          `json:"id"`
+	UserID    uuid.UUID          `json:"user_id"`
+	Name      string             `json:"name"`
+	IsActive  *bool              `json:"is_active"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
 }
 
 type Notification struct {
-	ID         uuid.UUID
-	RunnerID   uuid.UUID
-	NotifierID int32
-	Type       string
-	Trigger    string
-	Message    string
-	IsActive   *bool
-	CreatedAt  pgtype.Timestamptz
-	UpdatedAt  pgtype.Timestamptz
+	ID         uuid.UUID          `json:"id"`
+	RunnerID   uuid.UUID          `json:"runner_id"`
+	NotifierID int32              `json:"notifier_id"`
+	Type       string             `json:"type"`
+	Trigger    string             `json:"trigger"`
+	Message    string             `json:"message"`
+	IsActive   *bool              `json:"is_active"`
+	CreatedAt  pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt  pgtype.Timestamptz `json:"updated_at"`
 }
 
 type Notifier struct {
-	ID          int32
-	Type        string
-	DisplayName string
+	ID          int32  `json:"id"`
+	Type        string `json:"type"`
+	DisplayName string `json:"display_name"`
 }
 
 type Runner struct {
-	ID             uuid.UUID
-	UserID         uuid.UUID
-	MonitorID      uuid.UUID
-	Name           string
-	Region         string
-	IntervalSecond int32
-	IsActive       *bool
-	CreatedAt      pgtype.Timestamptz
-	UpdatedAt      pgtype.Timestamptz
+	ID             uuid.UUID          `json:"id"`
+	UserID         uuid.UUID          `json:"user_id"`
+	MonitorID      uuid.UUID          `json:"monitor_id"`
+	Name           string             `json:"name"`
+	Region         string             `json:"region"`
+	IntervalSecond int32              `json:"interval_second"`
+	IsActive       *bool              `json:"is_active"`
+	CreatedAt      pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt      pgtype.Timestamptz `json:"updated_at"`
 }
 
 type RunnerHistory struct {
-	ID             uuid.UUID
-	RunnerID       uuid.UUID
-	Status         string
-	Message        *string
-	StartedAt      pgtype.Timestamptz
-	EndedAt        pgtype.Timestamptz
-	DurationMs     *int32
-	ResponseTimeMs *int32
-	CreatedAt      pgtype.Timestamptz
+	ID             uuid.UUID          `json:"id"`
+	RunnerID       uuid.UUID          `json:"runner_id"`
+	Status         string             `json:"status"`
+	Message        *string            `json:"message"`
+	StartedAt      pgtype.Timestamptz `json:"started_at"`
+	EndedAt        pgtype.Timestamptz `json:"ended_at"`
+	DurationMs     *int32             `json:"duration_ms"`
+	ResponseTimeMs *int32             `json:"response_time_ms"`
+	CreatedAt      pgtype.Timestamptz `json:"created_at"`
 }
 
 type User struct {
-	ID        uuid.UUID
-	Name      string
-	Email     string
-	Password  string
-	CreatedAt pgtype.Timestamptz
-	UpdatedAt pgtype.Timestamptz
+	ID        uuid.UUID          `json:"id"`
+	Name      string             `json:"name"`
+	Email     string             `json:"email"`
+	Password  string             `json:"password"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
 }

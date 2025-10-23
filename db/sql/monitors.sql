@@ -3,7 +3,7 @@ INSERT INTO monitors (
     id, user_id, group_id, name, url, type, is_active, settings
 )
 VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8::jsonb
+    $1, $2, $3, $4, $5, $6, $7, $8
 )
 RETURNING *;
 
@@ -23,10 +23,9 @@ UPDATE monitors
 SET 
     name = $2,
     group_id = $3,
-    name = $4,
-    url = $5,
-    is_active = $6,
-    settings = $7::jsonb,
+    url = $4,
+    is_active = $5,
+    settings = $6,
     updated_at = now()
 WHERE id = $1
 RETURNING *;

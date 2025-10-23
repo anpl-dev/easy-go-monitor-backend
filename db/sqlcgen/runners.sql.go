@@ -21,13 +21,13 @@ RETURNING id, user_id, monitor_id, name, region, interval_second, is_active, cre
 `
 
 type CreateRunnerParams struct {
-	ID             uuid.UUID
-	UserID         uuid.UUID
-	MonitorID      uuid.UUID
-	Name           string
-	Region         string
-	IntervalSecond int32
-	IsActive       *bool
+	ID             uuid.UUID `json:"id"`
+	UserID         uuid.UUID `json:"user_id"`
+	MonitorID      uuid.UUID `json:"monitor_id"`
+	Name           string    `json:"name"`
+	Region         string    `json:"region"`
+	IntervalSecond int32     `json:"interval_second"`
+	IsActive       *bool     `json:"is_active"`
 }
 
 func (q *Queries) CreateRunner(ctx context.Context, arg CreateRunnerParams) (Runner, error) {
@@ -138,11 +138,11 @@ RETURNING id, user_id, monitor_id, name, region, interval_second, is_active, cre
 `
 
 type UpdateRunnerParams struct {
-	ID             uuid.UUID
-	Name           string
-	Region         string
-	IntervalSecond int32
-	IsActive       *bool
+	ID             uuid.UUID `json:"id"`
+	Name           string    `json:"name"`
+	Region         string    `json:"region"`
+	IntervalSecond int32     `json:"interval_second"`
+	IsActive       *bool     `json:"is_active"`
 }
 
 func (q *Queries) UpdateRunner(ctx context.Context, arg UpdateRunnerParams) (Runner, error) {
