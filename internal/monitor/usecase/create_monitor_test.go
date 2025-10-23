@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"easy-go-monitor/internal/constraint"
+	"easy-go-monitor/internal/codes"
 	"easy-go-monitor/internal/monitor/domain"
 
 	"github.com/google/uuid"
@@ -39,12 +39,12 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 
 	now := time.Date(2025, 4, 1, 0, 0, 0, 0, time.UTC)
 	monitor := &domain.Monitor{
-		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-		UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-		Name:           "test-monitor",
-		URL:            "https://example.com",
-		CreatedAt:      now,
-		UpdatedAt:      now,
+		ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+		UserID:    uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+		Name:      "test-monitor",
+		URL:       "https://example.com",
+		CreatedAt: now,
+		UpdatedAt: now,
 	}
 
 	tests := []struct {
@@ -58,9 +58,9 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 		{
 			name: "success: create monitor",
 			input: CreateMonitorInput{
-				UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-				Name:           "test-monitor",
-				URL:            "https://example.com",
+				UserID: uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+				Name:   "test-monitor",
+				URL:    "https://example.com",
 			},
 			mockRepo: mockMonitorRepoCreate{
 				result: monitor,
@@ -68,79 +68,79 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 			},
 			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{
-					ID:             monitor.ID,
-					UserID:         monitor.UserID,
-					Name:           monitor.Name,
-					URL:            monitor.URL,
-					CreatedAt:      monitor.CreatedAt,
-					UpdatedAt:      monitor.UpdatedAt,
+					ID:        monitor.ID,
+					UserID:    monitor.UserID,
+					Name:      monitor.Name,
+					URL:       monitor.URL,
+					CreatedAt: monitor.CreatedAt,
+					UpdatedAt: monitor.UpdatedAt,
 				},
 			},
 			want: CreateMonitorOutput{
-				ID:             monitor.ID,
-				UserID:         monitor.UserID,
-				Name:           monitor.Name,
-				URL:            monitor.URL,
-				CreatedAt:      monitor.CreatedAt,
-				UpdatedAt:      monitor.UpdatedAt,
+				ID:        monitor.ID,
+				UserID:    monitor.UserID,
+				Name:      monitor.Name,
+				URL:       monitor.URL,
+				CreatedAt: monitor.CreatedAt,
+				UpdatedAt: monitor.UpdatedAt,
 			},
 			wantError: nil,
 		},
 		{
 			name: "error: missing user id",
 			input: CreateMonitorInput{
-				Name:           "test-monitor",
-				URL:            "https://example.com",
+				Name: "test-monitor",
+				URL:  "https://example.com",
 			},
 			mockRepo: mockMonitorRepoCreate{},
 			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: constraint.ErrInvalidUUID,
+			wantError: codes.ErrInvalidUUID,
 		},
 		{
 			name: "error: user not found",
 			input: CreateMonitorInput{
-				UserID:         uuid.MustParse("22222222-2222-2222-2222-222222222222"),
-				Name:           "test-monitor",
-				URL:            "https://example.com",
+				UserID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
+				Name:   "test-monitor",
+				URL:    "https://example.com",
 			},
 			mockRepo: mockMonitorRepoCreate{
 				result: nil,
-				err:    constraint.ErrNotFound,
+				err:    codes.ErrNotFound,
 			},
 			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: constraint.ErrNotFound,
+			wantError: codes.ErrNotFound,
 		},
 		{
 			name: "error: missing name",
 			input: CreateMonitorInput{
-				UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-				URL:            "https://example.com",
+				UserID: uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+				URL:    "https://example.com",
 			},
 			mockRepo: mockMonitorRepoCreate{},
 			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: constraint.ErrInvalidMonitorName,
+			wantError: codes.ErrInvalidMonitorName,
 		},
 		{
 			name: "error: missing url",
 			input: CreateMonitorInput{
-				UserID:         uuid.MustParse("22222222-2222-2222-2222-222222222222"),
-				Name:           "test-monitor",
+				UserID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
+				Name:   "test-monitor",
 			},
 			mockRepo: mockMonitorRepoCreate{},
 			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: constraint.ErrInvalidMonitorURL,
+			wantError: codes.ErrInvalidMonitorURL,
 		},
 	}
 

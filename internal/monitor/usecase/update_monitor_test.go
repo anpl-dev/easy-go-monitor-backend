@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"easy-go-monitor/internal/constraint"
+	"easy-go-monitor/internal/codes"
 	"easy-go-monitor/internal/monitor/domain"
 
 	"github.com/google/uuid"
@@ -83,10 +83,10 @@ func TestUpdateMonitorInteractor_Execute(t *testing.T) {
 			},
 			mockRepo: mockMonitorRepoUpdate{
 				result: nil,
-				err:    constraint.ErrNotFound,
+				err:    codes.ErrNotFound,
 			},
 			mockPresenter: mockUpdateMonitorPresenter{},
-			wantError:     constraint.ErrNotFound,
+			wantError:     codes.ErrNotFound,
 		},
 	}
 

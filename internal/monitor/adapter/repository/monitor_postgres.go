@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"easy-go-monitor/db/sqlcgen"
-	"easy-go-monitor/internal/constraint"
+	"easy-go-monitor/internal/codes"
 	"easy-go-monitor/internal/monitor/domain"
 	"errors"
 
@@ -40,8 +40,8 @@ func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor
 	})
 	if err != nil {
 		if pgErr, ok := err.(*pgconn.PgError); ok {
-			if pgErr.Code == constraint.PostgresForeignKeyViolation {
-				return nil, constraint.ErrNotFound
+			if pgErr.Code == codes.PostgresForeignKeyViolation {
+				return nil, codes.ErrNotFound
 			}
 		}
 		return nil, err
@@ -53,7 +53,7 @@ func (r *MonitorPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) 
 	row, err := r.queries.FindMonitorByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, constraint.ErrNotFound
+			return nil, codes.ErrNotFound
 		}
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func (r *MonitorPostgresRepository) FindByUserID(ctx context.Context, userID uui
 	rows, err := r.queries.FindAllMonitors(ctx, userID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, constraint.ErrNotFound
+			return nil, codes.ErrNotFound
 		}
 		return nil, err
 	}
@@ -84,7 +84,7 @@ func (r *MonitorPostgresRepository) Update(ctx context.Context, m domain.Monitor
 	})
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, constraint.ErrNotFound
+			return nil, codes.ErrNotFound
 		}
 		return nil, err
 	}
@@ -95,7 +95,7 @@ func (r *MonitorPostgresRepository) Delete(ctx context.Context, id uuid.UUID) er
 	err := r.queries.DeleteMonitor(ctx, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return constraint.ErrNotFound
+			return codes.ErrNotFound
 		}
 		return err
 	}

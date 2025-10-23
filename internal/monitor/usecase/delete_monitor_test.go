@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"easy-go-monitor/internal/constraint"
+	"easy-go-monitor/internal/codes"
 	"easy-go-monitor/internal/monitor/domain"
 
 	"github.com/google/uuid"
@@ -49,8 +49,8 @@ func TestDeleteMonitorInteractor_Execute(t *testing.T) {
 			input: DeleteMonitorInput{
 				ID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 			},
-			mockRepo:  mockMonitorRepoDelete{err: constraint.ErrNotFound},
-			wantError: constraint.ErrNotFound,
+			mockRepo:  mockMonitorRepoDelete{err: codes.ErrNotFound},
+			wantError: codes.ErrNotFound,
 		},
 	}
 

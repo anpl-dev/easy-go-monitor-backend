@@ -1,7 +1,7 @@
 package response
 
 import (
-	"easy-go-monitor/internal/constraint"
+	"easy-go-monitor/internal/codes"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,7 +15,7 @@ type APIResponse struct {
 }
 
 func ErrorResponse(err error) (int, APIResponse) {
-	if res, ok := err.(*constraint.Error); ok {
+	if res, ok := err.(*codes.Error); ok {
 		status := toHTTPStatus(res.Code)
 		return status, APIResponse{
 			Code:    res.Code,

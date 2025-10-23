@@ -2,7 +2,7 @@ package controller
 
 import (
 	"easy-go-monitor/internal/api/response"
-	"easy-go-monitor/internal/constraint"
+	"easy-go-monitor/internal/codes"
 	"easy-go-monitor/internal/user/usecase"
 	"net/http"
 
@@ -23,12 +23,12 @@ func (h *SearchUsersController) Handle(c *gin.Context) {
 		Name:  c.Query("name"),
 	}
 	if input.Email == "" && input.Name == "" {
-		response.HandleError(c, constraint.ErrSearchParameters)
+		response.HandleError(c, codes.ErrSearchParameters)
 		return
 	}
 	output, err := h.uc.Execute(c.Request.Context(), input)
 	if err != nil {
-		response.HandleError(c, constraint.ErrNotFound)
+		response.HandleError(c, codes.ErrNotFound)
 		return
 	}
 	response.Success(c, http.StatusOK, output)

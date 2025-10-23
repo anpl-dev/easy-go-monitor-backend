@@ -2,7 +2,7 @@ package controller
 
 import (
 	"easy-go-monitor/internal/api/response"
-	"easy-go-monitor/internal/constraint"
+	"easy-go-monitor/internal/codes"
 	"easy-go-monitor/internal/monitor/usecase"
 	"net/http"
 
@@ -22,12 +22,12 @@ func (h *CreateMonitorController) Handle(c *gin.Context) {
 	userIDstr := c.GetString("user_id")
 	userID, err := uuid.Parse(userIDstr)
 	if err != nil {
-		response.HandleError(c, constraint.ErrInvalidUUID)
+		response.HandleError(c, codes.ErrInvalidUUID)
 	}
 
 	var input usecase.CreateMonitorInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		response.HandleError(c, constraint.ErrBadRequest)
+		response.HandleError(c, codes.ErrBadRequest)
 		return
 	}
 	input.UserID = userID

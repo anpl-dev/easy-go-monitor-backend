@@ -2,7 +2,7 @@ package domain
 
 import (
 	"context"
-	"easy-go-monitor/internal/constraint"
+	"easy-go-monitor/internal/codes"
 	"strings"
 	"time"
 
@@ -32,13 +32,13 @@ type (
 // NewUser creates a new User entity with validation
 func NewUser(name, email, plainPassword string) (*User, error) {
 	if name == "" {
-		return nil, constraint.ErrInvalidUserName
+		return nil, codes.ErrInvalidUserName
 	}
 	if !strings.Contains(email, "@") {
-		return nil, constraint.ErrInvalidEmail
+		return nil, codes.ErrInvalidEmail
 	}
 	if plainPassword == "" {
-		return nil, constraint.ErrInvalidPassword
+		return nil, codes.ErrInvalidPassword
 	}
 
 	hashed, err := HashedPassword(plainPassword)
@@ -65,7 +65,7 @@ func CheckPassword(password, hash string) bool {
 
 func (u *User) Authenticate(password string) error {
 	if !CheckPassword(password, u.Password) {
-		return constraint.ErrInvalidPassword
+		return codes.ErrInvalidPassword
 	}
 	return nil
 }

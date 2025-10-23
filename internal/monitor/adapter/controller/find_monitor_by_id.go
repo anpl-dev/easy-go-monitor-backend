@@ -2,7 +2,7 @@ package controller
 
 import (
 	"easy-go-monitor/internal/api/response"
-	"easy-go-monitor/internal/constraint"
+	"easy-go-monitor/internal/codes"
 	"easy-go-monitor/internal/monitor/usecase"
 	"net/http"
 
@@ -22,12 +22,12 @@ func (h *FindMonitorByIDController) Handle(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := uuid.Parse(idStr)
 	if err != nil {
-		response.HandleError(c, constraint.ErrInvalidUUID)
+		response.HandleError(c, codes.ErrInvalidUUID)
 		return
 	}
 	output, err := h.uc.Execute(c.Request.Context(), usecase.FindMonitorByIDInput{ID: id})
 	if err != nil {
-		response.HandleError(c, constraint.ErrNotFound)
+		response.HandleError(c, codes.ErrNotFound)
 		return
 	}
 	response.Success(c, http.StatusOK, output)

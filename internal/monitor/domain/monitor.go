@@ -2,7 +2,7 @@ package domain
 
 import (
 	"context"
-	"easy-go-monitor/internal/constraint"
+	"easy-go-monitor/internal/codes"
 	"net/url"
 	"time"
 
@@ -32,13 +32,13 @@ type (
 // NewMonitor creates a new Monitor entity with validation.
 func NewMonitor(userID uuid.UUID, name string, rawURL string) (*Monitor, error) {
 	if userID == uuid.Nil {
-		return nil, constraint.ErrInvalidUUID
+		return nil, codes.ErrInvalidUUID
 	}
 	if name == "" {
-		return nil, constraint.ErrInvalidMonitorName
+		return nil, codes.ErrInvalidMonitorName
 	}
 	if _, err := url.ParseRequestURI(rawURL); err != nil {
-		return nil, constraint.ErrInvalidMonitorURL
+		return nil, codes.ErrInvalidMonitorURL
 	}
 
 	return &Monitor{

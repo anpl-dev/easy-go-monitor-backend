@@ -2,7 +2,7 @@ package domain
 
 import (
 	"context"
-	"easy-go-monitor/internal/constraint"
+	"easy-go-monitor/internal/codes"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,8 +10,9 @@ import (
 
 type (
 	RunnerRepository interface {
-		Create(ctx context.Context, runner Runner) (*Runner, error)
+		Create(ctx context.Context, r Runner) (*Runner, error)
 		FindByID(ctx context.Context, id uuid.UUID) (*Runner, error)
+		FindAll(ctx context.Context, userID uuid.UUID) ([]*Runner, error)
 		Update(ctx context.Context, r Runner) (*Runner, error)
 		Delete(ctx context.Context, id uuid.UUID) error
 	}
@@ -37,19 +38,19 @@ func NewRunner(
 	region string,
 ) (*Runner, error) {
 	if userID == uuid.Nil {
-		return nil, constraint.ErrInvalidUUID
+		return nil, codes.ErrInvalidUUID
 	}
 	if monitorID == uuid.Nil {
-		return nil, constraint.ErrInvalidUUID
+		return nil, codes.ErrInvalidUUID
 	}
 	if name == "" {
-		return nil, constraint.ErrInvalidRunnerName
+		return nil, codes.ErrInvalidRunnerName
 	}
 	if region == "" {
-		return nil, constraint.ErrInvalidRunnerRegion
+		return nil, codes.ErrInvalidRunnerRegion
 	}
 	if interval_second <= 0 {
-		return nil, constraint.ErrInvalidRunnerInterval
+		return nil, codes.ErrInvalidRunnerInterval
 	}
 
 	return &Runner{
