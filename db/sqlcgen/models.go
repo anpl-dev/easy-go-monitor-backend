@@ -5,6 +5,8 @@
 package sqlcgen
 
 import (
+	"encoding/json"
+
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
@@ -17,7 +19,7 @@ type Monitor struct {
 	Url       string             `json:"url"`
 	Type      string             `json:"type"`
 	IsActive  *bool              `json:"is_active"`
-	Settings  []byte             `json:"settings"`
+	Settings  json.RawMessage    `json:"settings"`
 	CreatedAt pgtype.Timestamptz `json:"created_at"`
 	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
 }

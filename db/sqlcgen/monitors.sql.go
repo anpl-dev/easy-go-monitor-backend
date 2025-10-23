@@ -7,6 +7,7 @@ package sqlcgen
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -23,14 +24,14 @@ RETURNING id, user_id, group_id, name, url, type, is_active, settings, created_a
 `
 
 type CreateMonitorParams struct {
-	ID       uuid.UUID   `json:"id"`
-	UserID   uuid.UUID   `json:"user_id"`
-	GroupID  pgtype.UUID `json:"group_id"`
-	Name     string      `json:"name"`
-	Url      string      `json:"url"`
-	Type     string      `json:"type"`
-	IsActive *bool       `json:"is_active"`
-	Settings []byte      `json:"settings"`
+	ID       uuid.UUID       `json:"id"`
+	UserID   uuid.UUID       `json:"user_id"`
+	GroupID  pgtype.UUID     `json:"group_id"`
+	Name     string          `json:"name"`
+	Url      string          `json:"url"`
+	Type     string          `json:"type"`
+	IsActive *bool           `json:"is_active"`
+	Settings json.RawMessage `json:"settings"`
 }
 
 func (q *Queries) CreateMonitor(ctx context.Context, arg CreateMonitorParams) (Monitor, error) {
@@ -146,12 +147,12 @@ RETURNING id, user_id, group_id, name, url, type, is_active, settings, created_a
 `
 
 type UpdateMonitorParams struct {
-	ID       uuid.UUID   `json:"id"`
-	Name     string      `json:"name"`
-	GroupID  pgtype.UUID `json:"group_id"`
-	Url      string      `json:"url"`
-	IsActive *bool       `json:"is_active"`
-	Settings []byte      `json:"settings"`
+	ID       uuid.UUID       `json:"id"`
+	Name     string          `json:"name"`
+	GroupID  pgtype.UUID     `json:"group_id"`
+	Url      string          `json:"url"`
+	IsActive *bool           `json:"is_active"`
+	Settings json.RawMessage `json:"settings"`
 }
 
 func (q *Queries) UpdateMonitor(ctx context.Context, arg UpdateMonitorParams) (Monitor, error) {
