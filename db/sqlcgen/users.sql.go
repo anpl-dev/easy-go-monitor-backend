@@ -12,9 +12,9 @@ import (
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (id, name, email, password_hash)
+INSERT INTO users (id, name, email, password)
 VALUES ($1, $2, $3, $4)
-RETURNING id, name, email, password_hash, created_at, updated_at
+RETURNING id, name, email, password, created_at, updated_at
 `
 
 type CreateUserParams struct {
@@ -54,7 +54,7 @@ func (q *Queries) DeleteUser(ctx context.Context, id uuid.UUID) error {
 }
 
 const findAllUsers = `-- name: FindAllUsers :many
-SELECT id, name, email, password_hash, created_at, updated_at FROM users
+SELECT id, name, email, password, created_at, updated_at FROM users
 ORDER BY created_at DESC
 `
 
@@ -86,7 +86,7 @@ func (q *Queries) FindAllUsers(ctx context.Context) ([]User, error) {
 }
 
 const findUserByEmail = `-- name: FindUserByEmail :one
-SELECT id, name, email, password_hash, created_at, updated_at FROM users
+SELECT id, name, email, password, created_at, updated_at FROM users
 WHERE email = $1
 `
 
@@ -105,7 +105,7 @@ func (q *Queries) FindUserByEmail(ctx context.Context, email string) (User, erro
 }
 
 const findUserByID = `-- name: FindUserByID :one
-SELECT id, name, email, password_hash, created_at, updated_at FROM users
+SELECT id, name, email, password, created_at, updated_at FROM users
 WHERE id = $1
 `
 
@@ -127,10 +127,10 @@ const updateUser = `-- name: UpdateUser :one
 UPDATE users
 SET name = $2,
     email = $3,
-    password_hash = $4,
+    password = $4,
     updated_at = now()
 WHERE id = $1
-RETURNING id, name, email, password_hash, created_at, updated_at
+RETURNING id, name, email, password, created_at, updated_at
 `
 
 type UpdateUserParams struct {

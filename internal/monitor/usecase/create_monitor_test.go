@@ -43,7 +43,6 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 		UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:           "test-monitor",
 		URL:            "https://example.com",
-		IntervalSecond: 60,
 		CreatedAt:      now,
 		UpdatedAt:      now,
 	}
@@ -62,7 +61,6 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 				Name:           "test-monitor",
 				URL:            "https://example.com",
-				IntervalSecond: 60,
 			},
 			mockRepo: mockMonitorRepoCreate{
 				result: monitor,
@@ -74,7 +72,6 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 					UserID:         monitor.UserID,
 					Name:           monitor.Name,
 					URL:            monitor.URL,
-					IntervalSecond: monitor.IntervalSecond,
 					CreatedAt:      monitor.CreatedAt,
 					UpdatedAt:      monitor.UpdatedAt,
 				},
@@ -84,7 +81,6 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				UserID:         monitor.UserID,
 				Name:           monitor.Name,
 				URL:            monitor.URL,
-				IntervalSecond: monitor.IntervalSecond,
 				CreatedAt:      monitor.CreatedAt,
 				UpdatedAt:      monitor.UpdatedAt,
 			},
@@ -95,7 +91,6 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 			input: CreateMonitorInput{
 				Name:           "test-monitor",
 				URL:            "https://example.com",
-				IntervalSecond: 60,
 			},
 			mockRepo: mockMonitorRepoCreate{},
 			mockPresenter: mockCreateMonitorPresenter{
@@ -110,7 +105,6 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 				UserID:         uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 				Name:           "test-monitor",
 				URL:            "https://example.com",
-				IntervalSecond: 60,
 			},
 			mockRepo: mockMonitorRepoCreate{
 				result: nil,
@@ -127,7 +121,6 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 			input: CreateMonitorInput{
 				UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 				URL:            "https://example.com",
-				IntervalSecond: 60,
 			},
 			mockRepo: mockMonitorRepoCreate{},
 			mockPresenter: mockCreateMonitorPresenter{
@@ -141,7 +134,6 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 			input: CreateMonitorInput{
 				UserID:         uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 				Name:           "test-monitor",
-				IntervalSecond: 60,
 			},
 			mockRepo: mockMonitorRepoCreate{},
 			mockPresenter: mockCreateMonitorPresenter{
@@ -149,35 +141,6 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 			},
 			want:      CreateMonitorOutput{},
 			wantError: constraint.ErrInvalidMonitorURL,
-		},
-		{
-			name: "error: missing interval",
-			input: CreateMonitorInput{
-				UserID: uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-				Name:   "test-monitor",
-				URL:    "https://example.com",
-			},
-			mockRepo: mockMonitorRepoCreate{},
-			mockPresenter: mockCreateMonitorPresenter{
-				result: CreateMonitorOutput{},
-			},
-			want:      CreateMonitorOutput{},
-			wantError: constraint.ErrInvalidMonitorInterval,
-		},
-		{
-			name: "error: invalid interval",
-			input: CreateMonitorInput{
-				UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-				Name:           "test-monitor",
-				URL:            "https://example.com",
-				IntervalSecond: -5,
-			},
-			mockRepo: mockMonitorRepoCreate{},
-			mockPresenter: mockCreateMonitorPresenter{
-				result: CreateMonitorOutput{},
-			},
-			want:      CreateMonitorOutput{},
-			wantError: constraint.ErrInvalidMonitorInterval,
 		},
 	}
 

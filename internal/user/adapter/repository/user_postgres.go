@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"easy-go-monitor/db/sqlcgen"
 	"easy-go-monitor/internal/constraint"
-	"easy-go-monitor/internal/user/adapter/repository/sqlcgen"
 	"easy-go-monitor/internal/user/domain"
 	"errors"
 

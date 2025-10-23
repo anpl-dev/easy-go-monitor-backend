@@ -19,7 +19,6 @@ type (
 		UserID         uuid.UUID `json:"user_id"`
 		Name           string    `json:"name" binding:"required"`
 		URL            string    `json:"url" binding:"required"`
-		IntervalSecond int       `json:"interval_second" binding:"required,min=1"`
 	}
 
 	// CreateMonitorPresenter output port
@@ -33,7 +32,6 @@ type (
 		UserID         uuid.UUID `json:"user_id"`
 		Name           string    `json:"name"`
 		URL            string    `json:"url"`
-		IntervalSecond int       `json:"interval_second"`
 		CreatedAt      time.Time `json:"created_at"`
 		UpdatedAt      time.Time `json:"updated_at"`
 	}
@@ -59,7 +57,6 @@ func (i *createMonitorInteractor) Execute(ctx context.Context, input CreateMonit
 		input.UserID,
 		input.Name,
 		input.URL,
-		input.IntervalSecond,
 	)
 	if err != nil {
 		return CreateMonitorOutput{}, err

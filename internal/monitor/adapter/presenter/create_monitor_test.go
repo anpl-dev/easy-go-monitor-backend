@@ -33,7 +33,6 @@ func TestCreateMonitorPresenter_Output(t *testing.T) {
 				ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 				Name:           "test-monitor",
 				URL:            "https://example.com",
-				IntervalSecond: 60,
 				CreatedAt:      now,
 				UpdatedAt:      now,
 			},

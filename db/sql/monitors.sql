@@ -3,7 +3,7 @@ INSERT INTO monitors (
     id, user_id, group_id, name, url, type, is_active, settings
 )
 VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8::jsonb, 
+    $1, $2, $3, $4, $5, $6, $7, $8::jsonb
 )
 RETURNING *;
 

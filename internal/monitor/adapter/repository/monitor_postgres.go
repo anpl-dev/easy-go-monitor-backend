@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"easy-go-monitor/db/sqlcgen"
 	"easy-go-monitor/internal/constraint"
-	"easy-go-monitor/internal/monitor/adapter/repository/sqlcgen"
 	"easy-go-monitor/internal/monitor/domain"
 	"errors"
 
@@ -22,23 +22,21 @@ func NewMonitorPostgresRepository(pool *pgxpool.Pool) *MonitorPostgresRepository
 }
 func toDomainMonitor(s sqlcgen.Monitor) *domain.Monitor {
 	return &domain.Monitor{
-		ID:             s.ID,
-		UserID:         s.UserID,
-		Name:           s.Name,
-		URL:            s.Url,
-		IntervalSecond: int(s.IntervalSecond),
-		CreatedAt:      s.CreatedAt.Time,
-		UpdatedAt:      s.UpdatedAt.Time,
+		ID:        s.ID,
+		UserID:    s.UserID,
+		Name:      s.Name,
+		URL:       s.Url,
+		CreatedAt: s.CreatedAt.Time,
+		UpdatedAt: s.UpdatedAt.Time,
 	}
 }
 
 func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor) (*domain.Monitor, error) {
 	row, err := r.queries.CreateMonitor(ctx, sqlcgen.CreateMonitorParams{
-		ID:             m.ID,
-		UserID:         m.UserID,
-		Name:           m.Name,
-		Url:            m.URL,
-		IntervalSecond: int32(m.IntervalSecond),
+		ID:     m.ID,
+		UserID: m.UserID,
+		Name:   m.Name,
+		Url:    m.URL,
 	})
 	if err != nil {
 		if pgErr, ok := err.(*pgconn.PgError); ok {
@@ -63,7 +61,7 @@ func (r *MonitorPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) 
 }
 
 func (r *MonitorPostgresRepository) FindByUserID(ctx context.Context, userID uuid.UUID) ([]*domain.Monitor, error) {
-	rows, err := r.queries.FindMonitorsByUser(ctx, userID)
+	rows, err := r.queries.FindAllMonitors(ctx, userID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, constraint.ErrNotFound
@@ -80,10 +78,9 @@ func (r *MonitorPostgresRepository) FindByUserID(ctx context.Context, userID uui
 
 func (r *MonitorPostgresRepository) Update(ctx context.Context, m domain.Monitor) (*domain.Monitor, error) {
 	row, err := r.queries.UpdateMonitor(ctx, sqlcgen.UpdateMonitorParams{
-		ID:             m.ID,
-		Name:           m.Name,
-		Url:            m.URL,
-		IntervalSecond: int32(m.IntervalSecond),
+		ID:   m.ID,
+		Name: m.Name,
+		Url:  m.URL,
 	})
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
