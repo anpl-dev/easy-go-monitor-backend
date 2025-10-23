@@ -18,12 +18,16 @@ var (
 	ErrInvalidPassword = New(4103, "invalid password")
 
 	// Monitor
-	ErrInvalidMonitorName     = New(4201, "invalid monitor name")
-	ErrInvalidMonitorURL      = New(4202, "invalid monitor url")
-	ErrInvalidMonitorInterval = New(4203, "invalid monitor interval")
+	ErrInvalidMonitorName = New(4201, "invalid monitor name")
+	ErrInvalidMonitorURL  = New(4202, "invalid monitor url")
+
+	// Runner
+	ErrInvalidRunnerName     = New(4301, "invalid runner name")
+	ErrInvalidRunnerRegion   = New(4302, "invalid runner region")
+	ErrInvalidRunnerInterval = New(4303, "invalid runner interval")
 
 	// Controller / Request
-	ErrSearchParameters = New(4301, "no search parameters")
+	ErrSearchParameters = New(4901, "no search parameters")
 
 	// Auth
 	ErrTokenExpired = New(4401, "token expired")

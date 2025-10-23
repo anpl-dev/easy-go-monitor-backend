@@ -13,7 +13,6 @@ CREATE TABLE IF NOT EXISTS monitor_groups (
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     name VARCHAR(100) NOT NULL,
     is_active BOOLEAN,
-    description TEXT DEFAULT NULL,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     UNIQUE (user_id, name)
@@ -25,13 +24,9 @@ CREATE TABLE IF NOT EXISTS monitors (
     group_id UUID NULL REFERENCES monitor_groups(id) ON DELETE SET NULL,
     name VARCHAR(100) NOT NULL UNIQUE,
     url TEXT NOT NULL,
-    method VARCHAR(10) NOT NULL CHECK (method IN ('GET', 'POST', 'PUT', 'DELETE', 'HEAD')),
-    timeout_ms INT DEFAULT 5000,
+    type VARCHAR(50) NOT NULL DEFAULT 'http',
     is_active BOOLEAN DEFAULT true,
-    header JSONB,
-    body TEXT,
-    expected_status INT DEFAULT 200,
-    description TEXT DEFAULT NULL,
+    settings JSONB NOT NULL DEFAULT '{}'::jsonb,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
@@ -39,12 +34,11 @@ CREATE TABLE IF NOT EXISTS monitors (
 CREATE TABLE IF NOT EXISTS runners (
     id UUID PRIMARY KEY,
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    monitor_id UUID NULL REFERENCES monitors(id) ON DELETE SET NULL,
+    monitor_id UUID NOT NULL REFERENCES monitors(id) ON DELETE SET NULL,
     name VARCHAR(100) NOT NULL,
     region VARCHAR(50) NOT NULL,
     interval_second INT NOT NULL,
     is_active BOOLEAN DEFAULT false,
-    description TEXT DEFAULT NULL,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
@@ -75,7 +69,6 @@ CREATE TABLE IF NOT EXISTS notifications (
     trigger VARCHAR(50) NOT NULL DEFAULT 'on_failure' CHECK (trigger IN ('on_failure', 'on_recovery', 'always')),
     message TEXT NOT NULL,
     is_active BOOLEAN DEFAULT true,
-    description TEXT DEFAULT NULL,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );

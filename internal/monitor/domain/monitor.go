@@ -30,25 +30,21 @@ type (
 )
 
 // NewMonitor creates a new Monitor entity with validation.
-func NewMonitor(userID uuid.UUID, name string, rawURL string, interval int) (*Monitor, error) {
+func NewMonitor(userID uuid.UUID, name string, rawURL string) (*Monitor, error) {
 	if userID == uuid.Nil {
 		return nil, constraint.ErrInvalidUUID
 	}
 	if name == "" {
 		return nil, constraint.ErrInvalidMonitorName
 	}
-	if interval <= 0 {
-		return nil, constraint.ErrInvalidMonitorInterval
-	}
 	if _, err := url.ParseRequestURI(rawURL); err != nil {
 		return nil, constraint.ErrInvalidMonitorURL
 	}
 
 	return &Monitor{
-		ID:             uuid.New(),
-		UserID:         userID,
-		Name:           name,
-		URL:            rawURL,
-		IntervalSecond: interval,
+		ID:     uuid.New(),
+		UserID: userID,
+		Name:   name,
+		URL:    rawURL,
 	}, nil
 }

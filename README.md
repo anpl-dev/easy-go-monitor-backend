@@ -5,8 +5,7 @@
 このプロジェクトは外形監視を GUI から気軽にできるようにする Golang 製のプロジェクトです。
 
 ## ER 図
-
-![alt text](ER図_easy-go-monitor.svg)
+![alt text](<easy go monitor.svg>)
 
 ## データベースマイグレーション
 
@@ -22,7 +21,7 @@ go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@lat
 ### 新しいマイグレーションファイルの作成
 
 ```bash
-migrate create -ext sql -dir db/migrations -seq create_users_and_monitors
+migrate create -ext sql -dir db/migrations -seq easy-go-monitor-db
 ```
 
 このコマンドで以下のようなファイルが生成されます:
@@ -37,7 +36,7 @@ db/migrations/
 
 ```bash
 migrate -path db/migrations \
-  -database "postgres://<user>:<password>@localhost:55432/monitor_db?sslmode=disable" up
+  -database "postgres://user:password@localhost:55432/monitor_db?sslmode=disable" up
 ```
 
 ### マイグレーションのロールバック
@@ -46,14 +45,21 @@ migrate -path db/migrations \
 
 ```bash
 migrate -path db/migrations \
-  -database "postgres://<user>:<password>@localhost:55432/monitor_db?sslmode=disable" down 1
+  -database "postgres://user:password@localhost:55432/monitor_db?sslmode=disable" down 1
 ```
 
 すべて戻す:
 
 ```bash
 migrate -path db/migrations \
-  -database "postgres://<user>:<password>@localhost:55432/monitor_db?sslmode=disable" down
+  -database "postgres://user:password@localhost:55432/monitor_db?sslmode=disable" down
+```
+
+状態リセット
+
+```bash
+migrate -path db/migrations \
+  -database "postgres://user:password@localhost:55432/monitor_db?sslmode=disable" drop -f
 ```
 
 ### 確認
@@ -63,4 +69,4 @@ PostgreSQL にログインしてテーブルを確認:
 ```sql
 \d users;
 \d monitors;
-```
+````
