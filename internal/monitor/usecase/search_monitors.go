@@ -58,7 +58,7 @@ func (i *searchMonitorsInteractor) Execute(ctx context.Context, input SearchMoni
 		return nil, err
 	}
 
-	monitors, err := i.repo.FindByUserID(ctx, userID)
+	monitors, err := i.repo.FindAll(ctx, userID)
 	if err != nil {
 		return nil, err
 	}

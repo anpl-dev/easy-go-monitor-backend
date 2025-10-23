@@ -2,13 +2,13 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 	"easy-go-monitor/db/sqlcgen"
 	"easy-go-monitor/internal/codes"
 	"easy-go-monitor/internal/monitor/domain"
 	"errors"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -52,7 +52,7 @@ func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor
 func (r *MonitorPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) (*domain.Monitor, error) {
 	row, err := r.queries.FindMonitorByID(ctx, id)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, codes.ErrNotFound
 		}
 		return nil, err
@@ -60,10 +60,10 @@ func (r *MonitorPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) 
 	return toDomainMonitor(row), nil
 }
 
-func (r *MonitorPostgresRepository) FindByUserID(ctx context.Context, userID uuid.UUID) ([]*domain.Monitor, error) {
+func (r *MonitorPostgresRepository) FindAll(ctx context.Context, userID uuid.UUID) ([]*domain.Monitor, error) {
 	rows, err := r.queries.FindAllMonitors(ctx, userID)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, codes.ErrNotFound
 		}
 		return nil, err
@@ -83,7 +83,7 @@ func (r *MonitorPostgresRepository) Update(ctx context.Context, m domain.Monitor
 		Url:  m.URL,
 	})
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, codes.ErrNotFound
 		}
 		return nil, err
@@ -94,7 +94,7 @@ func (r *MonitorPostgresRepository) Update(ctx context.Context, m domain.Monitor
 func (r *MonitorPostgresRepository) Delete(ctx context.Context, id uuid.UUID) error {
 	err := r.queries.DeleteMonitor(ctx, id)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, pgx.ErrNoRows) {
 			return codes.ErrNotFound
 		}
 		return err
