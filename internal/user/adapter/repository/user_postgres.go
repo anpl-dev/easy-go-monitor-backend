@@ -22,21 +22,21 @@ func NewUserPostgresRepository(pool *pgxpool.Pool) *UserPostgresRepository {
 
 func toDomainUser(s sqlcgen.User) *domain.User {
 	return &domain.User{
-		ID:           s.ID,
-		Name:         s.Name,
-		Email:        s.Email,
-		PasswordHash: s.PasswordHash,
-		CreatedAt:    s.CreatedAt.Time,
-		UpdatedAt:    s.UpdatedAt.Time,
+		ID:        s.ID,
+		Name:      s.Name,
+		Email:     s.Email,
+		Password:  s.Password,
+		CreatedAt: s.CreatedAt.Time,
+		UpdatedAt: s.UpdatedAt.Time,
 	}
 }
 
 func (r *UserPostgresRepository) Create(ctx context.Context, u domain.User) (*domain.User, error) {
 	row, err := r.queries.CreateUser(ctx, sqlcgen.CreateUserParams{
-		ID:           u.ID,
-		Name:         u.Name,
-		Email:        u.Email,
-		PasswordHash: u.PasswordHash,
+		ID:       u.ID,
+		Name:     u.Name,
+		Email:    u.Email,
+		Password: u.Password,
 	})
 	if err != nil {
 		return nil, err
@@ -68,10 +68,10 @@ func (r *UserPostgresRepository) FindByEmail(ctx context.Context, email string) 
 
 func (r *UserPostgresRepository) Update(ctx context.Context, u domain.User) (*domain.User, error) {
 	row, err := r.queries.UpdateUser(ctx, sqlcgen.UpdateUserParams{
-		ID:           u.ID,
-		Name:         u.Name,
-		Email:        u.Email,
-		PasswordHash: u.PasswordHash,
+		ID:       u.ID,
+		Name:     u.Name,
+		Email:    u.Email,
+		Password: u.Password,
 	})
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {

@@ -18,10 +18,10 @@ RETURNING id, name, email, password_hash, created_at, updated_at
 `
 
 type CreateUserParams struct {
-	ID           uuid.UUID
-	Name         string
-	Email        string
-	PasswordHash string
+	ID       uuid.UUID
+	Name     string
+	Email    string
+	Password string
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
@@ -29,14 +29,14 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		arg.ID,
 		arg.Name,
 		arg.Email,
-		arg.PasswordHash,
+		arg.Password,
 	)
 	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.Email,
-		&i.PasswordHash,
+		&i.Password,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -71,7 +71,7 @@ func (q *Queries) FindAllUsers(ctx context.Context) ([]User, error) {
 			&i.ID,
 			&i.Name,
 			&i.Email,
-			&i.PasswordHash,
+			&i.Password,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -97,7 +97,7 @@ func (q *Queries) FindUserByEmail(ctx context.Context, email string) (User, erro
 		&i.ID,
 		&i.Name,
 		&i.Email,
-		&i.PasswordHash,
+		&i.Password,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -116,7 +116,7 @@ func (q *Queries) FindUserByID(ctx context.Context, id uuid.UUID) (User, error) 
 		&i.ID,
 		&i.Name,
 		&i.Email,
-		&i.PasswordHash,
+		&i.Password,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -134,10 +134,10 @@ RETURNING id, name, email, password_hash, created_at, updated_at
 `
 
 type UpdateUserParams struct {
-	ID           uuid.UUID
-	Name         string
-	Email        string
-	PasswordHash string
+	ID       uuid.UUID
+	Name     string
+	Email    string
+	Password string
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
@@ -145,14 +145,14 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		arg.ID,
 		arg.Name,
 		arg.Email,
-		arg.PasswordHash,
+		arg.Password,
 	)
 	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.Email,
-		&i.PasswordHash,
+		&i.Password,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)

@@ -20,12 +20,12 @@ type (
 	}
 
 	User struct {
-		ID           uuid.UUID
-		Name         string
-		Email        string
-		PasswordHash string
-		CreatedAt    time.Time
-		UpdatedAt    time.Time
+		ID        uuid.UUID
+		Name      string
+		Email     string
+		Password  string
+		CreatedAt time.Time
+		UpdatedAt time.Time
 	}
 )
 
@@ -47,10 +47,10 @@ func NewUser(name, email, plainPassword string) (*User, error) {
 	}
 
 	return &User{
-		ID:           uuid.New(),
-		Name:         name,
-		Email:        email,
-		PasswordHash: hashed,
+		ID:       uuid.New(),
+		Name:     name,
+		Email:    email,
+		Password: hashed,
 	}, nil
 }
 
@@ -59,12 +59,12 @@ func HashedPassword(plain string) (string, error) {
 	return string(bytes), err
 }
 
-func CheckPasswordHash(password, hash string) bool {
+func CheckPassword(password, hash string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) == nil
 }
 
 func (u *User) Authenticate(password string) error {
-	if !CheckPasswordHash(password, u.PasswordHash) {
+	if !CheckPassword(password, u.Password) {
 		return constraint.ErrInvalidPassword
 	}
 	return nil

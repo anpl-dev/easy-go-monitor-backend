@@ -56,12 +56,12 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			},
 			mockRepo: mockUserRepoCreate{
 				result: &domain.User{
-					ID:           uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-					Name:         "Alice",
-					Email:        "alice@example.com",
-					PasswordHash: hashed,
-					CreatedAt:    now,
-					UpdatedAt:    now,
+					ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+					Name:      "Alice",
+					Email:     "alice@example.com",
+					Password:  hashed,
+					CreatedAt: now,
+					UpdatedAt: now,
 				},
 				err: nil,
 			},
@@ -129,7 +129,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 				require.Equal(t, tt.mockPresenter.result, got, "[%s] output mismatch", tt.name)
 
 				// check hashed password
-				require.True(t, domain.CheckPasswordHash(tt.input.Password, tt.mockRepo.result.PasswordHash),
+				require.True(t, domain.CheckPassword(tt.input.Password, tt.mockRepo.result.Password),
 					"[%s] password hash mismatch", tt.name)
 			}
 		})

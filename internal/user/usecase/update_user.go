@@ -16,10 +16,10 @@ type (
 
 	// UpdateUserInput input data
 	UpdateUserInput struct {
-		ID           uuid.UUID `json:"-"`
-		Name         string    `json:"name" binding:"required"`
-		Email        string    `json:"email" binding:"required"`
-		PasswordHash string    `json:"password_hash" binding:"required"`
+		ID       uuid.UUID `json:"-"`
+		Name     string    `json:"name" binding:"required"`
+		Email    string    `json:"email" binding:"required"`
+		Password string    `json:"password_hash" binding:"required"`
 	}
 	// UpdateUserPresenter output port
 	UpdateUserPresenter interface {
@@ -52,11 +52,11 @@ func NewUpdateUserInteractor(
 
 func (i *updateUserInteractor) Execute(ctx context.Context, input UpdateUserInput) (UpdateUserOutput, error) {
 	updated, err := i.repo.Update(ctx, domain.User{
-		ID:           input.ID,
-		Name:         input.Name,
-		Email:        input.Email,
-		PasswordHash: input.PasswordHash,
-		UpdatedAt:    time.Now(),
+		ID:        input.ID,
+		Name:      input.Name,
+		Email:     input.Email,
+		Password:  input.Password,
+		UpdatedAt: time.Now(),
 	})
 	if err != nil {
 		return UpdateUserOutput{}, err
