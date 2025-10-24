@@ -4,6 +4,7 @@ import (
 	"easy-go-monitor/internal/api/middleware"
 	"easy-go-monitor/internal/infra/jwt"
 	monitorController "easy-go-monitor/internal/monitor/adapter/controller"
+	runnerController "easy-go-monitor/internal/runner/adapter/controller"
 	userController "easy-go-monitor/internal/user/adapter/controller"
 
 	"github.com/gin-gonic/gin"
@@ -26,15 +27,25 @@ type (
 		Update   *monitorController.UpdateMonitorController
 		Delete   *monitorController.DeleteMonitorController
 	}
+
+	RunnerControllers struct {
+		Create *runnerController.CreateRunnerController
+	}
 )
 
-func NewGinRouter(users UserControllers, monitors MonitorControllers, jwtService jwt.JWTService) *gin.Engine {
+func NewGinRouter(
+	users UserControllers,
+	monitors MonitorControllers,
+	runners RunnerControllers,
+	jwtService jwt.JWTService,
+) *gin.Engine {
 	r := gin.Default()
 
 	r.Use(middleware.CORSMiddleware())
 
 	api := r.Group("/api/v1")
 
+	// login or create users are not jwt authenticated
 	api.POST("/login", users.Login.Handle)
 	api.POST("/users", users.Create.Handle)
 
@@ -56,6 +67,11 @@ func NewGinRouter(users UserControllers, monitors MonitorControllers, jwtService
 			monitorsApi.GET("/search", monitors.Search.Handle)
 			monitorsApi.PUT("/:id", monitors.Update.Handle)
 			monitorsApi.DELETE("/:id", monitors.Delete.Handle)
+		}
+
+		runnersApi := auth.Group("/runners")
+		{
+			runnersApi.POST("", runners.Create.Handle)
 		}
 	}
 

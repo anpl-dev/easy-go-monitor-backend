@@ -8,6 +8,10 @@ import (
 	monitorPresenter "easy-go-monitor/internal/monitor/adapter/presenter"
 	monitorRepo "easy-go-monitor/internal/monitor/adapter/repository"
 	monitorUC "easy-go-monitor/internal/monitor/usecase"
+	runnerController "easy-go-monitor/internal/runner/adapter/controller"
+	runnerPresenter "easy-go-monitor/internal/runner/adapter/presenter"
+	runnerRepo "easy-go-monitor/internal/runner/adapter/repository"
+	runnerUC "easy-go-monitor/internal/runner/usecase"
 	userController "easy-go-monitor/internal/user/adapter/controller"
 	userPresenter "easy-go-monitor/internal/user/adapter/presenter"
 	userRepo "easy-go-monitor/internal/user/adapter/repository"
@@ -49,6 +53,7 @@ func main() {
 	// --- Repository ---
 	userRepo := userRepo.NewUserPostgresRepository(db)
 	monitorRepo := monitorRepo.NewMonitorPostgresRepository(db)
+	runnerRepo := runnerRepo.NewRunnerPostgresRepository(db)
 
 	// --- Presenter ---
 	createUserPresenter := userPresenter.NewCreateUserPresenter()
@@ -60,6 +65,8 @@ func main() {
 	findMonitorByIDPresenter := monitorPresenter.NewFindMonitorByIDPresenter()
 	searchMonitorsPresenter := monitorPresenter.NewSearchMonitorsPresenter()
 	updateMonitorPresenter := monitorPresenter.NewUpdateMonitorPresenter()
+
+	createRunnerPresenter := runnerPresenter.NewCreateRunnerPresenter()
 
 	// --- UseCase ---
 	createUserUC := userUC.NewCreateUserInteractor(userRepo, createUserPresenter)
@@ -74,6 +81,8 @@ func main() {
 	searchMonitorsUC := monitorUC.NewSearchMonitorsInteractor(monitorRepo, searchMonitorsPresenter)
 	updateMonitorUC := monitorUC.NewUpdateMonitorInteractor(monitorRepo, updateMonitorPresenter)
 	deleteMonitorUC := monitorUC.NewDeleteMonitorInteractor(monitorRepo)
+
+	createRunnerUC := runnerUC.NewCreateRunnerInteractor(runnerRepo, createRunnerPresenter)
 
 	// --- Controller ---
 	userControllers := router.UserControllers{
@@ -93,8 +102,12 @@ func main() {
 		Delete:   monitorController.NewDeleteMonitorController(deleteMonitorUC),
 	}
 
+	runnerControllers := router.RunnerControllers{
+		Create: runnerController.NewCreateRunnerController(createRunnerUC),
+	}
+
 	// --- Router ---
-	r := router.NewGinRouter(userControllers, monitorControllers, jwtService)
+	r := router.NewGinRouter(userControllers, monitorControllers, runnerControllers, jwtService)
 
 	// --- Run Server ---
 	if err := r.Run(":8080"); err != nil {

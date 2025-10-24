@@ -23,6 +23,7 @@ func (h *CreateMonitorController) Handle(c *gin.Context) {
 	userID, err := uuid.Parse(userIDstr)
 	if err != nil {
 		response.HandleError(c, codes.ErrInvalidUUID)
+		return
 	}
 
 	var input usecase.CreateMonitorInput
