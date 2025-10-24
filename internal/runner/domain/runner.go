@@ -34,8 +34,8 @@ func NewRunner(
 	userID uuid.UUID,
 	monitorID uuid.UUID,
 	name string,
-	interval_second int,
 	region string,
+	interval_second int,
 ) (*Runner, error) {
 	if userID == uuid.Nil {
 		return nil, codes.ErrInvalidUUID
