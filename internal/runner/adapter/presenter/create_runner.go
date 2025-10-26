@@ -22,7 +22,7 @@ func (p *CreateRunnerPresenter) Output(runner *domain.Runner) usecase.CreateRunn
 		Name:           runner.Name,
 		Region:         runner.Region,
 		IntervalSecond: runner.IntervalSecond,
-		IsActive:       runner.IsActive,
+		IsEnabled:      runner.IsEnabled,
 		CreatedAt:      runner.CreatedAt,
 		UpdatedAt:      runner.UpdatedAt,
 	}

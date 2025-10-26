@@ -36,7 +36,7 @@ type (
 		Name           string    `json:"name"`
 		Region         string    `json:"region"`
 		IntervalSecond int       `json:"interval_second"`
-		IsActive       bool      `json:"is_active"`
+		IsEnabled      bool      `json:"is_enabled"`
 		CreatedAt      time.Time `json:"created_at"`
 		UpdatedAt      time.Time `json:"updated_at"`
 	}

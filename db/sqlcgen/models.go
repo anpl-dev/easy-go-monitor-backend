@@ -18,7 +18,7 @@ type Monitor struct {
 	Name      string             `json:"name"`
 	Url       string             `json:"url"`
 	Type      string             `json:"type"`
-	IsActive  *bool              `json:"is_active"`
+	IsEnabled *bool              `json:"is_enabled"`
 	Settings  json.RawMessage    `json:"settings"`
 	CreatedAt pgtype.Timestamptz `json:"created_at"`
 	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
@@ -28,7 +28,7 @@ type MonitorGroup struct {
 	ID        uuid.UUID          `json:"id"`
 	UserID    uuid.UUID          `json:"user_id"`
 	Name      string             `json:"name"`
-	IsActive  *bool              `json:"is_active"`
+	IsEnabled *bool              `json:"is_enabled"`
 	CreatedAt pgtype.Timestamptz `json:"created_at"`
 	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
 }
@@ -40,7 +40,7 @@ type Notification struct {
 	Type       string             `json:"type"`
 	Trigger    string             `json:"trigger"`
 	Message    string             `json:"message"`
-	IsActive   *bool              `json:"is_active"`
+	IsEnabled  *bool              `json:"is_enabled"`
 	CreatedAt  pgtype.Timestamptz `json:"created_at"`
 	UpdatedAt  pgtype.Timestamptz `json:"updated_at"`
 }
@@ -58,7 +58,7 @@ type Runner struct {
 	Name           string             `json:"name"`
 	Region         string             `json:"region"`
 	IntervalSecond int32              `json:"interval_second"`
-	IsActive       *bool              `json:"is_active"`
+	IsEnabled      *bool              `json:"is_enabled"`
 	CreatedAt      pgtype.Timestamptz `json:"created_at"`
 	UpdatedAt      pgtype.Timestamptz `json:"updated_at"`
 }

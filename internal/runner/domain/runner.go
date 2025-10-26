@@ -24,7 +24,7 @@ type (
 		Name           string
 		Region         string
 		IntervalSecond int
-		IsActive       bool
+		IsEnabled      bool
 		CreatedAt      time.Time
 		UpdatedAt      time.Time
 	}
@@ -60,6 +60,6 @@ func NewRunner(
 		Name:           name,
 		Region:         region,
 		IntervalSecond: interval_second,
-		IsActive:       true,
+		IsEnabled:      true,
 	}, nil
 }

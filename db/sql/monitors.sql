@@ -1,6 +1,6 @@
 -- name: CreateMonitor :one
 INSERT INTO monitors (
-    id, user_id, group_id, name, url, type, is_active, settings
+    id, user_id, group_id, name, url, type, is_enabled, settings
 )
 VALUES (
     $1, $2, $3, $4, $5, $6, $7, $8
@@ -24,7 +24,7 @@ SET
     name = $2,
     group_id = $3,
     url = $4,
-    is_active = $5,
+    is_enabled = $5,
     settings = $6,
     updated_at = now()
 WHERE id = $1

@@ -1,6 +1,6 @@
 -- name: CreateRunner :one
 INSERT INTO runners (
-    id, user_id, monitor_id, name, region, interval_second, is_active
+    id, user_id, monitor_id, name, region, interval_second, is_enabled
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7
 )
@@ -22,7 +22,7 @@ SET
     name = $2,
     region = $3,
     interval_second = $4,
-    is_active = $5,
+    is_enabled = $5,
     updated_at = now()
 WHERE id = $1
 RETURNING *;

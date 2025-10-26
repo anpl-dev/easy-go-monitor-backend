@@ -13,11 +13,11 @@ import (
 
 const createRunner = `-- name: CreateRunner :one
 INSERT INTO runners (
-    id, user_id, monitor_id, name, region, interval_second, is_active
+    id, user_id, monitor_id, name, region, interval_second, is_enabled
 ) VALUES (
     $1, $2, $3, $4, $5, $6, $7
 )
-RETURNING id, user_id, monitor_id, name, region, interval_second, is_active, created_at, updated_at
+RETURNING id, user_id, monitor_id, name, region, interval_second, is_enabled, created_at, updated_at
 `
 
 type CreateRunnerParams struct {
@@ -27,7 +27,7 @@ type CreateRunnerParams struct {
 	Name           string    `json:"name"`
 	Region         string    `json:"region"`
 	IntervalSecond int32     `json:"interval_second"`
-	IsActive       *bool     `json:"is_active"`
+	IsEnabled      *bool     `json:"is_enabled"`
 }
 
 func (q *Queries) CreateRunner(ctx context.Context, arg CreateRunnerParams) (Runner, error) {
@@ -38,7 +38,7 @@ func (q *Queries) CreateRunner(ctx context.Context, arg CreateRunnerParams) (Run
 		arg.Name,
 		arg.Region,
 		arg.IntervalSecond,
-		arg.IsActive,
+		arg.IsEnabled,
 	)
 	var i Runner
 	err := row.Scan(
@@ -48,7 +48,7 @@ func (q *Queries) CreateRunner(ctx context.Context, arg CreateRunnerParams) (Run
 		&i.Name,
 		&i.Region,
 		&i.IntervalSecond,
-		&i.IsActive,
+		&i.IsEnabled,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -66,7 +66,7 @@ func (q *Queries) DeleteRunner(ctx context.Context, id uuid.UUID) error {
 }
 
 const findAllRunners = `-- name: FindAllRunners :many
-SELECT id, user_id, monitor_id, name, region, interval_second, is_active, created_at, updated_at 
+SELECT id, user_id, monitor_id, name, region, interval_second, is_enabled, created_at, updated_at 
 FROM runners
 WHERE user_id = $1
 ORDER BY created_at DESC
@@ -88,7 +88,7 @@ func (q *Queries) FindAllRunners(ctx context.Context, userID uuid.UUID) ([]Runne
 			&i.Name,
 			&i.Region,
 			&i.IntervalSecond,
-			&i.IsActive,
+			&i.IsEnabled,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -103,7 +103,7 @@ func (q *Queries) FindAllRunners(ctx context.Context, userID uuid.UUID) ([]Runne
 }
 
 const findRunnerByID = `-- name: FindRunnerByID :one
-SELECT id, user_id, monitor_id, name, region, interval_second, is_active, created_at, updated_at 
+SELECT id, user_id, monitor_id, name, region, interval_second, is_enabled, created_at, updated_at 
 FROM runners
 WHERE id = $1
 `
@@ -118,7 +118,7 @@ func (q *Queries) FindRunnerByID(ctx context.Context, id uuid.UUID) (Runner, err
 		&i.Name,
 		&i.Region,
 		&i.IntervalSecond,
-		&i.IsActive,
+		&i.IsEnabled,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -131,10 +131,10 @@ SET
     name = $2,
     region = $3,
     interval_second = $4,
-    is_active = $5,
+    is_enabled = $5,
     updated_at = now()
 WHERE id = $1
-RETURNING id, user_id, monitor_id, name, region, interval_second, is_active, created_at, updated_at
+RETURNING id, user_id, monitor_id, name, region, interval_second, is_enabled, created_at, updated_at
 `
 
 type UpdateRunnerParams struct {
@@ -142,7 +142,7 @@ type UpdateRunnerParams struct {
 	Name           string    `json:"name"`
 	Region         string    `json:"region"`
 	IntervalSecond int32     `json:"interval_second"`
-	IsActive       *bool     `json:"is_active"`
+	IsEnabled      *bool     `json:"is_enabled"`
 }
 
 func (q *Queries) UpdateRunner(ctx context.Context, arg UpdateRunnerParams) (Runner, error) {
@@ -151,7 +151,7 @@ func (q *Queries) UpdateRunner(ctx context.Context, arg UpdateRunnerParams) (Run
 		arg.Name,
 		arg.Region,
 		arg.IntervalSecond,
-		arg.IsActive,
+		arg.IsEnabled,
 	)
 	var i Runner
 	err := row.Scan(
@@ -161,7 +161,7 @@ func (q *Queries) UpdateRunner(ctx context.Context, arg UpdateRunnerParams) (Run
 		&i.Name,
 		&i.Region,
 		&i.IntervalSecond,
-		&i.IsActive,
+		&i.IsEnabled,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)

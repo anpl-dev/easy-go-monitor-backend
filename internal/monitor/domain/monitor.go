@@ -19,13 +19,15 @@ type (
 	}
 
 	Monitor struct {
-		ID             uuid.UUID
-		UserID         uuid.UUID
-		Name           string
-		URL            string
-		IntervalSecond int
-		CreatedAt      time.Time
-		UpdatedAt      time.Time
+		ID        uuid.UUID
+		UserID    uuid.UUID
+		Name      string
+		URL       string
+		Type      string
+		IsEnabled bool
+		Settings  map[string]any
+		CreatedAt time.Time
+		UpdatedAt time.Time
 	}
 )
 
