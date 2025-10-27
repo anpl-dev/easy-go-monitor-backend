@@ -16,11 +16,14 @@ func (p *FindMonitorByIDPresenter) Output(monitor *domain.Monitor) usecase.FindM
 		return usecase.FindMonitorByIDOutput{}
 	}
 	return usecase.FindMonitorByIDOutput{
-		ID:             monitor.ID,
-		UserID:         monitor.UserID,
-		Name:           monitor.Name,
-		URL:            monitor.URL,
-		CreatedAt:      monitor.CreatedAt,
-		UpdatedAt:      monitor.UpdatedAt,
+		ID:        monitor.ID,
+		UserID:    monitor.UserID,
+		Name:      monitor.Name,
+		URL:       monitor.URL,
+		Type:      monitor.Type,
+		Settings:  monitor.Settings,
+		IsEnabled: monitor.IsEnabled,
+		CreatedAt: monitor.CreatedAt,
+		UpdatedAt: monitor.UpdatedAt,
 	}
 }

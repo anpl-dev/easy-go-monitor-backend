@@ -22,12 +22,15 @@ func (p *SearchMonitorsPresenter) Output(monitors []*domain.Monitor) []usecase.S
 			continue
 		}
 		outputs = append(outputs, usecase.SearchMonitorsOutput{
-			ID:             m.ID,
-			UserID:         m.UserID,
-			Name:           m.Name,
-			URL:            m.URL,
-			CreatedAt:      m.CreatedAt,
-			UpdatedAt:      m.UpdatedAt,
+			ID:        m.ID,
+			UserID:    m.UserID,
+			Name:      m.Name,
+			URL:       m.URL,
+			Type:      m.Type,
+			Settings:  m.Settings,
+			IsEnabled: m.IsEnabled,
+			CreatedAt: m.CreatedAt,
+			UpdatedAt: m.UpdatedAt,
 		})
 	}
 	return outputs

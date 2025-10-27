@@ -20,6 +20,9 @@ func (p *UpdateMonitorPresenter) Output(monitor *domain.Monitor) usecase.UpdateM
 		UserID:    monitor.UserID,
 		Name:      monitor.Name,
 		URL:       monitor.URL,
+		Type:      monitor.Type,
+		Settings:  monitor.Settings,
+		IsEnabled: monitor.IsEnabled,
 		UpdatedAt: monitor.UpdatedAt,
 	}
 }
