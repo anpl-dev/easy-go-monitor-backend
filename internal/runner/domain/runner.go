@@ -10,10 +10,10 @@ import (
 
 type (
 	RunnerRepository interface {
-		Create(ctx context.Context, r Runner) (*Runner, error)
+		Create(ctx context.Context, runner Runner) (*Runner, error)
 		FindByID(ctx context.Context, id uuid.UUID) (*Runner, error)
 		FindAll(ctx context.Context, userID uuid.UUID) ([]*Runner, error)
-		Update(ctx context.Context, r Runner) (*Runner, error)
+		Update(ctx context.Context, runner Runner) (*Runner, error)
 		Delete(ctx context.Context, id uuid.UUID) error
 	}
 

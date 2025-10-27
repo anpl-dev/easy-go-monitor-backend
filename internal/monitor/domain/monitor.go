@@ -11,10 +11,10 @@ import (
 
 type (
 	MonitorRepository interface {
-		Create(ctx context.Context, m Monitor) (*Monitor, error)
+		Create(ctx context.Context, monitor Monitor) (*Monitor, error)
 		FindByID(ctx context.Context, id uuid.UUID) (*Monitor, error)
 		FindAll(ctx context.Context, user_id uuid.UUID) ([]*Monitor, error)
-		Update(ctx context.Context, m Monitor) (*Monitor, error)
+		Update(ctx context.Context, monitor Monitor) (*Monitor, error)
 		Delete(ctx context.Context, id uuid.UUID) error
 	}
 
