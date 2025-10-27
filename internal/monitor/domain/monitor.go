@@ -31,10 +31,10 @@ type (
 	}
 
 	MonitorSettings struct {
-		Method    string
-		TimeoutMs int
-		Headers   map[string]string
-		Body      string
+		Method    string            `json:"method"`
+		TimeoutMs int               `json:"timeout_ms"`
+		Headers   map[string]string `json:"headers"`
+		Body      string            `json:"body"`
 	}
 )
 
@@ -55,11 +55,11 @@ func NewMonitor(
 	if _, err := url.ParseRequestURI(monitorUrl); err != nil {
 		return nil, codes.ErrInvalidMonitorURL
 	}
-	if monitorType == "" {
-		monitorType = "http"
+	if monitorType != "http" && monitorType != "tcp" && monitorType != "ping" {
+		return nil, codes.ErrInvalidMonitorType
 	}
 	if monitorSettings == nil {
-		monitorSettings = map[string]any{}
+		monitorSettings = make(map[string]any)
 	}
 
 	return &Monitor{

@@ -16,11 +16,14 @@ func (p *CreateMonitorPresenter) Output(monitor *domain.Monitor) usecase.CreateM
 		return usecase.CreateMonitorOutput{}
 	}
 	return usecase.CreateMonitorOutput{
-		ID:             monitor.ID,
-		UserID:         monitor.UserID,
-		Name:           monitor.Name,
-		URL:            monitor.URL,
-		CreatedAt:      monitor.CreatedAt,
-		UpdatedAt:      monitor.UpdatedAt,
+		ID:        monitor.ID,
+		UserID:    monitor.UserID,
+		Name:      monitor.Name,
+		URL:       monitor.URL,
+		Type:      monitor.Type,
+		Settings:  monitor.Settings,
+		IsEnabled: monitor.IsEnabled,
+		CreatedAt: monitor.CreatedAt,
+		UpdatedAt: monitor.UpdatedAt,
 	}
 }

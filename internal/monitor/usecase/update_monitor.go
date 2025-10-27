@@ -16,10 +16,12 @@ type (
 
 	// UpdateMonitorInput input data
 	UpdateMonitorInput struct {
-		ID             uuid.UUID `json:"-"`
-		Name           string    `json:"name" binding:"required"`
-		URL            string    `json:"url" binding:"required"`
-		IntervalSecond int       `json:"interval_second" binding:"required,min=1"`
+		ID        uuid.UUID      `json:"-"`
+		Name      string         `json:"name,omitempty"`
+		URL       string         `json:"url,omitempty"`
+		Type      string         `json:"type,omitempty"`
+		Settings  map[string]any `json:"settings,omitempty"`
+		IsEnabled bool           `json:"is_enabled"`
 	}
 
 	// UpdateMonitorPresenter output port
@@ -29,12 +31,15 @@ type (
 
 	// UpdateMonitorInput output data
 	UpdateMonitorOutput struct {
-		ID             uuid.UUID `json:"id"`
-		UserID         uuid.UUID `json:"user_id"`
-		Name           string    `json:"name"`
-		URL            string    `json:"url"`
-		IntervalSecond int       `json:"interval_second"`
-		UpdatedAt      time.Time `json:"updated_at"`
+		ID        uuid.UUID      `json:"id"`
+		UserID    uuid.UUID      `json:"user_id"`
+		Name      string         `json:"name"`
+		URL       string         `json:"url"`
+		Type      string         `json:"type"`
+		Settings  map[string]any `json:"settings"`
+		IsEnabled bool           `json:"is_enabled"`
+		CreatedAt time.Time      `json:"created_at"`
+		UpdatedAt time.Time      `json:"updated_at"`
 	}
 
 	updateMonitorInteractor struct {
@@ -55,10 +60,13 @@ func NewUpdateMonitorInteractor(
 
 func (i *updateMonitorInteractor) Execute(ctx context.Context, input UpdateMonitorInput) (UpdateMonitorOutput, error) {
 	monitor := domain.Monitor{
-		ID:             input.ID,
-		Name:           input.Name,
-		URL:            input.URL,
-		UpdatedAt:      time.Now(),
+		ID:        input.ID,
+		Name:      input.Name,
+		URL:       input.URL,
+		Type:      input.Type,
+		Settings:  input.Settings,
+		IsEnabled: input.IsEnabled,
+		UpdatedAt: time.Now(),
 	}
 	updated, err := i.repo.Update(ctx, monitor)
 	if err != nil {

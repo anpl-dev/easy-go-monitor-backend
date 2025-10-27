@@ -26,13 +26,15 @@ type (
 
 	// FindMonitorByIDOutput output data
 	FindMonitorByIDOutput struct {
-		ID             uuid.UUID `json:"id"`
-		UserID         uuid.UUID `json:"user_id"`
-		Name           string    `json:"name"`
-		URL            string    `json:"url"`
-		IntervalSecond int       `json:"interval_second"`
-		CreatedAt      time.Time `json:"created_at"`
-		UpdatedAt      time.Time `json:"updated_at"`
+		ID        uuid.UUID      `json:"id"`
+		UserID    uuid.UUID      `json:"user_id"`
+		Name      string         `json:"name"`
+		URL       string         `json:"url"`
+		Type      string         `json:"type"`
+		Settings  map[string]any `json:"settings"`
+		IsEnabled bool           `json:"is_enabled"`
+		CreatedAt time.Time      `json:"created_at"`
+		UpdatedAt time.Time      `json:"updated_at"`
 	}
 
 	findMonitorByIDInteractor struct {
