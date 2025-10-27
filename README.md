@@ -5,6 +5,7 @@
 このプロジェクトは外形監視を GUI から気軽にできるようにする Golang 製のプロジェクトです。
 
 ## ER 図
+
 ![alt text](<easy go monitor.svg>)
 
 ## データベースマイグレーション
@@ -69,4 +70,4 @@ PostgreSQL にログインしてテーブルを確認:
 ```sql
 \d users;
 \d monitors;
-````
+```
