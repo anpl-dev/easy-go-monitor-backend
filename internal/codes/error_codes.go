@@ -18,9 +18,10 @@ var (
 	ErrInvalidPassword = New(4103, "invalid password")
 
 	// Monitor
-	ErrInvalidMonitorName = New(4201, "invalid monitor name")
-	ErrInvalidMonitorURL  = New(4202, "invalid monitor url")
-	ErrInvalidMonitorType = New(4203, "invalid monitor type")
+	ErrInvalidMonitorName   = New(4201, "invalid monitor name")
+	ErrInvalidMonitorURL    = New(4202, "invalid monitor url")
+	ErrInvalidMonitorType   = New(4203, "invalid monitor type")
+	ErrInvalidMonitorMethod = New(4204, "invalid monitor method")
 
 	// Runner
 	ErrInvalidRunnerName     = New(4301, "invalid runner name")

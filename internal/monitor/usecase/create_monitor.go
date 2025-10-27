@@ -16,11 +16,11 @@ type (
 
 	// CreateMonitorInput input data
 	CreateMonitorInput struct {
-		UserID   uuid.UUID      `json:"user_id"`
-		Name     string         `json:"name" binding:"required"`
-		URL      string         `json:"url" binding:"required"`
-		Type     string         `json:"type" binding:"required"`
-		Settings map[string]any `json:"settings" binding:"requried"`
+		UserID   uuid.UUID              `json:"user_id"`
+		Name     string                 `json:"name" binding:"required"`
+		URL      string                 `json:"url" binding:"required"`
+		Type     string                 `json:"type" binding:"required"`
+		Settings domain.MonitorSettings `json:"settings" binding:"requried"`
 	}
 
 	// CreateMonitorPresenter output port
@@ -30,15 +30,15 @@ type (
 
 	// CreateMonitorOutput output data
 	CreateMonitorOutput struct {
-		ID        uuid.UUID      `json:"id"`
-		UserID    uuid.UUID      `json:"user_id"`
-		Name      string         `json:"name"`
-		URL       string         `json:"url"`
-		Type      string         `json:"type"`
-		Settings  map[string]any `json:"settings"`
-		IsEnabled bool           `json:"is_enabled"`
-		CreatedAt time.Time      `json:"created_at"`
-		UpdatedAt time.Time      `json:"updated_at"`
+		ID        uuid.UUID              `json:"id"`
+		UserID    uuid.UUID              `json:"user_id"`
+		Name      string                 `json:"name"`
+		URL       string                 `json:"url"`
+		Type      string                 `json:"type"`
+		Settings  domain.MonitorSettings `json:"settings"`
+		IsEnabled bool                   `json:"is_enabled"`
+		CreatedAt time.Time              `json:"created_at"`
+		UpdatedAt time.Time              `json:"updated_at"`
 	}
 
 	createMonitorInteractor struct {

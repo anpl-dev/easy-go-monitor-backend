@@ -9,6 +9,12 @@ import (
 	"github.com/google/uuid"
 )
 
+const (
+	MonitorTypeHTTP = "http"
+	MonitorTypeTCP  = "tcp"
+	MonitorTypePing = "ping"
+)
+
 type (
 	MonitorRepository interface {
 		Create(ctx context.Context, monitor Monitor) (*Monitor, error)
@@ -24,7 +30,7 @@ type (
 		Name      string
 		URL       string
 		Type      string
-		Settings  map[string]any
+		Settings  MonitorSettings
 		IsEnabled bool
 		CreatedAt time.Time
 		UpdatedAt time.Time
@@ -42,9 +48,9 @@ type (
 func NewMonitor(
 	userID uuid.UUID,
 	name string,
-	monitorUrl string,
-	monitorType string,
-	monitorSettings map[string]any,
+	mUrl string,
+	mType string,
+	settings MonitorSettings,
 ) (*Monitor, error) {
 	if userID == uuid.Nil {
 		return nil, codes.ErrInvalidUUID
@@ -52,23 +58,46 @@ func NewMonitor(
 	if name == "" {
 		return nil, codes.ErrInvalidMonitorName
 	}
-	if _, err := url.ParseRequestURI(monitorUrl); err != nil {
+	if _, err := url.ParseRequestURI(mUrl); err != nil {
 		return nil, codes.ErrInvalidMonitorURL
 	}
-	if monitorType != "http" && monitorType != "tcp" && monitorType != "ping" {
+	if mType != "http" && mType != "tcp" && mType != "ping" {
 		return nil, codes.ErrInvalidMonitorType
 	}
-	if monitorSettings == nil {
-		monitorSettings = make(map[string]any)
+	switch mType {
+	case MonitorTypeHTTP, MonitorTypeTCP, MonitorTypePing:
+		// OK
+	default:
+		return nil, codes.ErrInvalidMonitorType
 	}
 
 	return &Monitor{
 		ID:        uuid.New(),
 		UserID:    userID,
 		Name:      name,
-		URL:       monitorUrl,
-		Type:      monitorType,
-		Settings:  monitorSettings,
+		URL:       mUrl,
+		Type:      mType,
+		Settings:  settings,
 		IsEnabled: true,
+	}, nil
+}
+
+func NewMonitorSettings(
+	method string,
+	timeoutMS int,
+	headers map[string]string,
+	body string,
+) (*MonitorSettings, error) {
+	if method == "" {
+		return nil, codes.ErrInvalidMonitorMethod
+	}
+	if timeoutMS <= 0 {
+		timeoutMS = 5000
+	}
+	return &MonitorSettings{
+		Method:    method,
+		TimeoutMs: timeoutMS,
+		Headers:   headers,
+		Body:      body,
 	}, nil
 }
