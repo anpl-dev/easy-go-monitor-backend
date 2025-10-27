@@ -26,7 +26,6 @@ func (p *SearchMonitorsPresenter) Output(monitors []*domain.Monitor) []usecase.S
 			UserID:         m.UserID,
 			Name:           m.Name,
 			URL:            m.URL,
-			IntervalSecond: m.IntervalSecond,
 			CreatedAt:      m.CreatedAt,
 			UpdatedAt:      m.UpdatedAt,
 		})

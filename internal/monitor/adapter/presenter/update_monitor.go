@@ -16,11 +16,10 @@ func (p *UpdateMonitorPresenter) Output(monitor *domain.Monitor) usecase.UpdateM
 		return usecase.UpdateMonitorOutput{}
 	}
 	return usecase.UpdateMonitorOutput{
-		ID:             monitor.ID,
-		UserID:         monitor.UserID,
-		Name:           monitor.Name,
-		URL:            monitor.URL,
-		IntervalSecond: monitor.IntervalSecond,
-		UpdatedAt:      monitor.UpdatedAt,
+		ID:        monitor.ID,
+		UserID:    monitor.UserID,
+		Name:      monitor.Name,
+		URL:       monitor.URL,
+		UpdatedAt: monitor.UpdatedAt,
 	}
 }

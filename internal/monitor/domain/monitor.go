@@ -24,29 +24,51 @@ type (
 		Name      string
 		URL       string
 		Type      string
-		IsEnabled bool
 		Settings  map[string]any
+		IsEnabled bool
 		CreatedAt time.Time
 		UpdatedAt time.Time
+	}
+
+	MonitorSettings struct {
+		Method    string
+		TimeoutMs int
+		Headers   map[string]string
+		Body      string
 	}
 )
 
 // NewMonitor creates a new Monitor entity with validation.
-func NewMonitor(userID uuid.UUID, name string, rawURL string) (*Monitor, error) {
+func NewMonitor(
+	userID uuid.UUID,
+	name string,
+	monitorUrl string,
+	monitorType string,
+	monitorSettings map[string]any,
+) (*Monitor, error) {
 	if userID == uuid.Nil {
 		return nil, codes.ErrInvalidUUID
 	}
 	if name == "" {
 		return nil, codes.ErrInvalidMonitorName
 	}
-	if _, err := url.ParseRequestURI(rawURL); err != nil {
+	if _, err := url.ParseRequestURI(monitorUrl); err != nil {
 		return nil, codes.ErrInvalidMonitorURL
+	}
+	if monitorType == "" {
+		monitorType = "http"
+	}
+	if monitorSettings == nil {
+		monitorSettings = map[string]any{}
 	}
 
 	return &Monitor{
-		ID:     uuid.New(),
-		UserID: userID,
-		Name:   name,
-		URL:    rawURL,
+		ID:        uuid.New(),
+		UserID:    userID,
+		Name:      name,
+		URL:       monitorUrl,
+		Type:      monitorType,
+		Settings:  monitorSettings,
+		IsEnabled: true,
 	}, nil
 }

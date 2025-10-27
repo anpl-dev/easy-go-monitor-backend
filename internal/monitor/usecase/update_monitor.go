@@ -58,7 +58,6 @@ func (i *updateMonitorInteractor) Execute(ctx context.Context, input UpdateMonit
 		ID:             input.ID,
 		Name:           input.Name,
 		URL:            input.URL,
-		IntervalSecond: input.IntervalSecond,
 		UpdatedAt:      time.Now(),
 	}
 	updated, err := i.repo.Update(ctx, monitor)

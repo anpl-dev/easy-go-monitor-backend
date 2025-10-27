@@ -43,7 +43,6 @@ func TestUpdateMonitorInteractor_Execute(t *testing.T) {
 		UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:           "test-monitor",
 		URL:            "https://examaple.com",
-		IntervalSecond: 60,
 		CreatedAt:      now,
 		UpdatedAt:      now,
 	}
@@ -70,7 +69,6 @@ func TestUpdateMonitorInteractor_Execute(t *testing.T) {
 					UserID:         monitor.UserID,
 					Name:           monitor.Name,
 					URL:            monitor.URL,
-					IntervalSecond: monitor.IntervalSecond,
 					UpdatedAt:      monitor.UpdatedAt,
 				},
 			},

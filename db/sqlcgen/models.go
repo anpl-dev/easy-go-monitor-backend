@@ -18,8 +18,8 @@ type Monitor struct {
 	Name      string             `json:"name"`
 	Url       string             `json:"url"`
 	Type      string             `json:"type"`
-	IsEnabled *bool              `json:"is_enabled"`
 	Settings  json.RawMessage    `json:"settings"`
+	IsEnabled *bool              `json:"is_enabled"`
 	CreatedAt pgtype.Timestamptz `json:"created_at"`
 	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
 }

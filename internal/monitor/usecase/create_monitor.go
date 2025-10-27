@@ -16,9 +16,11 @@ type (
 
 	// CreateMonitorInput input data
 	CreateMonitorInput struct {
-		UserID         uuid.UUID `json:"user_id"`
-		Name           string    `json:"name" binding:"required"`
-		URL            string    `json:"url" binding:"required"`
+		UserID   uuid.UUID      `json:"user_id"`
+		Name     string         `json:"name" binding:"required"`
+		URL      string         `json:"url" binding:"required"`
+		Type     string         `json:"type" binding:"required"`
+		Settings map[string]any `json:"settings" binding:"requried"`
 	}
 
 	// CreateMonitorPresenter output port
@@ -26,14 +28,17 @@ type (
 		Output(*domain.Monitor) CreateMonitorOutput
 	}
 
-	// CreateMonitorInput output data
+	// CreateMonitorOutput output data
 	CreateMonitorOutput struct {
-		ID             uuid.UUID `json:"id"`
-		UserID         uuid.UUID `json:"user_id"`
-		Name           string    `json:"name"`
-		URL            string    `json:"url"`
-		CreatedAt      time.Time `json:"created_at"`
-		UpdatedAt      time.Time `json:"updated_at"`
+		ID        uuid.UUID      `json:"id"`
+		UserID    uuid.UUID      `json:"user_id"`
+		Name      string         `json:"name"`
+		URL       string         `json:"url"`
+		Type      string         `json:"type"`
+		Settings  map[string]any `json:"settings"`
+		IsEnabled bool           `json:"is_enabled"`
+		CreatedAt time.Time      `json:"created_at"`
+		UpdatedAt time.Time      `json:"updated_at"`
 	}
 
 	createMonitorInteractor struct {
@@ -57,6 +62,8 @@ func (i *createMonitorInteractor) Execute(ctx context.Context, input CreateMonit
 		input.UserID,
 		input.Name,
 		input.URL,
+		input.Type,
+		input.Settings,
 	)
 	if err != nil {
 		return CreateMonitorOutput{}, err

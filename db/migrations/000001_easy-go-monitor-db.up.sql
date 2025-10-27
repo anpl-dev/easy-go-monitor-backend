@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS monitors (
     name VARCHAR(100) NOT NULL UNIQUE,
     url TEXT NOT NULL,
     type VARCHAR(50) NOT NULL DEFAULT 'http',
-    is_enabled BOOLEAN DEFAULT true,
     settings JSONB NOT NULL DEFAULT '{}'::jsonb,
+    is_enabled BOOLEAN DEFAULT true,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
