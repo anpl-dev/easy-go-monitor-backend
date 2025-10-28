@@ -31,6 +31,7 @@ func toDomainUser(s sqlcgen.User) *domain.User {
 	}
 }
 
+// Create
 func (r *UserPostgresRepository) Create(ctx context.Context, u domain.User) (*domain.User, error) {
 	row, err := r.queries.CreateUser(ctx, sqlcgen.CreateUserParams{
 		ID:       u.ID,
@@ -44,6 +45,7 @@ func (r *UserPostgresRepository) Create(ctx context.Context, u domain.User) (*do
 	return toDomainUser(row), nil
 }
 
+// FindByID
 func (r *UserPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) (*domain.User, error) {
 	row, err := r.queries.FindUserByID(ctx, id)
 	if err != nil {
@@ -55,6 +57,7 @@ func (r *UserPostgresRepository) FindByID(ctx context.Context, id uuid.UUID) (*d
 	return toDomainUser(row), nil
 }
 
+// FindByEmail
 func (r *UserPostgresRepository) FindByEmail(ctx context.Context, email string) (*domain.User, error) {
 	row, err := r.queries.FindUserByEmail(ctx, email)
 	if err != nil {
@@ -66,6 +69,7 @@ func (r *UserPostgresRepository) FindByEmail(ctx context.Context, email string) 
 	return toDomainUser(row), nil
 }
 
+// Update
 func (r *UserPostgresRepository) Update(ctx context.Context, u domain.User) (*domain.User, error) {
 	row, err := r.queries.UpdateUser(ctx, sqlcgen.UpdateUserParams{
 		ID:       u.ID,
@@ -82,6 +86,7 @@ func (r *UserPostgresRepository) Update(ctx context.Context, u domain.User) (*do
 	return toDomainUser(row), nil
 }
 
+// Delete
 func (r *UserPostgresRepository) Delete(ctx context.Context, id uuid.UUID) error {
 	err := r.queries.DeleteUser(ctx, id)
 	if err != nil {
