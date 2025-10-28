@@ -41,7 +41,7 @@ func NewUser(name, email, plainPassword string) (*User, error) {
 		return nil, codes.ErrInvalidPassword
 	}
 
-	hashed, err := HashedPassword(plainPassword)
+	hashedPassword, err := HashedPassword(plainPassword)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func NewUser(name, email, plainPassword string) (*User, error) {
 		ID:       uuid.New(),
 		Name:     name,
 		Email:    email,
-		Password: hashed,
+		Password: hashedPassword,
 	}, nil
 }
 

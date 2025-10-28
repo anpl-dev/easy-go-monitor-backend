@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type (
@@ -51,11 +52,20 @@ func NewUpdateUserInteractor(
 }
 
 func (i *updateUserInteractor) Execute(ctx context.Context, input UpdateUserInput) (UpdateUserOutput, error) {
+	var hashedPassword string
+	if input.Password != "" {
+		hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+		if err != nil {
+			return UpdateUserOutput{}, err
+		}
+		hashedPassword = string(hash)
+	}
+
 	updated, err := i.repo.Update(ctx, domain.User{
 		ID:        input.ID,
 		Name:      input.Name,
 		Email:     input.Email,
-		Password:  input.Password,
+		Password:  hashedPassword,
 		UpdatedAt: time.Now(),
 	})
 	if err != nil {

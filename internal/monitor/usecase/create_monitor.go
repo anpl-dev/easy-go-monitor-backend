@@ -20,7 +20,7 @@ type (
 		Name     string                 `json:"name" binding:"required"`
 		URL      string                 `json:"url" binding:"required"`
 		Type     string                 `json:"type" binding:"required"`
-		Settings domain.MonitorSettings `json:"settings" binding:"requried"`
+		Settings domain.MonitorSettings `json:"settings" binding:"required"`
 	}
 
 	// CreateMonitorPresenter output port
