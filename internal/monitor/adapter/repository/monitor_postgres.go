@@ -25,14 +25,8 @@ func toDomainMonitor(s sqlcgen.Monitor) *domain.Monitor {
 	var settings domain.MonitorSettings
 	if s.Settings != nil {
 		if err := json.Unmarshal(s.Settings, &settings); err != nil {
-			// Guard settings
 			settings = domain.MonitorSettings{}
 		}
-	}
-	// Null Safe
-	isEnabled := false
-	if s.IsEnabled {
-		isEnabled = s.IsEnabled
 	}
 	return &domain.Monitor{
 		ID:        s.ID,
@@ -41,7 +35,7 @@ func toDomainMonitor(s sqlcgen.Monitor) *domain.Monitor {
 		URL:       s.Url,
 		Type:      s.Type,
 		Settings:  &settings,
-		IsEnabled: isEnabled,
+		IsEnabled: s.IsEnabled,
 		CreatedAt: s.CreatedAt.Time,
 		UpdatedAt: s.UpdatedAt.Time,
 	}
@@ -53,14 +47,13 @@ func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor
 	if err != nil {
 		return nil, codes.ErrJSONRequest
 	}
-	isEnalbled := true
 	row, err := r.queries.CreateMonitor(ctx, sqlcgen.CreateMonitorParams{
 		ID:        m.ID,
 		UserID:    m.UserID,
 		Name:      m.Name,
 		Url:       m.URL,
 		Type:      m.Type,
-		IsEnabled: isEnalbled,
+		IsEnabled: m.IsEnabled,
 		Settings:  settingsJSON,
 	})
 	if err != nil {
@@ -94,9 +87,9 @@ func (r *MonitorPostgresRepository) FindAll(ctx context.Context, userID uuid.UUI
 	rows, err := r.queries.FindAllMonitors(ctx, userID)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, codes.ErrNotFound
+			return []*domain.Monitor{}, nil
 		}
-		return []*domain.Monitor{}, nil
+		return nil, err
 	}
 
 	result := make([]*domain.Monitor, 0, len(rows))
