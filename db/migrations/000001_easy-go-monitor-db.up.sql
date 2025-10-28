@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS monitors (
     settings JSONB NOT NULL,
     is_enabled BOOLEAN NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
-    updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
+    updated_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     UNIQUE(user_id, name)
 );
 
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS runner_histories (
     started_at TIMESTAMPTZ NOT NULL,
     ended_at TIMESTAMPTZ,
     duration_ms INT,
-    response_time_ms INT NULL,
+    response_time_ms INT,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
