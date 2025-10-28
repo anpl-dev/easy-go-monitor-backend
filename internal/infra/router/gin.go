@@ -3,6 +3,7 @@ package router
 import (
 	"easy-go-monitor/internal/api/middleware"
 	"easy-go-monitor/internal/infra/jwt"
+	"easy-go-monitor/internal/infra/logger"
 	monitorController "easy-go-monitor/internal/monitor/adapter/controller"
 	runnerController "easy-go-monitor/internal/runner/adapter/controller"
 	userController "easy-go-monitor/internal/user/adapter/controller"
@@ -38,10 +39,14 @@ func NewGinRouter(
 	monitors MonitorControllers,
 	runners RunnerControllers,
 	jwtService jwt.JWTService,
+	log *logger.Logger,
 ) *gin.Engine {
 	r := gin.Default()
 
-	r.Use(middleware.CORSMiddleware())
+	r.Use(
+		middleware.CORSMiddleware(),
+		middleware.LoggerMiddleWare(log),
+	)
 
 	api := r.Group("/api/v1")
 

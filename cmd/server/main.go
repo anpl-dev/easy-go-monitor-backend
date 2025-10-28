@@ -3,6 +3,7 @@ package main
 import (
 	"easy-go-monitor/internal/infra/database"
 	"easy-go-monitor/internal/infra/jwt"
+	"easy-go-monitor/internal/infra/logger"
 	"easy-go-monitor/internal/infra/router"
 	monitorController "easy-go-monitor/internal/monitor/adapter/controller"
 	monitorPresenter "easy-go-monitor/internal/monitor/adapter/presenter"
@@ -31,6 +32,11 @@ func init() {
 }
 
 func main() {
+	// --- Logger ---
+	appLogger := logger.NewLogger(os.Getenv("LOG_LEVEL"))
+	appLogger.Info("Starting Easy-Go-Monitor backend...")
+
+	// --- DB Config ---
 	db_cfg := database.Config{
 		Host:      os.Getenv("POSTGRES_HOST"),
 		Port:      os.Getenv("POSTGRES_PORT"),
@@ -42,9 +48,11 @@ func main() {
 
 	db, err := database.NewPostgresDB(db_cfg)
 	if err != nil {
-		log.Fatalf("failed to connect database: %v", err)
+		appLogger.Fatal("Failed to connect database", "error", err)
 	}
 	defer db.Close()
+
+	appLogger.Info("Database connected successfully.")
 
 	// --- JWT Service ---
 	expHour, _ := strconv.Atoi(os.Getenv("JWT_EXPIRE_HOUR"))
@@ -107,10 +115,14 @@ func main() {
 	}
 
 	// --- Router ---
-	r := router.NewGinRouter(userControllers, monitorControllers, runnerControllers, jwtService)
+	r := router.NewGinRouter(userControllers, monitorControllers, runnerControllers, jwtService, appLogger)
 
 	// --- Run Server ---
-	if err := r.Run(":8080"); err != nil {
-		log.Fatalf("falled to start server: %v", err)
+	host := os.Getenv("HOST")
+	port := os.Getenv("PORT")
+	addr := host + ":" + port
+	appLogger.Info("Server starting", "addr", addr)
+	if err := r.Run(addr); err != nil {
+		appLogger.Fatal("Failed to start server", "error", err)
 	}
 }
