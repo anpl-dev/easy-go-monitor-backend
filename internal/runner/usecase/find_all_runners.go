@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"easy-go-monitor/internal/codes"
 	"easy-go-monitor/internal/runner/domain"
 	"time"
 
@@ -17,7 +16,7 @@ type (
 
 	// FindAllRunnersInput input data
 	FindAllRunnersInput struct {
-		UserID uuid.UUID `json:"-"`
+		UserID string `json:"-"`
 	}
 
 	// FindAllRunnersPresenter output port
@@ -55,11 +54,12 @@ func NewFindAllRunnersInteractor(
 }
 
 func (i *findAllRunnersInteractor) Execute(ctx context.Context, input FindAllRunnersInput) ([]FindAllRunnersOutput, error) {
-	if input.UserID != uuid.Nil {
-		return nil, codes.ErrInvalidUUID
+	userID, err := uuid.Parse(input.UserID)
+	if err != nil {
+		return nil, err
 	}
 
-	runners, err := i.repo.FindAll(ctx, input.UserID)
+	runners, err := i.repo.FindAll(ctx, userID)
 	if err != nil {
 		return nil, err
 	}

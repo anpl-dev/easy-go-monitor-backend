@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type FindAllRunnersController struct {
@@ -25,14 +24,8 @@ func (h *FindAllRunnersController) Handle(c *gin.Context) {
 		return
 	}
 
-	userIDStr, ok := userIDVal.(string)
+	userID, ok := userIDVal.(string)
 	if !ok {
-		response.HandleError(c, codes.ErrInvalidUUID)
-		return
-	}
-
-	userID, err := uuid.Parse(userIDStr)
-	if err != nil {
 		response.HandleError(c, codes.ErrInvalidUUID)
 		return
 	}
