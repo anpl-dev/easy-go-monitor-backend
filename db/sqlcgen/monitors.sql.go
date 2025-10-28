@@ -142,17 +142,18 @@ SET
     settings = $5,
     is_enabled = $6,
     updated_at = now()
-WHERE id = $1
+WHERE id = $1 AND updated_at = $7
 RETURNING id, user_id, group_id, name, url, type, settings, is_enabled, created_at, updated_at
 `
 
 type UpdateMonitorParams struct {
-	ID        uuid.UUID       `json:"id"`
-	Name      string          `json:"name"`
-	Url       string          `json:"url"`
-	Type      string          `json:"type"`
-	Settings  json.RawMessage `json:"settings"`
-	IsEnabled bool            `json:"is_enabled"`
+	ID        uuid.UUID          `json:"id"`
+	Name      string             `json:"name"`
+	Url       string             `json:"url"`
+	Type      string             `json:"type"`
+	Settings  json.RawMessage    `json:"settings"`
+	IsEnabled bool               `json:"is_enabled"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
 }
 
 func (q *Queries) UpdateMonitor(ctx context.Context, arg UpdateMonitorParams) (Monitor, error) {
@@ -163,6 +164,7 @@ func (q *Queries) UpdateMonitor(ctx context.Context, arg UpdateMonitorParams) (M
 		arg.Type,
 		arg.Settings,
 		arg.IsEnabled,
+		arg.UpdatedAt,
 	)
 	var i Monitor
 	err := row.Scan(

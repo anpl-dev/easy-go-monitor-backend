@@ -11,6 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -113,10 +114,11 @@ func (r *MonitorPostgresRepository) Update(ctx context.Context, m domain.Monitor
 		Url:       m.URL,
 		Settings:  settingsJSON,
 		IsEnabled: m.IsEnabled,
+		UpdatedAt: pgtype.Timestamptz{Time: m.UpdatedAt, Valid: true},
 	})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, codes.ErrNotFound
+			return nil, codes.ErrConflict
 		}
 		return nil, err
 	}

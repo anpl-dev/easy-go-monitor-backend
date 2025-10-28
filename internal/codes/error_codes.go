@@ -13,6 +13,7 @@ var (
 	ErrInvalidCredentials = New(4002, "invalid login or password")
 	ErrJSONRequest        = New(4003, "invalid api request")
 	ErrAlreadyExists      = New(4004, "aleady exsits")
+	ErrConflict           = New(4005, "conflict requsts")
 
 	// User
 	ErrInvalidUserName = New(4101, "invalid user name")
