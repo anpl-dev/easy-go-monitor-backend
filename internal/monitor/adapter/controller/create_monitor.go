@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type CreateMonitorController struct {
@@ -25,7 +24,7 @@ func (h *CreateMonitorController) Handle(c *gin.Context) {
 		return
 	}
 
-	userID, ok := userIDVal.(uuid.UUID)
+	userID, ok := userIDVal.(string)
 	if !ok {
 		response.HandleError(c, codes.ErrInvalidUUID)
 		return
@@ -36,8 +35,9 @@ func (h *CreateMonitorController) Handle(c *gin.Context) {
 		response.HandleError(c, codes.ErrBadRequest)
 		return
 	}
+	
 	input.UserID = userID
-
+	
 	output, err := h.uc.Execute(c.Request.Context(), input)
 	if err != nil {
 		response.HandleError(c, err)

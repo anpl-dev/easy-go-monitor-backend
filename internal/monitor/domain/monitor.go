@@ -49,7 +49,6 @@ func NewMonitor(
 	name string,
 	monitorUrl string,
 	monitorType string,
-	settings *MonitorSettings,
 ) (*Monitor, error) {
 	if userID == uuid.Nil {
 		return nil, codes.ErrInvalidUUID
@@ -66,12 +65,10 @@ func NewMonitor(
 	default:
 		return nil, codes.ErrInvalidMonitorType
 	}
-	if settings == nil {
-		defaultSettings, err := NewMonitorSettingsByType(monitorType)
-		if err != nil {
-			return nil, err
-		}
-		settings = defaultSettings
+
+	defaultSettings, err := NewMonitorSettingsByType(monitorType)
+	if err != nil {
+		return nil, err
 	}
 
 	return &Monitor{
@@ -80,7 +77,7 @@ func NewMonitor(
 		Name:      name,
 		URL:       monitorUrl,
 		Type:      monitorType,
-		Settings:  settings,
+		Settings:  defaultSettings,
 		IsEnabled: true,
 	}, nil
 }

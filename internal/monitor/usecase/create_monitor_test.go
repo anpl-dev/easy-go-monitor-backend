@@ -58,7 +58,6 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 		{
 			name: "success: create monitor",
 			input: CreateMonitorInput{
-				UserID: uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 				Name:   "test-monitor",
 				URL:    "https://example.com",
 			},
@@ -102,7 +101,6 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 		{
 			name: "error: user not found",
 			input: CreateMonitorInput{
-				UserID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 				Name:   "test-monitor",
 				URL:    "https://example.com",
 			},
@@ -119,7 +117,6 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 		{
 			name: "error: missing name",
 			input: CreateMonitorInput{
-				UserID: uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 				URL:    "https://example.com",
 			},
 			mockRepo: mockMonitorRepoCreate{},
@@ -132,7 +129,6 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 		{
 			name: "error: missing url",
 			input: CreateMonitorInput{
-				UserID: uuid.MustParse("22222222-2222-2222-2222-222222222222"),
 				Name:   "test-monitor",
 			},
 			mockRepo: mockMonitorRepoCreate{},
