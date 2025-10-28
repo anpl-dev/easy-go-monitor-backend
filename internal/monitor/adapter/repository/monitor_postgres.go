@@ -54,8 +54,8 @@ func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor
 		Name:      m.Name,
 		Url:       m.URL,
 		Type:      m.Type,
-		IsEnabled: m.IsEnabled,
 		Settings:  settingsJSON,
+		IsEnabled: m.IsEnabled,
 	})
 	if err != nil {
 		if pgErr, ok := err.(*pgconn.PgError); ok {
