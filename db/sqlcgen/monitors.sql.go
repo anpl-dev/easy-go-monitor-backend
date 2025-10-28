@@ -31,7 +31,7 @@ type CreateMonitorParams struct {
 	Url       string          `json:"url"`
 	Type      string          `json:"type"`
 	Settings  json.RawMessage `json:"settings"`
-	IsEnabled *bool           `json:"is_enabled"`
+	IsEnabled bool            `json:"is_enabled"`
 }
 
 func (q *Queries) CreateMonitor(ctx context.Context, arg CreateMonitorParams) (Monitor, error) {
@@ -152,7 +152,7 @@ type UpdateMonitorParams struct {
 	GroupID   pgtype.UUID     `json:"group_id"`
 	Url       string          `json:"url"`
 	Settings  json.RawMessage `json:"settings"`
-	IsEnabled *bool           `json:"is_enabled"`
+	IsEnabled bool            `json:"is_enabled"`
 }
 
 func (q *Queries) UpdateMonitor(ctx context.Context, arg UpdateMonitorParams) (Monitor, error) {

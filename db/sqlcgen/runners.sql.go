@@ -27,7 +27,7 @@ type CreateRunnerParams struct {
 	Name           string    `json:"name"`
 	Region         string    `json:"region"`
 	IntervalSecond int32     `json:"interval_second"`
-	IsEnabled      *bool     `json:"is_enabled"`
+	IsEnabled      bool      `json:"is_enabled"`
 }
 
 func (q *Queries) CreateRunner(ctx context.Context, arg CreateRunnerParams) (Runner, error) {
@@ -142,7 +142,7 @@ type UpdateRunnerParams struct {
 	Name           string    `json:"name"`
 	Region         string    `json:"region"`
 	IntervalSecond int32     `json:"interval_second"`
-	IsEnabled      *bool     `json:"is_enabled"`
+	IsEnabled      bool      `json:"is_enabled"`
 }
 
 func (q *Queries) UpdateRunner(ctx context.Context, arg UpdateRunnerParams) (Runner, error) {

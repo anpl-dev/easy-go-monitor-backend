@@ -29,10 +29,6 @@ func toDomainMonitor(s sqlcgen.Monitor) *domain.Monitor {
 			settings = domain.MonitorSettings{}
 		}
 	}
-	isEnabled := false
-	if s.IsEnabled != nil {
-		isEnabled = *s.IsEnabled
-	}
 	return &domain.Monitor{
 		ID:        s.ID,
 		UserID:    s.UserID,
@@ -40,7 +36,7 @@ func toDomainMonitor(s sqlcgen.Monitor) *domain.Monitor {
 		URL:       s.Url,
 		Type:      s.Type,
 		Settings:  &settings,
-		IsEnabled: isEnabled,
+		IsEnabled: s.IsEnabled,
 		CreatedAt: s.CreatedAt.Time,
 		UpdatedAt: s.UpdatedAt.Time,
 	}
@@ -112,7 +108,7 @@ func (r *MonitorPostgresRepository) Update(ctx context.Context, m domain.Monitor
 		Name:      m.Name,
 		Url:       m.URL,
 		Settings:  settingsJSON,
-		IsEnabled: &m.IsEnabled,
+		IsEnabled: m.IsEnabled,
 	})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {

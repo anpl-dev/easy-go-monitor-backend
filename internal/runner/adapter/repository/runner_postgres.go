@@ -21,10 +21,6 @@ func NewRunnerPostgresRepository(pool *pgxpool.Pool) *RunnerPostgresRepository {
 }
 
 func toDomainRunner(s sqlcgen.Runner) *domain.Runner {
-	isActive := false
-	if s.IsEnabled != nil {
-		isActive = *s.IsEnabled
-	}
 	return &domain.Runner{
 		ID:             s.ID,
 		UserID:         s.UserID,
@@ -32,7 +28,7 @@ func toDomainRunner(s sqlcgen.Runner) *domain.Runner {
 		Name:           s.Name,
 		Region:         s.Region,
 		IntervalSecond: int(s.IntervalSecond),
-		IsEnabled:      isActive,
+		IsEnabled:      s.IsEnabled,
 		CreatedAt:      s.CreatedAt.Time,
 		UpdatedAt:      s.UpdatedAt.Time,
 	}
@@ -46,7 +42,7 @@ func (r *RunnerPostgresRepository) Create(ctx context.Context, runner domain.Run
 		Name:           runner.Name,
 		Region:         runner.Region,
 		IntervalSecond: int32(runner.IntervalSecond),
-		IsEnabled:      &runner.IsEnabled,
+		IsEnabled:      runner.IsEnabled,
 	})
 	if err != nil {
 		return nil, err
@@ -87,7 +83,7 @@ func (r *RunnerPostgresRepository) Update(ctx context.Context, runner domain.Run
 		Name:           runner.Name,
 		Region:         runner.Region,
 		IntervalSecond: int32(runner.IntervalSecond),
-		IsEnabled:      &runner.IsEnabled,
+		IsEnabled:      runner.IsEnabled,
 	})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
