@@ -12,6 +12,7 @@ var (
 	ErrInvalidUUID        = New(4001, "invalid uuid")
 	ErrInvalidCredentials = New(4002, "invalid login or password")
 	ErrJSONRequest        = New(4003, "invalid api request")
+	ErrAlreadyExists      = New(4004, "aleady exsits")
 
 	// User
 	ErrInvalidUserName = New(4101, "invalid user name")

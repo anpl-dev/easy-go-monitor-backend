@@ -29,6 +29,11 @@ func toDomainMonitor(s sqlcgen.Monitor) *domain.Monitor {
 			settings = domain.MonitorSettings{}
 		}
 	}
+	// Null Safe
+	isEnabled := false
+	if s.IsEnabled {
+		isEnabled = s.IsEnabled
+	}
 	return &domain.Monitor{
 		ID:        s.ID,
 		UserID:    s.UserID,
@@ -36,7 +41,7 @@ func toDomainMonitor(s sqlcgen.Monitor) *domain.Monitor {
 		URL:       s.Url,
 		Type:      s.Type,
 		Settings:  &settings,
-		IsEnabled: s.IsEnabled,
+		IsEnabled: isEnabled,
 		CreatedAt: s.CreatedAt.Time,
 		UpdatedAt: s.UpdatedAt.Time,
 	}
@@ -48,18 +53,23 @@ func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor
 	if err != nil {
 		return nil, codes.ErrJSONRequest
 	}
+	isEnalbled := true
 	row, err := r.queries.CreateMonitor(ctx, sqlcgen.CreateMonitorParams{
-		ID:       m.ID,
-		UserID:   m.UserID,
-		Name:     m.Name,
-		Url:      m.URL,
-		Type:     m.Type,
-		Settings: settingsJSON,
+		ID:        m.ID,
+		UserID:    m.UserID,
+		Name:      m.Name,
+		Url:       m.URL,
+		Type:      m.Type,
+		IsEnabled: isEnalbled,
+		Settings:  settingsJSON,
 	})
 	if err != nil {
 		if pgErr, ok := err.(*pgconn.PgError); ok {
 			if pgErr.Code == codes.PostgresForeignKeyViolation {
 				return nil, codes.ErrNotFound
+			}
+			if pgErr.Code == codes.PostgresUniqueViolation {
+				return nil, codes.ErrAlreadyExists
 			}
 		}
 		return nil, err
@@ -86,7 +96,7 @@ func (r *MonitorPostgresRepository) FindAll(ctx context.Context, userID uuid.UUI
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, codes.ErrNotFound
 		}
-		return nil, err
+		return []*domain.Monitor{}, nil
 	}
 
 	result := make([]*domain.Monitor, 0, len(rows))
