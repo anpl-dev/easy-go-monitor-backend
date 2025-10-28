@@ -3,34 +3,41 @@ package controller
 import (
 	"easy-go-monitor/internal/api/response"
 	"easy-go-monitor/internal/codes"
-	"easy-go-monitor/internal/monitor/usecase"
+	"easy-go-monitor/internal/runner/usecase"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
-type FindAllMonitorsController struct {
-	uc usecase.FindAllMonitorsUseCase
+type FindAllRunnersController struct {
+	uc usecase.FindAllRunnersUseCase
 }
 
-func NewFindAllMonitorsController(uc usecase.FindAllMonitorsUseCase) *FindAllMonitorsController {
-	return &FindAllMonitorsController{uc: uc}
+func NewFindAllRunnersController(uc usecase.FindAllRunnersUseCase) *FindAllRunnersController {
+	return &FindAllRunnersController{uc: uc}
 }
 
-func (h *FindAllMonitorsController) Handle(c *gin.Context) {
+func (h *FindAllRunnersController) Handle(c *gin.Context) {
 	userIDVal, exists := c.Get("user_id")
 	if !exists {
 		response.HandleError(c, codes.ErrAuthFailed)
 		return
 	}
 
-	userID, ok := userIDVal.(uuid.UUID)
+	userIDStr, ok := userIDVal.(string)
 	if !ok {
 		response.HandleError(c, codes.ErrInvalidUUID)
 		return
 	}
-	output, err := h.uc.Execute(c.Request.Context(), usecase.FindAllMonitorsInput{UserID: userID})
+
+	userID, err := uuid.Parse(userIDStr)
+	if err != nil {
+		response.HandleError(c, codes.ErrInvalidUUID)
+		return
+	}
+
+	output, err := h.uc.Execute(c.Request.Context(), usecase.FindAllRunnersInput{UserID: userID})
 	if err != nil {
 		response.HandleError(c, codes.ErrNotFound)
 		return

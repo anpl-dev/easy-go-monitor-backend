@@ -1,29 +1,29 @@
 package presenter
 
 import (
-	"easy-go-monitor/internal/monitor/domain"
-	"easy-go-monitor/internal/monitor/usecase"
+	"easy-go-monitor/internal/runner/domain"
+	"easy-go-monitor/internal/runner/usecase"
 )
 
-type FindMonitorByIDPresenter struct{}
+type FindRunnerByIDPresenter struct{}
 
-func NewFindMonitorByIDPresenter() *FindMonitorByIDPresenter {
-	return &FindMonitorByIDPresenter{}
+func NewFindRunnerByIDPresenter() *FindRunnerByIDPresenter {
+	return &FindRunnerByIDPresenter{}
 }
 
-func (p *FindMonitorByIDPresenter) Output(monitor *domain.Monitor) usecase.FindMonitorByIDOutput {
-	if monitor == nil {
-		return usecase.FindMonitorByIDOutput{}
+func (p *FindRunnerByIDPresenter) Output(runner *domain.Runner) usecase.FindRunnerByIDOutput {
+	if runner == nil {
+		return usecase.FindRunnerByIDOutput{}
 	}
-	return usecase.FindMonitorByIDOutput{
-		ID:        monitor.ID,
-		UserID:    monitor.UserID,
-		Name:      monitor.Name,
-		URL:       monitor.URL,
-		Type:      monitor.Type,
-		Settings:  monitor.Settings,
-		IsEnabled: monitor.IsEnabled,
-		CreatedAt: monitor.CreatedAt,
-		UpdatedAt: monitor.UpdatedAt,
+	return usecase.FindRunnerByIDOutput{
+		ID:             runner.ID,
+		UserID:         runner.UserID,
+		MonitorID:      runner.MonitorID,
+		Name:           runner.Name,
+		Region:         runner.Region,
+		IntervalSecond: runner.IntervalSecond,
+		IsEnabled:      runner.IsEnabled,
+		CreatedAt:      runner.CreatedAt,
+		UpdatedAt:      runner.UpdatedAt,
 	}
 }

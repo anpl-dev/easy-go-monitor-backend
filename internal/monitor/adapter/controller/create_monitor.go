@@ -19,9 +19,14 @@ func NewCreateMonitorController(uc usecase.CreateMonitorUseCase) *CreateMonitorC
 }
 
 func (h *CreateMonitorController) Handle(c *gin.Context) {
-	userIDstr := c.GetString("user_id")
-	userID, err := uuid.Parse(userIDstr)
-	if err != nil {
+	userIDVal, exists := c.Get("user_id")
+	if !exists {
+		response.HandleError(c, codes.ErrAuthFailed)
+		return
+	}
+
+	userID, ok := userIDVal.(uuid.UUID)
+	if !ok {
 		response.HandleError(c, codes.ErrInvalidUUID)
 		return
 	}

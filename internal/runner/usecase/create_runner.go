@@ -16,7 +16,7 @@ type (
 
 	// CreateRunnerInput input data
 	CreateRunnerInput struct {
-		UserID         uuid.UUID `json:"user_id"`
+		UserID         uuid.UUID `json:"-"`
 		MonitorID      uuid.UUID `json:"monitor_id" binding:"required"`
 		Name           string    `json:"name" binding:"required"`
 		Region         string    `json:"region" binding:"required"`

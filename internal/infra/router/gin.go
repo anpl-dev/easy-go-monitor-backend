@@ -29,7 +29,11 @@ type (
 	}
 
 	RunnerControllers struct {
-		Create *runnerController.CreateRunnerController
+		Create   *runnerController.CreateRunnerController
+		FindByID *runnerController.FindRunnerByIDController
+		FindAll  *runnerController.FindAllRunnersController
+		Update   *runnerController.UpdateRunnerController
+		Delete   *runnerController.DeleteRunnerController
 	}
 )
 
@@ -75,6 +79,10 @@ func NewGinRouter(
 		runnersApi := auth.Group("/runners")
 		{
 			runnersApi.POST("", runners.Create.Handle)
+			runnersApi.GET("/:id", runners.FindByID.Handle)
+			runnersApi.GET("", runners.FindAll.Handle)
+			runnersApi.PUT("/:id", runners.Update.Handle)
+			runnersApi.DELETE("/:id", runners.Delete.Handle)
 		}
 	}
 

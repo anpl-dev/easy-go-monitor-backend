@@ -16,11 +16,11 @@ type (
 
 	// CreateMonitorInput input data
 	CreateMonitorInput struct {
-		UserID   uuid.UUID               `json:"user_id"`
+		UserID   uuid.UUID
 		Name     string                  `json:"name" binding:"required"`
 		URL      string                  `json:"url" binding:"required"`
 		Type     string                  `json:"type" binding:"required"`
-		Settings *domain.MonitorSettings `json:"settings,omitempty"`
+		Settings *domain.MonitorSettings `json:"settings" binding:"required"`
 	}
 
 	// CreateMonitorPresenter output port
@@ -30,7 +30,7 @@ type (
 
 	// CreateMonitorOutput output data
 	CreateMonitorOutput struct {
-		ID        uuid.UUID               `json:"id"`
+		ID        uuid.UUID               `json:"-"`
 		UserID    uuid.UUID               `json:"user_id"`
 		Name      string                  `json:"name"`
 		URL       string                  `json:"url"`

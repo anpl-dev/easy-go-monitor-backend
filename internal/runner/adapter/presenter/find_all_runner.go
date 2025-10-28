@@ -1,36 +1,35 @@
 package presenter
 
 import (
-	"easy-go-monitor/internal/monitor/domain"
-	"easy-go-monitor/internal/monitor/usecase"
+	"easy-go-monitor/internal/runner/domain"
+	"easy-go-monitor/internal/runner/usecase"
 )
 
-type FindAllMonitorsPresenter struct{}
+type FindAllRunnersPresenter struct{}
 
-func NewFindAllMonitorsPresenter() *FindAllMonitorsPresenter {
-	return &FindAllMonitorsPresenter{}
+func NewFindAllRunnersPresenter() *FindAllRunnersPresenter {
+	return &FindAllRunnersPresenter{}
 }
 
-func (p *FindAllMonitorsPresenter) Output(monitors []*domain.Monitor) []usecase.FindAllMonitorsOutput {
-	if monitors == nil {
-		return []usecase.FindAllMonitorsOutput{}
+func (p *FindAllRunnersPresenter) Output(runners []*domain.Runner) []usecase.FindAllRunnersOutput {
+	if runners == nil {
+		return []usecase.FindAllRunnersOutput{}
 	}
 
-	outputs := make([]usecase.FindAllMonitorsOutput, 0, len(monitors))
-	for _, m := range monitors {
-		if m == nil {
+	outputs := make([]usecase.FindAllRunnersOutput, 0, len(runners))
+	for _, runner := range runners {
+		if runner == nil {
 			continue
 		}
-		outputs = append(outputs, usecase.FindAllMonitorsOutput{
-			ID:        m.ID,
-			UserID:    m.UserID,
-			Name:      m.Name,
-			URL:       m.URL,
-			Type:      m.Type,
-			Settings:  m.Settings,
-			IsEnabled: m.IsEnabled,
-			CreatedAt: m.CreatedAt,
-			UpdatedAt: m.UpdatedAt,
+		outputs = append(outputs, usecase.FindAllRunnersOutput{
+			ID:             runner.ID,
+			UserID:         runner.UserID,
+			Name:           runner.Name,
+			Region:         runner.Region,
+			IntervalSecond: runner.IntervalSecond,
+			IsEnabled:      runner.IsEnabled,
+			CreatedAt:      runner.CreatedAt,
+			UpdatedAt:      runner.UpdatedAt,
 		})
 	}
 	return outputs

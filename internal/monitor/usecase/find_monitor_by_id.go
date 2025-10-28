@@ -16,7 +16,7 @@ type (
 
 	// FindMonitorByIDInput input data
 	FindMonitorByIDInput struct {
-		ID uuid.UUID `json:"id" binding:"required"`
+		ID uuid.UUID `json:"-"`
 	}
 
 	// FindMonitorByIDPresenter output port

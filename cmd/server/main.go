@@ -74,6 +74,9 @@ func main() {
 	updateMonitorPresenter := monitorPresenter.NewUpdateMonitorPresenter()
 
 	createRunnerPresenter := runnerPresenter.NewCreateRunnerPresenter()
+	findRunnerByIDPresenter := runnerPresenter.NewFindRunnerByIDPresenter()
+	findAllRunnersPresenter := runnerPresenter.NewFindAllRunnersPresenter()
+	updateRunnerPresenter := runnerPresenter.NewUpdateRunnerPresenter()
 
 	// --- UseCase ---
 	createUserUC := userUC.NewCreateUserInteractor(userRepo, createUserPresenter)
@@ -89,6 +92,10 @@ func main() {
 	deleteMonitorUC := monitorUC.NewDeleteMonitorInteractor(monitorRepo)
 
 	createRunnerUC := runnerUC.NewCreateRunnerInteractor(runnerRepo, createRunnerPresenter)
+	findRunnerUC := runnerUC.NewFindRunnerByIDInteractor(runnerRepo, findRunnerByIDPresenter)
+	findAllRunnersUC := runnerUC.NewFindAllRunnersInteractor(runnerRepo, findAllRunnersPresenter)
+	updateRunnerUC := runnerUC.NewUpdateRunnerInteractor(runnerRepo, updateRunnerPresenter)
+	deleteRunnerUC := runnerUC.NewDeleteRunnerInteractor(runnerRepo)
 
 	// --- Controller ---
 	userControllers := router.UserControllers{
@@ -102,13 +109,17 @@ func main() {
 	monitorControllers := router.MonitorControllers{
 		Create:   monitorController.NewCreateMonitorController(createMonitorUC),
 		FindByID: monitorController.NewFindMonitorByIDController(findMointorByIDUC),
-		FindAll:   monitorController.NewFindAllMonitorsController(findAllMonitorsUC),
+		FindAll:  monitorController.NewFindAllMonitorsController(findAllMonitorsUC),
 		Update:   monitorController.NewUpdateMonitorController(updateMonitorUC),
 		Delete:   monitorController.NewDeleteMonitorController(deleteMonitorUC),
 	}
 
 	runnerControllers := router.RunnerControllers{
-		Create: runnerController.NewCreateRunnerController(createRunnerUC),
+		Create:   runnerController.NewCreateRunnerController(createRunnerUC),
+		FindByID: runnerController.NewFindRunnerByIDController(findRunnerUC),
+		FindAll:  runnerController.NewFindAllRunnersController(findAllRunnersUC),
+		Update:   runnerController.NewUpdateRunnerController(updateRunnerUC),
+		Delete:   runnerController.NewDeleteRunnerController(deleteRunnerUC),
 	}
 
 	// --- Router ---

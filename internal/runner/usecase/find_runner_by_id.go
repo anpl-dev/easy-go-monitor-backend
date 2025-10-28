@@ -16,7 +16,7 @@ type (
 
 	// FindRunnerByIDInput input data
 	FindRunnerByIDInput struct {
-		ID uuid.UUID `json:"id" binding:"required"`
+		ID uuid.UUID `json:"-"`
 	}
 
 	// FindRunnerByIDPresenter output port
@@ -28,7 +28,7 @@ type (
 	FindRunnerByIDOutput struct {
 		ID             uuid.UUID `json:"id"`
 		UserID         uuid.UUID `json:"user_id"`
-		MonitorID      uuid.UUID `json:"monitor_id"`
+		MonitorID      uuid.UUID `json:"runner_id"`
 		Name           string    `json:"name"`
 		Region         string    `json:"region"`
 		IntervalSecond int       `json:"interval_second"`
@@ -54,12 +54,12 @@ func NewFindRunnerByIDInteractor(
 }
 
 func (i *findRunnerByIDInteractor) Execute(ctx context.Context, input FindRunnerByIDInput) (FindRunnerByIDOutput, error) {
-	monitor, err := i.repo.FindByID(ctx, input.ID)
+	runner, err := i.repo.FindByID(ctx, input.ID)
 	if err != nil {
 		return FindRunnerByIDOutput{}, err
 	}
-	if monitor == nil {
+	if runner == nil {
 		return FindRunnerByIDOutput{}, nil
 	}
-	return i.presenter.Output(monitor), nil
+	return i.presenter.Output(runner), nil
 }

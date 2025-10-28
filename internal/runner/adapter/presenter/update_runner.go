@@ -1,28 +1,27 @@
 package presenter
 
 import (
-	"easy-go-monitor/internal/monitor/domain"
-	"easy-go-monitor/internal/monitor/usecase"
+	"easy-go-monitor/internal/runner/domain"
+	"easy-go-monitor/internal/runner/usecase"
 )
 
-type UpdateMonitorPresenter struct{}
+type UpdateRunnerPresenter struct{}
 
-func NewUpdateMonitorPresenter() *UpdateMonitorPresenter {
-	return &UpdateMonitorPresenter{}
+func NewUpdateRunnerPresenter() *UpdateRunnerPresenter {
+	return &UpdateRunnerPresenter{}
 }
 
-func (p *UpdateMonitorPresenter) Output(monitor *domain.Monitor) usecase.UpdateMonitorOutput {
-	if monitor == nil {
-		return usecase.UpdateMonitorOutput{}
+func (p *UpdateRunnerPresenter) Output(runner *domain.Runner) usecase.UpdateRunnerOutput {
+	if runner == nil {
+		return usecase.UpdateRunnerOutput{}
 	}
-	return usecase.UpdateMonitorOutput{
-		ID:        monitor.ID,
-		UserID:    monitor.UserID,
-		Name:      monitor.Name,
-		URL:       monitor.URL,
-		Type:      monitor.Type,
-		Settings:  monitor.Settings,
-		IsEnabled: monitor.IsEnabled,
-		UpdatedAt: monitor.UpdatedAt,
+	return usecase.UpdateRunnerOutput{
+		ID:             runner.ID,
+		UserID:         runner.UserID,
+		Name:           runner.Name,
+		Region:         runner.Region,
+		IntervalSecond: runner.IntervalSecond,
+		IsEnabled:      runner.IsEnabled,
+		UpdatedAt:      runner.UpdatedAt,
 	}
 }

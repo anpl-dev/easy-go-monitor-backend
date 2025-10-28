@@ -17,20 +17,20 @@ func (p *FindAllMonitorsPresenter) Output(monitors []*domain.Monitor) []usecase.
 	}
 
 	outputs := make([]usecase.FindAllMonitorsOutput, 0, len(monitors))
-	for _, m := range monitors {
-		if m == nil {
+	for _, monitor := range monitors {
+		if monitor == nil {
 			continue
 		}
 		outputs = append(outputs, usecase.FindAllMonitorsOutput{
-			ID:        m.ID,
-			UserID:    m.UserID,
-			Name:      m.Name,
-			URL:       m.URL,
-			Type:      m.Type,
-			Settings:  m.Settings,
-			IsEnabled: m.IsEnabled,
-			CreatedAt: m.CreatedAt,
-			UpdatedAt: m.UpdatedAt,
+			ID:        monitor.ID,
+			UserID:    monitor.UserID,
+			Name:      monitor.Name,
+			URL:       monitor.URL,
+			Type:      monitor.Type,
+			Settings:  monitor.Settings,
+			IsEnabled: monitor.IsEnabled,
+			CreatedAt: monitor.CreatedAt,
+			UpdatedAt: monitor.UpdatedAt,
 		})
 	}
 	return outputs

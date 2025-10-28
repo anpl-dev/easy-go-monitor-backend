@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"easy-go-monitor/internal/codes"
 	"easy-go-monitor/internal/runner/domain"
 	"time"
 
@@ -54,15 +55,14 @@ func NewFindAllRunnersInteractor(
 }
 
 func (i *findAllRunnersInteractor) Execute(ctx context.Context, input FindAllRunnersInput) ([]FindAllRunnersOutput, error) {
-	userID, err := uuid.Parse(input.UserID)
+	if input.UserID != uuid.Nil {
+		return nil, codes.ErrInvalidUUID
+	}
+
+	runners, err := i.repo.FindAll(ctx, input.UserID)
 	if err != nil {
 		return nil, err
 	}
 
-	monitors, err := i.repo.FindAll(ctx, userID)
-	if err != nil {
-		return nil, err
-	}
-
-	return i.presenter.Output(monitors), nil
+	return i.presenter.Output(runners), nil
 }
