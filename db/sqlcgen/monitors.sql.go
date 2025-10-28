@@ -137,8 +137,8 @@ const updateMonitor = `-- name: UpdateMonitor :one
 UPDATE monitors
 SET 
     name = $2,
-    group_id = $3,
-    url = $4,
+    url = $3,
+    type = $4,
     settings = $5,
     is_enabled = $6,
     updated_at = now()
@@ -149,8 +149,8 @@ RETURNING id, user_id, group_id, name, url, type, settings, is_enabled, created_
 type UpdateMonitorParams struct {
 	ID        uuid.UUID       `json:"id"`
 	Name      string          `json:"name"`
-	GroupID   pgtype.UUID     `json:"group_id"`
 	Url       string          `json:"url"`
+	Type      string          `json:"type"`
 	Settings  json.RawMessage `json:"settings"`
 	IsEnabled bool            `json:"is_enabled"`
 }
@@ -159,8 +159,8 @@ func (q *Queries) UpdateMonitor(ctx context.Context, arg UpdateMonitorParams) (M
 	row := q.db.QueryRow(ctx, updateMonitor,
 		arg.ID,
 		arg.Name,
-		arg.GroupID,
 		arg.Url,
+		arg.Type,
 		arg.Settings,
 		arg.IsEnabled,
 	)

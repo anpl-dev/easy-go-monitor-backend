@@ -109,6 +109,7 @@ func (r *MonitorPostgresRepository) Update(ctx context.Context, m domain.Monitor
 	row, err := r.queries.UpdateMonitor(ctx, sqlcgen.UpdateMonitorParams{
 		ID:        m.ID,
 		Name:      m.Name,
+		Type:      m.Type,
 		Url:       m.URL,
 		Settings:  settingsJSON,
 		IsEnabled: m.IsEnabled,
