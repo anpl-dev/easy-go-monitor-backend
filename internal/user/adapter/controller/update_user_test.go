@@ -30,9 +30,9 @@ func TestUpdateUserController_Execute(t *testing.T) {
 
 	targetID := "11111111-1111-1111-1111-111111111111"
 	payload, _ := json.Marshal(map[string]interface{}{
-		"name":          "Alice",
-		"email":         "alice@example.com",
-		"password_hash": "hashedPass",
+		"name":     "Alice",
+		"email":    "alice@example.com",
+		"password": "hashedPass",
 	})
 	wantOutput := usecase.UpdateUserOutput{
 		ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
