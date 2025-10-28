@@ -3,7 +3,6 @@ package domain
 import (
 	"context"
 	"easy-go-monitor/internal/codes"
-	"net/url"
 	"time"
 
 	"github.com/google/uuid"
@@ -30,7 +29,7 @@ type (
 		Name      string
 		URL       string
 		Type      string
-		Settings  MonitorSettings
+		Settings  *MonitorSettings
 		IsEnabled bool
 		CreatedAt time.Time
 		UpdatedAt time.Time
@@ -48,9 +47,9 @@ type (
 func NewMonitor(
 	userID uuid.UUID,
 	name string,
-	mUrl string,
-	mType string,
-	settings MonitorSettings,
+	monitorUrl string,
+	monitorType string,
+	settings *MonitorSettings,
 ) (*Monitor, error) {
 	if userID == uuid.Nil {
 		return nil, codes.ErrInvalidUUID
@@ -58,25 +57,29 @@ func NewMonitor(
 	if name == "" {
 		return nil, codes.ErrInvalidMonitorName
 	}
-	if _, err := url.ParseRequestURI(mUrl); err != nil {
+	if monitorUrl == "" {
 		return nil, codes.ErrInvalidMonitorURL
 	}
-	if mType != "http" && mType != "tcp" && mType != "ping" {
-		return nil, codes.ErrInvalidMonitorType
-	}
-	switch mType {
+	switch monitorType {
 	case MonitorTypeHTTP, MonitorTypeTCP, MonitorTypePing:
 		// OK
 	default:
 		return nil, codes.ErrInvalidMonitorType
+	}
+	if settings == nil {
+		defaultSettings, err := NewMonitorSettingsByType(monitorType)
+		if err != nil {
+			return nil, err
+		}
+		settings = defaultSettings
 	}
 
 	return &Monitor{
 		ID:        uuid.New(),
 		UserID:    userID,
 		Name:      name,
-		URL:       mUrl,
-		Type:      mType,
+		URL:       monitorUrl,
+		Type:      monitorType,
 		Settings:  settings,
 		IsEnabled: true,
 	}, nil
@@ -94,10 +97,26 @@ func NewMonitorSettings(
 	if timeoutMS <= 0 {
 		timeoutMS = 5000
 	}
+	if headers == nil {
+		headers = map[string]string{}
+	}
 	return &MonitorSettings{
 		Method:    method,
 		TimeoutMs: timeoutMS,
 		Headers:   headers,
 		Body:      body,
 	}, nil
+}
+
+func NewMonitorSettingsByType(monitorType string) (*MonitorSettings, error) {
+	switch monitorType {
+	case MonitorTypeHTTP:
+		return NewMonitorSettings("GET", 5000, nil, "")
+	case MonitorTypeTCP:
+		return NewMonitorSettings("", 5000, nil, "")
+	case MonitorTypePing:
+		return NewMonitorSettings("", 5000, nil, "")
+	default:
+		return nil, codes.ErrInvalidMonitorType
+	}
 }
