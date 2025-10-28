@@ -15,7 +15,6 @@ type (
 	UserControllers struct {
 		Create   *userController.CreateUserController
 		FindByID *userController.FindUserByIDController
-		Search   *userController.SearchUsersController
 		Update   *userController.UpdateUserController
 		Delete   *userController.DeleteUserController
 		Login    *userController.LoginUserController
@@ -24,7 +23,7 @@ type (
 	MonitorControllers struct {
 		Create   *monitorController.CreateMonitorController
 		FindByID *monitorController.FindMonitorByIDController
-		Search   *monitorController.SearchMonitorsController
+		FindAll  *monitorController.FindAllMonitorsController
 		Update   *monitorController.UpdateMonitorController
 		Delete   *monitorController.DeleteMonitorController
 	}
@@ -60,7 +59,6 @@ func NewGinRouter(
 		usersApi := auth.Group("/users")
 		{
 			usersApi.GET("/:id", users.FindByID.Handle)
-			usersApi.GET("/search", users.Search.Handle)
 			usersApi.PUT("/:id", users.Update.Handle)
 			usersApi.DELETE("/:id", users.Delete.Handle)
 		}
@@ -69,7 +67,7 @@ func NewGinRouter(
 		{
 			monitorsApi.POST("", monitors.Create.Handle)
 			monitorsApi.GET("/:id", monitors.FindByID.Handle)
-			monitorsApi.GET("/search", monitors.Search.Handle)
+			monitorsApi.GET("", monitors.FindAll.Handle)
 			monitorsApi.PUT("/:id", monitors.Update.Handle)
 			monitorsApi.DELETE("/:id", monitors.Delete.Handle)
 		}

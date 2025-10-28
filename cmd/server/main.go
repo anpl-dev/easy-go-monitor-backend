@@ -66,12 +66,11 @@ func main() {
 	// --- Presenter ---
 	createUserPresenter := userPresenter.NewCreateUserPresenter()
 	findUserByIDPresenter := userPresenter.NewFindUserByIDPresenter()
-	searchUsersPresenter := userPresenter.NewSearchUsersPresenter()
 	updateUserPresenter := userPresenter.NewUpdateUserPresenter()
 
 	createMonitorPresenter := monitorPresenter.NewCreateMonitorPresenter()
 	findMonitorByIDPresenter := monitorPresenter.NewFindMonitorByIDPresenter()
-	searchMonitorsPresenter := monitorPresenter.NewSearchMonitorsPresenter()
+	findAllMonitorsPresenter := monitorPresenter.NewFindAllMonitorsPresenter()
 	updateMonitorPresenter := monitorPresenter.NewUpdateMonitorPresenter()
 
 	createRunnerPresenter := runnerPresenter.NewCreateRunnerPresenter()
@@ -79,14 +78,13 @@ func main() {
 	// --- UseCase ---
 	createUserUC := userUC.NewCreateUserInteractor(userRepo, createUserPresenter)
 	findUserByIDUC := userUC.NewFindUserByIDInteractor(userRepo, findUserByIDPresenter)
-	searchUsersUC := userUC.NewSearchUsersInteractor(userRepo, searchUsersPresenter)
 	updateUserUC := userUC.NewUpdateUserInteractor(userRepo, updateUserPresenter)
 	deleteUserUC := userUC.NewDeleteUserInteractor(userRepo)
 	loginUserUC := userUC.NewLoginUserInteractor(userRepo, jwtService)
 
 	createMonitorUC := monitorUC.NewCreateMonitorInteractor(monitorRepo, createMonitorPresenter)
 	findMointorByIDUC := monitorUC.NewFindMonitorByIDInteractor(monitorRepo, findMonitorByIDPresenter)
-	searchMonitorsUC := monitorUC.NewSearchMonitorsInteractor(monitorRepo, searchMonitorsPresenter)
+	findAllMonitorsUC := monitorUC.NewFindAllMonitorsInteractor(monitorRepo, findAllMonitorsPresenter)
 	updateMonitorUC := monitorUC.NewUpdateMonitorInteractor(monitorRepo, updateMonitorPresenter)
 	deleteMonitorUC := monitorUC.NewDeleteMonitorInteractor(monitorRepo)
 
@@ -96,7 +94,6 @@ func main() {
 	userControllers := router.UserControllers{
 		Create:   userController.NewCreateUserController(createUserUC),
 		FindByID: userController.NewFindUserByIDController(findUserByIDUC),
-		Search:   userController.NewSearchUsersController(searchUsersUC),
 		Update:   userController.NewUpdateUserController(updateUserUC),
 		Delete:   userController.NewDeleteUserController(deleteUserUC),
 		Login:    userController.NewLoginUserController(loginUserUC),
@@ -105,7 +102,7 @@ func main() {
 	monitorControllers := router.MonitorControllers{
 		Create:   monitorController.NewCreateMonitorController(createMonitorUC),
 		FindByID: monitorController.NewFindMonitorByIDController(findMointorByIDUC),
-		Search:   monitorController.NewSearchMonitorsController(searchMonitorsUC),
+		FindAll:   monitorController.NewFindAllMonitorsController(findAllMonitorsUC),
 		Update:   monitorController.NewUpdateMonitorController(updateMonitorUC),
 		Delete:   monitorController.NewDeleteMonitorController(deleteMonitorUC),
 	}

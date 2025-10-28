@@ -9,24 +9,23 @@ import (
 )
 
 type (
-	// SearchMonitorsUseCase input port
-	SearchMonitorsUseCase interface {
-		Execute(ctx context.Context, input SearchMonitorsInput) ([]SearchMonitorsOutput, error)
+	// FindAllMonitorsUseCase input port
+	FindAllMonitorsUseCase interface {
+		Execute(ctx context.Context, input FindAllMonitorsInput) ([]FindAllMonitorsOutput, error)
 	}
 
-	// SearchMonitorsInput input data
-	SearchMonitorsInput struct {
-		UserID string `json:"user_id,omitempty" binding:"uuid"`
-		Name   string `json:"name,omitempty"`
+	// FindAllMonitorsInput input data
+	FindAllMonitorsInput struct {
+		UserID string `json:"-"`
 	}
 
-	// SearchMonitorsPresenter output port
-	SearchMonitorsPresenter interface {
-		Output([]*domain.Monitor) []SearchMonitorsOutput
+	// FindAllMonitorsPresenter output port
+	FindAllMonitorsPresenter interface {
+		Output([]*domain.Monitor) []FindAllMonitorsOutput
 	}
 
-	// SearchMonitorsOutput output data
-	SearchMonitorsOutput struct {
+	// FindAllMonitorsOutput output data
+	FindAllMonitorsOutput struct {
 		ID        uuid.UUID               `json:"id"`
 		UserID    uuid.UUID               `json:"user_id"`
 		Name      string                  `json:"name"`
@@ -38,23 +37,23 @@ type (
 		UpdatedAt time.Time               `json:"updated_at"`
 	}
 
-	searchMonitorsInteractor struct {
+	findAllMonitorsInteractor struct {
 		repo      domain.MonitorRepository
-		presenter SearchMonitorsPresenter
+		presenter FindAllMonitorsPresenter
 	}
 )
 
-func NewSearchMonitorsInteractor(
+func NewFindAllMonitorsInteractor(
 	repo domain.MonitorRepository,
-	presenter SearchMonitorsPresenter,
-) SearchMonitorsUseCase {
-	return &searchMonitorsInteractor{
+	presenter FindAllMonitorsPresenter,
+) FindAllMonitorsUseCase {
+	return &findAllMonitorsInteractor{
 		repo:      repo,
 		presenter: presenter,
 	}
 }
 
-func (i *searchMonitorsInteractor) Execute(ctx context.Context, input SearchMonitorsInput) ([]SearchMonitorsOutput, error) {
+func (i *findAllMonitorsInteractor) Execute(ctx context.Context, input FindAllMonitorsInput) ([]FindAllMonitorsOutput, error) {
 	userID, err := uuid.Parse(input.UserID)
 	if err != nil {
 		return nil, err

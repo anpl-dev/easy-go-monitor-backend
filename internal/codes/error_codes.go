@@ -4,7 +4,7 @@ var (
 	// Basic
 	ErrBadRequest = New(4000, "bad request")
 	ErrAuthFailed = New(4001, "authentication failed")
-	ErrNotFound   = New(4040, "not found")
+	ErrNotFound   = New(4004, "not found")
 	ErrDatabase   = New(5001, "database error")
 	ErrInternal   = New(5000, "internal server error")
 

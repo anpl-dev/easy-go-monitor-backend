@@ -5,23 +5,23 @@ import (
 	"easy-go-monitor/internal/monitor/usecase"
 )
 
-type SearchMonitorsPresenter struct{}
+type FindAllMonitorsPresenter struct{}
 
-func NewSearchMonitorsPresenter() *SearchMonitorsPresenter {
-	return &SearchMonitorsPresenter{}
+func NewFindAllMonitorsPresenter() *FindAllMonitorsPresenter {
+	return &FindAllMonitorsPresenter{}
 }
 
-func (p *SearchMonitorsPresenter) Output(monitors []*domain.Monitor) []usecase.SearchMonitorsOutput {
+func (p *FindAllMonitorsPresenter) Output(monitors []*domain.Monitor) []usecase.FindAllMonitorsOutput {
 	if monitors == nil {
-		return []usecase.SearchMonitorsOutput{}
+		return []usecase.FindAllMonitorsOutput{}
 	}
 
-	outputs := make([]usecase.SearchMonitorsOutput, 0, len(monitors))
+	outputs := make([]usecase.FindAllMonitorsOutput, 0, len(monitors))
 	for _, m := range monitors {
 		if m == nil {
 			continue
 		}
-		outputs = append(outputs, usecase.SearchMonitorsOutput{
+		outputs = append(outputs, usecase.FindAllMonitorsOutput{
 			ID:        m.ID,
 			UserID:    m.UserID,
 			Name:      m.Name,
