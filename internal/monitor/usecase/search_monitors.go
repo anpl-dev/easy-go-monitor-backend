@@ -17,7 +17,7 @@ type (
 	// SearchMonitorsInput input data
 	SearchMonitorsInput struct {
 		UserID string `json:"user_id,omitempty" binding:"uuid"`
-		Name   string `json:"name,omitempty" `
+		Name   string `json:"name,omitempty"`
 	}
 
 	// SearchMonitorsPresenter output port

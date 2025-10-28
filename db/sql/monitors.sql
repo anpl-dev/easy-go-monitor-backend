@@ -21,11 +21,12 @@ ORDER BY created_at DESC;
 -- name: UpdateMonitor :one
 UPDATE monitors
 SET 
-    name = $2,
     group_id = $3,
-    url = $4,
-    settings = $5,
-    is_enabled = $6,
+    name = $4,
+    url = $5,
+    type = $6,
+    settings = $7,
+    is_enabled = $8,
     updated_at = now()
 WHERE id = $1
 RETURNING *;
