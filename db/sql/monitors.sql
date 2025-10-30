@@ -33,3 +33,11 @@ RETURNING *;
 -- name: DeleteMonitor :exec
 DELETE FROM monitors
 WHERE id = $1;
+
+-- name: UpdateMonitorIsEnabled :one
+UPDATE monitors
+SET 
+  is_enabled = $2,
+  updated_at = now()
+WHERE id = $1 AND updated_at = $3
+RETURNING *;

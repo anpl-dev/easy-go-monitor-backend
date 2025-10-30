@@ -21,11 +21,12 @@ type (
 	}
 
 	MonitorControllers struct {
-		Create   *monitorController.CreateMonitorController
-		FindByID *monitorController.FindMonitorByIDController
-		FindAll  *monitorController.FindAllMonitorsController
-		Update   *monitorController.UpdateMonitorController
-		Delete   *monitorController.DeleteMonitorController
+		Create     *monitorController.CreateMonitorController
+		FindByID   *monitorController.FindMonitorByIDController
+		FindAll    *monitorController.FindAllMonitorsController
+		Update     *monitorController.UpdateMonitorController
+		Delete     *monitorController.DeleteMonitorController
+		SetEnabled *monitorController.SetEnabledMonitorController
 	}
 
 	RunnerControllers struct {
@@ -73,6 +74,7 @@ func NewGinRouter(
 			monitorsApi.GET("/:id", monitors.FindByID.Handle)
 			monitorsApi.GET("", monitors.FindAll.Handle)
 			monitorsApi.PUT("/:id", monitors.Update.Handle)
+			monitorsApi.PATCH("/enabled/:id", monitors.SetEnabled.Handle)
 			monitorsApi.DELETE("/:id", monitors.Delete.Handle)
 		}
 

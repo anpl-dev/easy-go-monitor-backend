@@ -72,6 +72,7 @@ func main() {
 	findMonitorByIDPresenter := monitorPresenter.NewFindMonitorByIDPresenter()
 	findAllMonitorsPresenter := monitorPresenter.NewFindAllMonitorsPresenter()
 	updateMonitorPresenter := monitorPresenter.NewUpdateMonitorPresenter()
+	setEnabledMonitorPresenter := monitorPresenter.NewSetEnabledMonitorPresenter()
 
 	createRunnerPresenter := runnerPresenter.NewCreateRunnerPresenter()
 	findRunnerByIDPresenter := runnerPresenter.NewFindRunnerByIDPresenter()
@@ -90,6 +91,7 @@ func main() {
 	findAllMonitorsUC := monitorUC.NewFindAllMonitorsInteractor(monitorRepo, findAllMonitorsPresenter)
 	updateMonitorUC := monitorUC.NewUpdateMonitorInteractor(monitorRepo, updateMonitorPresenter)
 	deleteMonitorUC := monitorUC.NewDeleteMonitorInteractor(monitorRepo)
+	setEnabledUC := monitorUC.NewSetEnabledMonitorInteractor(monitorRepo, setEnabledMonitorPresenter)
 
 	createRunnerUC := runnerUC.NewCreateRunnerInteractor(runnerRepo, createRunnerPresenter)
 	findRunnerUC := runnerUC.NewFindRunnerByIDInteractor(runnerRepo, findRunnerByIDPresenter)
@@ -107,11 +109,12 @@ func main() {
 	}
 
 	monitorControllers := router.MonitorControllers{
-		Create:   monitorController.NewCreateMonitorController(createMonitorUC),
-		FindByID: monitorController.NewFindMonitorByIDController(findMointorByIDUC),
-		FindAll:  monitorController.NewFindAllMonitorsController(findAllMonitorsUC),
-		Update:   monitorController.NewUpdateMonitorController(updateMonitorUC),
-		Delete:   monitorController.NewDeleteMonitorController(deleteMonitorUC),
+		Create:     monitorController.NewCreateMonitorController(createMonitorUC),
+		FindByID:   monitorController.NewFindMonitorByIDController(findMointorByIDUC),
+		FindAll:    monitorController.NewFindAllMonitorsController(findAllMonitorsUC),
+		Update:     monitorController.NewUpdateMonitorController(updateMonitorUC),
+		Delete:     monitorController.NewDeleteMonitorController(deleteMonitorUC),
+		SetEnabled: monitorController.NewSetEnabledMonitorController(setEnabledUC),
 	}
 
 	runnerControllers := router.RunnerControllers{

@@ -181,3 +181,36 @@ func (q *Queries) UpdateMonitor(ctx context.Context, arg UpdateMonitorParams) (M
 	)
 	return i, err
 }
+
+const updateMonitorIsEnabled = `-- name: UpdateMonitorIsEnabled :one
+UPDATE monitors
+SET 
+  is_enabled = $2,
+  updated_at = now()
+WHERE id = $1 AND updated_at = $3
+RETURNING id, user_id, group_id, name, url, type, settings, is_enabled, created_at, updated_at
+`
+
+type UpdateMonitorIsEnabledParams struct {
+	ID        uuid.UUID          `json:"id"`
+	IsEnabled bool               `json:"is_enabled"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
+}
+
+func (q *Queries) UpdateMonitorIsEnabled(ctx context.Context, arg UpdateMonitorIsEnabledParams) (Monitor, error) {
+	row := q.db.QueryRow(ctx, updateMonitorIsEnabled, arg.ID, arg.IsEnabled, arg.UpdatedAt)
+	var i Monitor
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.GroupID,
+		&i.Name,
+		&i.Url,
+		&i.Type,
+		&i.Settings,
+		&i.IsEnabled,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}

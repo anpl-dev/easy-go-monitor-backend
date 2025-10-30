@@ -7,6 +7,7 @@ import (
 	"easy-go-monitor/internal/monitor/domain"
 	"encoding/json"
 	"errors"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -135,4 +136,24 @@ func (r *MonitorPostgresRepository) Delete(ctx context.Context, id uuid.UUID) er
 		return err
 	}
 	return nil
+}
+
+func (r *MonitorPostgresRepository) SetEnabled(
+	ctx context.Context,
+	id uuid.UUID,
+	enabled bool,
+	updatedAt time.Time,
+) (*domain.Monitor, error) {
+	row, err := r.queries.UpdateMonitorIsEnabled(ctx, sqlcgen.UpdateMonitorIsEnabledParams{
+		ID:        id,
+		IsEnabled: enabled,
+		UpdatedAt: pgtype.Timestamptz{Time: updatedAt, Valid: true},
+	})
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, codes.ErrConflict
+		}
+		return nil, err
+	}
+	return toDomainMonitor(row), nil
 }
