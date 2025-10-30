@@ -29,7 +29,7 @@ type (
 
 	// CreateMonitorOutput output data
 	CreateMonitorOutput struct {
-		ID        uuid.UUID               `json:"-"`
+		ID        uuid.UUID               `json:"id"`
 		UserID    uuid.UUID               `json:"user_id"`
 		Name      string                  `json:"name"`
 		URL       string                  `json:"url"`
