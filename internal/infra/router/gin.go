@@ -74,7 +74,7 @@ func NewGinRouter(
 			monitorsApi.GET("/:id", monitors.FindByID.Handle)
 			monitorsApi.GET("", monitors.FindAll.Handle)
 			monitorsApi.PUT("/:id", monitors.Update.Handle)
-			monitorsApi.PATCH("/enabled/:id", monitors.SetEnabled.Handle)
+			monitorsApi.PATCH("/:id/enabled", monitors.SetEnabled.Handle)
 			monitorsApi.DELETE("/:id", monitors.Delete.Handle)
 		}
 
