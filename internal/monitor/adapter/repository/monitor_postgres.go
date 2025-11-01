@@ -4,6 +4,7 @@ import (
 	"context"
 	"easy-go-monitor/db/sqlcgen"
 	"easy-go-monitor/internal/codes"
+	"easy-go-monitor/internal/infra/logger"
 	"easy-go-monitor/internal/monitor/domain"
 	"encoding/json"
 	"errors"
@@ -16,10 +17,11 @@ import (
 
 type MonitorPostgresRepository struct {
 	queries *sqlcgen.Queries
+	logger  *logger.Logger
 }
 
-func NewMonitorPostgresRepository(pool *pgxpool.Pool) *MonitorPostgresRepository {
-	return &MonitorPostgresRepository{queries: sqlcgen.New(pool)}
+func NewMonitorPostgresRepository(pool *pgxpool.Pool, log *logger.Logger) *MonitorPostgresRepository {
+	return &MonitorPostgresRepository{queries: sqlcgen.New(pool), logger: log}
 }
 func toDomainMonitor(s sqlcgen.Monitor) *domain.Monitor {
 	var settings domain.MonitorSettings
@@ -43,6 +45,11 @@ func toDomainMonitor(s sqlcgen.Monitor) *domain.Monitor {
 
 // Create
 func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor) (*domain.Monitor, error) {
+	r.logger.Info("Inserting monitor",
+		"user_id", m.UserID.String(),
+		"name", m.Name,
+		"url", m.URL,
+	)
 	settingsJSON, err := json.Marshal(m.Settings)
 	if err != nil {
 		return nil, codes.ErrJSONRequest
@@ -65,8 +72,10 @@ func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor
 				return nil, codes.ErrAlreadyExists
 			}
 		}
+		r.logger.Error("DB insert failed", "error", err)
 		return nil, err
 	}
+	r.logger.Debug("Monitor inserted", "id", row.ID.String())
 	return toDomainMonitor(row), nil
 }
 

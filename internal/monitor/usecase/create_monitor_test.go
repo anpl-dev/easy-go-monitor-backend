@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"easy-go-monitor/internal/codes"
+	"easy-go-monitor/internal/infra/logger"
 	"easy-go-monitor/internal/monitor/domain"
 
 	"github.com/google/uuid"
@@ -58,8 +59,8 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 		{
 			name: "success: create monitor",
 			input: CreateMonitorInput{
-				Name:   "test-monitor",
-				URL:    "https://example.com",
+				Name: "test-monitor",
+				URL:  "https://example.com",
 			},
 			mockRepo: mockMonitorRepoCreate{
 				result: monitor,
@@ -101,8 +102,8 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 		{
 			name: "error: user not found",
 			input: CreateMonitorInput{
-				Name:   "test-monitor",
-				URL:    "https://example.com",
+				Name: "test-monitor",
+				URL:  "https://example.com",
 			},
 			mockRepo: mockMonitorRepoCreate{
 				result: nil,
@@ -117,7 +118,7 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 		{
 			name: "error: missing name",
 			input: CreateMonitorInput{
-				URL:    "https://example.com",
+				URL: "https://example.com",
 			},
 			mockRepo: mockMonitorRepoCreate{},
 			mockPresenter: mockCreateMonitorPresenter{
@@ -129,7 +130,7 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 		{
 			name: "error: missing url",
 			input: CreateMonitorInput{
-				Name:   "test-monitor",
+				Name: "test-monitor",
 			},
 			mockRepo: mockMonitorRepoCreate{},
 			mockPresenter: mockCreateMonitorPresenter{
@@ -142,7 +143,7 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			uc := NewCreateMonitorInteractor(&tt.mockRepo, &tt.mockPresenter)
+			uc := NewCreateMonitorInteractor(&tt.mockRepo, &tt.mockPresenter, &logger.Logger{})
 			got, err := uc.Execute(context.Background(), tt.input)
 
 			if tt.wantError != nil {

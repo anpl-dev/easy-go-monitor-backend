@@ -60,7 +60,7 @@ func main() {
 
 	// --- Repository ---
 	userRepo := userRepo.NewUserPostgresRepository(db)
-	monitorRepo := monitorRepo.NewMonitorPostgresRepository(db)
+	monitorRepo := monitorRepo.NewMonitorPostgresRepository(db, appLogger)
 	runnerRepo := runnerRepo.NewRunnerPostgresRepository(db)
 
 	// --- Presenter ---
@@ -86,7 +86,7 @@ func main() {
 	deleteUserUC := userUC.NewDeleteUserInteractor(userRepo)
 	loginUserUC := userUC.NewLoginUserInteractor(userRepo, jwtService)
 
-	createMonitorUC := monitorUC.NewCreateMonitorInteractor(monitorRepo, createMonitorPresenter)
+	createMonitorUC := monitorUC.NewCreateMonitorInteractor(monitorRepo, createMonitorPresenter, appLogger)
 	findMointorByIDUC := monitorUC.NewFindMonitorByIDInteractor(monitorRepo, findMonitorByIDPresenter)
 	findAllMonitorsUC := monitorUC.NewFindAllMonitorsInteractor(monitorRepo, findAllMonitorsPresenter)
 	updateMonitorUC := monitorUC.NewUpdateMonitorInteractor(monitorRepo, updateMonitorPresenter)
@@ -109,7 +109,7 @@ func main() {
 	}
 
 	monitorControllers := router.MonitorControllers{
-		Create:     monitorController.NewCreateMonitorController(createMonitorUC),
+		Create:     monitorController.NewCreateMonitorController(createMonitorUC, appLogger),
 		FindByID:   monitorController.NewFindMonitorByIDController(findMointorByIDUC),
 		FindAll:    monitorController.NewFindAllMonitorsController(findAllMonitorsUC),
 		Update:     monitorController.NewUpdateMonitorController(updateMonitorUC),

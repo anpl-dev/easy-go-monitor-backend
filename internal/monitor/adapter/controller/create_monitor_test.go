@@ -3,6 +3,7 @@ package controller
 import (
 	"bytes"
 	"context"
+	"easy-go-monitor/internal/infra/logger"
 	"easy-go-monitor/internal/monitor/usecase"
 	"encoding/json"
 	"net/http"
@@ -35,12 +36,12 @@ func TestCreateMonitorController_Execute(t *testing.T) {
 		"interval_second": 60,
 	})
 	wantOutput := usecase.CreateMonitorOutput{
-		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-		UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-		Name:           "test-monitor",
-		URL:            "https://example.com",
-		CreatedAt:      time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
-		UpdatedAt:      time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
+		ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+		UserID:    uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+		Name:      "test-monitor",
+		URL:       "https://example.com",
+		CreatedAt: time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
+		UpdatedAt: time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local),
 	}
 	wantBody := map[string]interface{}{
 		"code":    float64(201),
@@ -78,7 +79,7 @@ func TestCreateMonitorController_Execute(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := gin.Default()
-			h := NewCreateMonitorController(tt.ucMock)
+			h := NewCreateMonitorController(tt.ucMock, &logger.Logger{})
 			r.POST("/monitors", h.Handle)
 
 			req := httptest.NewRequest(http.MethodPost, "/monitors", bytes.NewBuffer(tt.rawPayload))

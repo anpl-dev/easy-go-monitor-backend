@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"easy-go-monitor/internal/infra/logger"
 	"easy-go-monitor/internal/monitor/domain"
 	"time"
 
@@ -43,20 +44,30 @@ type (
 	createMonitorInteractor struct {
 		repo      domain.MonitorRepository
 		presenter CreateMonitorPresenter
+		logger    *logger.Logger
 	}
 )
 
 func NewCreateMonitorInteractor(
 	repo domain.MonitorRepository,
 	presenter CreateMonitorPresenter,
+	logger *logger.Logger,
 ) CreateMonitorUseCase {
 	return &createMonitorInteractor{
 		repo:      repo,
 		presenter: presenter,
+		logger:    logger,
 	}
 }
 
 func (i *createMonitorInteractor) Execute(ctx context.Context, input CreateMonitorInput) (CreateMonitorOutput, error) {
+	i.logger.Debug("CreateMonitor started",
+		"user_id", input.UserID,
+		"name", input.Name,
+		"url", input.URL,
+		"type", input.Type,
+	)
+
 	userID, err := uuid.Parse(input.UserID)
 	if err != nil {
 		return CreateMonitorOutput{}, err
@@ -69,6 +80,7 @@ func (i *createMonitorInteractor) Execute(ctx context.Context, input CreateMonit
 		input.Type,
 	)
 	if err != nil {
+		i.logger.Error("CreateMonitor", "failed", "error", err)
 		return CreateMonitorOutput{}, err
 	}
 
@@ -77,5 +89,6 @@ func (i *createMonitorInteractor) Execute(ctx context.Context, input CreateMonit
 		return CreateMonitorOutput{}, err
 	}
 
+	i.logger.Debug("CreateMonitor success", "monitor_id", monitor.ID.String())
 	return i.presenter.Output(created), nil
 }
