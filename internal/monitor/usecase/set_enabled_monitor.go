@@ -14,9 +14,8 @@ type (
 	}
 
 	SetEnabledMonitorInput struct {
-		ID        uuid.UUID `json:"id"`
+		ID        uuid.UUID `json:"-"`
 		IsEnabled bool      `json:"is_enabled"`
-		UpdatedAt time.Time `json:"updated_at"`
 	}
 
 	SetEnabledMonitorPresenter interface {
@@ -51,7 +50,7 @@ func NewSetEnabledMonitorInteractor(
 }
 
 func (i *setEnabledMonitorInteractor) Execute(ctx context.Context, input SetEnabledMonitorInput) (SetEnabledMonitorOutput, error) {
-	monitor, err := i.repo.SetEnabled(ctx, input.ID, input.IsEnabled, input.UpdatedAt)
+	monitor, err := i.repo.SetEnabled(ctx, input.ID, input.IsEnabled)
 	if err != nil {
 		return SetEnabledMonitorOutput{}, err
 	}

@@ -142,18 +142,17 @@ SET
     settings = $5,
     is_enabled = $6,
     updated_at = now()
-WHERE id = $1 AND updated_at = $7
+WHERE id = $1
 RETURNING id, user_id, group_id, name, url, type, settings, is_enabled, created_at, updated_at
 `
 
 type UpdateMonitorParams struct {
-	ID        uuid.UUID          `json:"id"`
-	Name      string             `json:"name"`
-	Url       string             `json:"url"`
-	Type      string             `json:"type"`
-	Settings  json.RawMessage    `json:"settings"`
-	IsEnabled bool               `json:"is_enabled"`
-	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
+	ID        uuid.UUID       `json:"id"`
+	Name      string          `json:"name"`
+	Url       string          `json:"url"`
+	Type      string          `json:"type"`
+	Settings  json.RawMessage `json:"settings"`
+	IsEnabled bool            `json:"is_enabled"`
 }
 
 func (q *Queries) UpdateMonitor(ctx context.Context, arg UpdateMonitorParams) (Monitor, error) {
@@ -164,7 +163,6 @@ func (q *Queries) UpdateMonitor(ctx context.Context, arg UpdateMonitorParams) (M
 		arg.Type,
 		arg.Settings,
 		arg.IsEnabled,
-		arg.UpdatedAt,
 	)
 	var i Monitor
 	err := row.Scan(
@@ -187,18 +185,17 @@ UPDATE monitors
 SET 
   is_enabled = $2,
   updated_at = now()
-WHERE id = $1 AND updated_at = $3
+WHERE id = $1
 RETURNING id, user_id, group_id, name, url, type, settings, is_enabled, created_at, updated_at
 `
 
 type UpdateMonitorIsEnabledParams struct {
-	ID        uuid.UUID          `json:"id"`
-	IsEnabled bool               `json:"is_enabled"`
-	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
+	ID        uuid.UUID `json:"id"`
+	IsEnabled bool      `json:"is_enabled"`
 }
 
 func (q *Queries) UpdateMonitorIsEnabled(ctx context.Context, arg UpdateMonitorIsEnabledParams) (Monitor, error) {
-	row := q.db.QueryRow(ctx, updateMonitorIsEnabled, arg.ID, arg.IsEnabled, arg.UpdatedAt)
+	row := q.db.QueryRow(ctx, updateMonitorIsEnabled, arg.ID, arg.IsEnabled)
 	var i Monitor
 	err := row.Scan(
 		&i.ID,

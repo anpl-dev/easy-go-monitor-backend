@@ -7,12 +7,10 @@ import (
 	"easy-go-monitor/internal/monitor/domain"
 	"encoding/json"
 	"errors"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -115,7 +113,6 @@ func (r *MonitorPostgresRepository) Update(ctx context.Context, m domain.Monitor
 		Url:       m.URL,
 		Settings:  settingsJSON,
 		IsEnabled: m.IsEnabled,
-		UpdatedAt: pgtype.Timestamptz{Time: m.UpdatedAt, Valid: true},
 	})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -142,12 +139,10 @@ func (r *MonitorPostgresRepository) SetEnabled(
 	ctx context.Context,
 	id uuid.UUID,
 	enabled bool,
-	updatedAt time.Time,
 ) (*domain.Monitor, error) {
 	row, err := r.queries.UpdateMonitorIsEnabled(ctx, sqlcgen.UpdateMonitorIsEnabledParams{
 		ID:        id,
 		IsEnabled: enabled,
-		UpdatedAt: pgtype.Timestamptz{Time: updatedAt, Valid: true},
 	})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {

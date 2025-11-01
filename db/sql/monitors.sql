@@ -27,7 +27,7 @@ SET
     settings = $5,
     is_enabled = $6,
     updated_at = now()
-WHERE id = $1 AND updated_at = $7
+WHERE id = $1
 RETURNING *;
 
 -- name: DeleteMonitor :exec
@@ -39,5 +39,5 @@ UPDATE monitors
 SET 
   is_enabled = $2,
   updated_at = now()
-WHERE id = $1 AND updated_at = $3
+WHERE id = $1
 RETURNING *;

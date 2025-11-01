@@ -21,8 +21,8 @@ type (
 		FindAll(ctx context.Context, userID uuid.UUID) ([]*Monitor, error)
 		Update(ctx context.Context, monitor Monitor) (*Monitor, error)
 		Delete(ctx context.Context, id uuid.UUID) error
-		
-		SetEnabled(ctx context.Context, id uuid.UUID, enabled bool, updateAt time.Time) (*Monitor, error)
+
+		SetEnabled(ctx context.Context, id uuid.UUID, enabled bool) (*Monitor, error)
 	}
 
 	Monitor struct {

@@ -22,7 +22,6 @@ type (
 		Type      string                  `json:"type" binding:"required"`
 		Settings  *domain.MonitorSettings `json:"settings" biding:"required"`
 		IsEnabled bool                    `json:"is_enabled" binding:"required"`
-		UpdatedAt time.Time               `json:"updated_at" binding:"required"`
 	}
 
 	// UpdateMonitorPresenter output port
@@ -66,7 +65,6 @@ func (i *updateMonitorInteractor) Execute(ctx context.Context, input UpdateMonit
 		Type:      input.Type,
 		Settings:  input.Settings,
 		IsEnabled: input.IsEnabled,
-		UpdatedAt: input.UpdatedAt,
 	}
 	updated, err := i.repo.Update(ctx, monitor)
 	if err != nil {
