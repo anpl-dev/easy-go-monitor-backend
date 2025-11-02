@@ -12,6 +12,7 @@ import (
 	runnerController "easy-go-monitor/internal/runner/adapter/controller"
 	runnerPresenter "easy-go-monitor/internal/runner/adapter/presenter"
 	runnerRepo "easy-go-monitor/internal/runner/adapter/repository"
+	runnerDomain "easy-go-monitor/internal/runner/domain"
 	runnerUC "easy-go-monitor/internal/runner/usecase"
 	userController "easy-go-monitor/internal/user/adapter/controller"
 	userPresenter "easy-go-monitor/internal/user/adapter/presenter"
@@ -78,6 +79,7 @@ func main() {
 	findRunnerByIDPresenter := runnerPresenter.NewFindRunnerByIDPresenter()
 	findAllRunnersPresenter := runnerPresenter.NewFindAllRunnersPresenter()
 	updateRunnerPresenter := runnerPresenter.NewUpdateRunnerPresenter()
+	executeRunnerPresenter := runnerPresenter.NewExecuteRunnerPresenter()
 
 	// --- UseCase ---
 	createUserUC := userUC.NewCreateUserInteractor(userRepo, createUserPresenter)
@@ -98,6 +100,11 @@ func main() {
 	findAllRunnersUC := runnerUC.NewFindAllRunnersInteractor(runnerRepo, findAllRunnersPresenter)
 	updateRunnerUC := runnerUC.NewUpdateRunnerInteractor(runnerRepo, updateRunnerPresenter)
 	deleteRunnerUC := runnerUC.NewDeleteRunnerInteractor(runnerRepo)
+	executeRunnerUC := runnerUC.NewExecuteRunnerInteractor(
+		runnerDomain.NewRunnerService(runnerRepo, monitorRepo, appLogger),
+		executeRunnerPresenter,
+		appLogger,
+	)
 
 	// --- Controller ---
 	userControllers := router.UserControllers{
@@ -123,6 +130,7 @@ func main() {
 		FindAll:  runnerController.NewFindAllRunnersController(findAllRunnersUC),
 		Update:   runnerController.NewUpdateRunnerController(updateRunnerUC),
 		Delete:   runnerController.NewDeleteRunnerController(deleteRunnerUC),
+		Execute:  runnerController.NewExecuteRunnerController(executeRunnerUC, appLogger),
 	}
 
 	// --- Router ---

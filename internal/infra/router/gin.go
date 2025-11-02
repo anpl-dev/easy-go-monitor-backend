@@ -21,11 +21,12 @@ type (
 	}
 
 	MonitorControllers struct {
-		Create     *monitorController.CreateMonitorController
-		FindByID   *monitorController.FindMonitorByIDController
-		FindAll    *monitorController.FindAllMonitorsController
-		Update     *monitorController.UpdateMonitorController
-		Delete     *monitorController.DeleteMonitorController
+		Create   *monitorController.CreateMonitorController
+		FindByID *monitorController.FindMonitorByIDController
+		FindAll  *monitorController.FindAllMonitorsController
+		Update   *monitorController.UpdateMonitorController
+		Delete   *monitorController.DeleteMonitorController
+
 		SetEnabled *monitorController.SetEnabledMonitorController
 	}
 
@@ -35,6 +36,8 @@ type (
 		FindAll  *runnerController.FindAllRunnersController
 		Update   *runnerController.UpdateRunnerController
 		Delete   *runnerController.DeleteRunnerController
+
+		Execute *runnerController.ExecuteRunnerController
 	}
 )
 
@@ -85,6 +88,7 @@ func NewGinRouter(
 			runnersApi.GET("", runners.FindAll.Handle)
 			runnersApi.PUT("/:id", runners.Update.Handle)
 			runnersApi.DELETE("/:id", runners.Delete.Handle)
+			runnersApi.POST("/:id/execute", runners.Execute.Handle)
 		}
 	}
 
