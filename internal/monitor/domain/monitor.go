@@ -78,7 +78,7 @@ func NewMonitor(
 		UserID:    userID,
 		Name:      name,
 		URL:       monitorUrl,
-		Type:      monitorType.Upper(),
+		Type:      monitorType,
 		Settings:  defaultSettings,
 		IsEnabled: true,
 	}, nil

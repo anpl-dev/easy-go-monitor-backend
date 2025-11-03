@@ -66,7 +66,7 @@ func (r *MonitorPostgresRepository) Create(ctx context.Context, m domain.Monitor
 	if err != nil {
 		if pgErr, ok := err.(*pgconn.PgError); ok {
 			if pgErr.Code == codes.PostgresForeignKeyViolation {
-				return nil, codes.ErrNotFound
+				return nil, codes.ErrInvalidMonitorRequest
 			}
 			if pgErr.Code == codes.PostgresUniqueViolation {
 				return nil, codes.ErrAlreadyExists
