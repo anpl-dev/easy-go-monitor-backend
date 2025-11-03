@@ -24,6 +24,7 @@ func (p *FindAllRunnersPresenter) Output(runners []*domain.Runner) []usecase.Fin
 		outputs = append(outputs, usecase.FindAllRunnersOutput{
 			ID:             runner.ID,
 			UserID:         runner.UserID,
+			MonitorID:      runner.MonitorID,
 			Name:           runner.Name,
 			Region:         runner.Region,
 			IntervalSecond: runner.IntervalSecond,
