@@ -20,7 +20,6 @@ SELECT
     message,
     started_at,
     ended_at,
-    duration_ms,
     response_time_ms,
     created_at
 FROM runner_histories
@@ -44,7 +43,6 @@ func (q *Queries) FindHistoryByRunnerID(ctx context.Context, runnerID uuid.UUID)
 			&i.Message,
 			&i.StartedAt,
 			&i.EndedAt,
-			&i.DurationMs,
 			&i.ResponseTimeMs,
 			&i.CreatedAt,
 		); err != nil {
@@ -66,11 +64,10 @@ INSERT INTO runner_histories (
     message,
     started_at,
     ended_at,
-    duration_ms,
     response_time_ms,
     created_at
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, now()
+    $1, $2, $3, $4, $5, $6, $7, now()
 )
 `
 
@@ -81,7 +78,6 @@ type SaveRunnerHistoryParams struct {
 	Message        *string    `json:"message"`
 	StartedAt      *time.Time `json:"started_at"`
 	EndedAt        *time.Time `json:"ended_at"`
-	DurationMs     *int32     `json:"duration_ms"`
 	ResponseTimeMs *int32     `json:"response_time_ms"`
 }
 
@@ -93,7 +89,6 @@ func (q *Queries) SaveRunnerHistory(ctx context.Context, arg SaveRunnerHistoryPa
 		arg.Message,
 		arg.StartedAt,
 		arg.EndedAt,
-		arg.DurationMs,
 		arg.ResponseTimeMs,
 	)
 	return err

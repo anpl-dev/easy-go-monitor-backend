@@ -63,7 +63,7 @@ func main() {
 	userRepo := userRepository.NewUserPostgresRepository(db)
 	monitorRepo := monitorRepository.NewMonitorPostgresRepository(db, appLogger)
 	runnerRepo := runnerRepository.NewRunnerPostgresRepository(db)
-	findRunnerHistoryRepo := runnerRepository.NewRunnerHistoryPostgresRepository(db)
+	runnerHistoryRepo := runnerRepository.NewRunnerHistoryPostgresRepository(db)
 
 	// --- Presenter ---
 	createUserPresenter := userPresenter.NewCreateUserPresenter()
@@ -103,11 +103,11 @@ func main() {
 	updateRunnerUC := runnerUC.NewUpdateRunnerInteractor(runnerRepo, updateRunnerPresenter)
 	deleteRunnerUC := runnerUC.NewDeleteRunnerInteractor(runnerRepo)
 	executeRunnerUC := runnerUC.NewExecuteRunnerInteractor(
-		runnerDomain.NewRunnerService(runnerRepo, monitorRepo, appLogger),
+		runnerDomain.NewRunnerService(runnerRepo, monitorRepo, runnerHistoryRepo, appLogger),
 		executeRunnerPresenter,
 		appLogger,
 	)
-	findRunnerHistoryUC := runnerUC.NewFindRunnerHistoryInteractor(findRunnerHistoryRepo, findRunnerHistoryPresenter)
+	findRunnerHistoryUC := runnerUC.NewFindRunnerHistoryInteractor(runnerHistoryRepo, findRunnerHistoryPresenter)
 
 	// --- Controller ---
 	userControllers := router.UserControllers{

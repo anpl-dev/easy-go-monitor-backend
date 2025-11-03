@@ -52,7 +52,6 @@ CREATE TABLE IF NOT EXISTS runner_histories (
     message TEXT,
     started_at TIMESTAMPTZ NOT NULL,
     ended_at TIMESTAMPTZ,
-    duration_ms INT,
     response_time_ms INT,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );

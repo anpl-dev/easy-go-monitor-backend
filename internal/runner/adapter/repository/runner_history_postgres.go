@@ -27,7 +27,6 @@ func toDomainRunnerHistory(s sqlcgen.RunnerHistory) *domain.RunnerHistory {
 		Message:        s.Message,
 		StartedAt:      *s.StartedAt,
 		EndedAt:        s.EndedAt,
-		DurationMs:     s.DurationMs,
 		ResponseTimeMs: s.ResponseTimeMs,
 		CreatedAt:      *s.CreatedAt,
 	}
@@ -48,7 +47,6 @@ func (r *RunnerHistoryPostgresRepository) Save(ctx context.Context, h domain.Run
 		Message:        h.Message,
 		StartedAt:      &h.StartedAt,
 		EndedAt:        h.EndedAt,
-		DurationMs:     h.DurationMs,
 		ResponseTimeMs: h.ResponseTimeMs,
 	}
 	if err := r.queries.SaveRunnerHistory(ctx, params); err != nil {
@@ -57,7 +55,7 @@ func (r *RunnerHistoryPostgresRepository) Save(ctx context.Context, h domain.Run
 	return nil
 }
 
-func (r *RunnerHistoryPostgresRepository) FindByRunnerID(ctx context.Context, runnerID uuid.UUID) ([]*domain.RunnerHistory, error) {
+func (r *RunnerHistoryPostgresRepository) FindHistory(ctx context.Context, runnerID uuid.UUID) ([]*domain.RunnerHistory, error) {
 	rows, err := r.queries.FindHistoryByRunnerID(ctx, runnerID)
 	if err != nil {
 		if err == pgx.ErrNoRows {

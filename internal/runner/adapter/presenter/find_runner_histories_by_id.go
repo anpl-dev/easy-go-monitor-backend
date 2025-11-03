@@ -20,7 +20,6 @@ func (p *findRunnerHistoryPresenter) Output(histories []domain.RunnerHistory) []
 			Message:        *h.Message,
 			StartedAt:      h.StartedAt.Format("2006-01-02 15:04:05"),
 			EndedAt:        h.EndedAt.Format("2006-01-02 15:04:05"),
-			DurationMs:     *h.DurationMs,
 			ResponseTimeMs: *h.ResponseTimeMs,
 		}
 	}

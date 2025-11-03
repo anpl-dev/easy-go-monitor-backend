@@ -26,7 +26,6 @@ type (
 		Message        string    `json:"message"`
 		StartedAt      string    `json:"started_at"`
 		EndedAt        string    `json:"ended_at"`
-		DurationMs     int32     `json:"duration_ms"`
 		ResponseTimeMs int32     `json:"response_time_ms"`
 	}
 
@@ -47,7 +46,7 @@ func NewFindRunnerHistoryInteractor(
 }
 
 func (i *findRunnerHistoryInteractor) Execute(ctx context.Context, input FindRunnerHistoryInput) ([]FindRunnerHistoryOutput, error) {
-	histories, err := i.repo.FindByRunnerID(ctx, input.RunnerID)
+	histories, err := i.repo.FindHistory(ctx, input.RunnerID)
 	if err != nil {
 		return nil, err
 	}

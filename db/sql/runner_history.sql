@@ -6,11 +6,10 @@ INSERT INTO runner_histories (
     message,
     started_at,
     ended_at,
-    duration_ms,
     response_time_ms,
     created_at
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8, now()
+    $1, $2, $3, $4, $5, $6, $7, now()
 );
 
 -- name: FindHistoryByRunnerID :many
@@ -21,7 +20,6 @@ SELECT
     message,
     started_at,
     ended_at,
-    duration_ms,
     response_time_ms,
     created_at
 FROM runner_histories

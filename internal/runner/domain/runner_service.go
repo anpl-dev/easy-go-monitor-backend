@@ -17,17 +17,20 @@ type RunnerService interface {
 type runnerService struct {
 	runnerRepo  RunnerRepository
 	monitorRepo domain.MonitorRepository
+	historyRepo RunnerHistoryRepository
 	log         *logger.Logger
 }
 
 func NewRunnerService(
 	runnerRepo RunnerRepository,
 	monitorRepo domain.MonitorRepository,
+	historyRepo RunnerHistoryRepository,
 	log *logger.Logger,
 ) RunnerService {
 	return &runnerService{
 		runnerRepo:  runnerRepo,
 		monitorRepo: monitorRepo,
+		historyRepo: historyRepo,
 		log:         log,
 	}
 }
@@ -50,21 +53,47 @@ func (s *runnerService) Run(ctx context.Context, runnerID uuid.UUID) ([]MonitorR
 
 	start := time.Now()
 	status := "OK"
+	message := ""
 
 	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, monitor.URL, nil)
 	res, err := http.DefaultClient.Do(req)
 	if err != nil || res.StatusCode >= 400 {
 		status = "FAIL"
+		if err != nil {
+			message = err.Error()
+		} else {
+			message = res.Status
+		}
 	}
 	if res != nil {
 		res.Body.Close()
 	}
 
+	latency := time.Since(start)
+
 	result := MonitorResult{
 		MonitorID: monitor.ID,
 		Status:    status,
-		LatencyMs: time.Since(start).Milliseconds(),
+		LatencyMs: latency.Milliseconds(),
 		Timestamp: time.Now(),
+	}
+
+	endedAt := time.Now()
+	responseTimeMs := int32(latency.Milliseconds())
+
+	history := RunnerHistory{
+		ID:             uuid.New(),
+		RunnerID:       runnerID,
+		Status:         status,
+		Message:        &message,
+		StartedAt:      start,
+		EndedAt:        &endedAt,
+		ResponseTimeMs: &responseTimeMs,
+		CreatedAt:      time.Now(),
+	}
+
+	if err := s.historyRepo.Save(ctx, history); err != nil {
+		s.log.Error("failed to save runner history", "runner_id", runnerID, "error", err)
 	}
 
 	return []MonitorResult{result}, nil
