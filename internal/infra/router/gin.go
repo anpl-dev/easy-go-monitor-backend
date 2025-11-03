@@ -36,8 +36,8 @@ type (
 		FindAll  *runnerController.FindAllRunnersController
 		Update   *runnerController.UpdateRunnerController
 		Delete   *runnerController.DeleteRunnerController
-
-		Execute *runnerController.ExecuteRunnerController
+		Execute  *runnerController.ExecuteRunnerController
+		History  *runnerController.FindRunnerHistoryController
 	}
 )
 
@@ -89,6 +89,7 @@ func NewGinRouter(
 			runnersApi.PUT("/:id", runners.Update.Handle)
 			runnersApi.DELETE("/:id", runners.Delete.Handle)
 			runnersApi.POST("/:id/execute", runners.Execute.Handle)
+			runnersApi.GET("/:id/histories", runners.History.Handle)
 		}
 	}
 

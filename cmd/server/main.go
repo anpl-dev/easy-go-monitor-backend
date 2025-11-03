@@ -7,16 +7,16 @@ import (
 	"easy-go-monitor/internal/infra/router"
 	monitorController "easy-go-monitor/internal/monitor/adapter/controller"
 	monitorPresenter "easy-go-monitor/internal/monitor/adapter/presenter"
-	monitorRepo "easy-go-monitor/internal/monitor/adapter/repository"
+	monitorRepository "easy-go-monitor/internal/monitor/adapter/repository"
 	monitorUC "easy-go-monitor/internal/monitor/usecase"
 	runnerController "easy-go-monitor/internal/runner/adapter/controller"
 	runnerPresenter "easy-go-monitor/internal/runner/adapter/presenter"
-	runnerRepo "easy-go-monitor/internal/runner/adapter/repository"
+	runnerRepository "easy-go-monitor/internal/runner/adapter/repository"
 	runnerDomain "easy-go-monitor/internal/runner/domain"
 	runnerUC "easy-go-monitor/internal/runner/usecase"
 	userController "easy-go-monitor/internal/user/adapter/controller"
 	userPresenter "easy-go-monitor/internal/user/adapter/presenter"
-	userRepo "easy-go-monitor/internal/user/adapter/repository"
+	userRepository "easy-go-monitor/internal/user/adapter/repository"
 	userUC "easy-go-monitor/internal/user/usecase"
 	"log"
 	"os"
@@ -60,9 +60,10 @@ func main() {
 	jwtService := jwt.NewService(os.Getenv("JWT_SECRET"), time.Duration(expHour)*time.Hour)
 
 	// --- Repository ---
-	userRepo := userRepo.NewUserPostgresRepository(db)
-	monitorRepo := monitorRepo.NewMonitorPostgresRepository(db, appLogger)
-	runnerRepo := runnerRepo.NewRunnerPostgresRepository(db)
+	userRepo := userRepository.NewUserPostgresRepository(db)
+	monitorRepo := monitorRepository.NewMonitorPostgresRepository(db, appLogger)
+	runnerRepo := runnerRepository.NewRunnerPostgresRepository(db)
+	findRunnerHistoryRepo := runnerRepository.NewRunnerHistoryPostgresRepository(db)
 
 	// --- Presenter ---
 	createUserPresenter := userPresenter.NewCreateUserPresenter()
@@ -80,6 +81,7 @@ func main() {
 	findAllRunnersPresenter := runnerPresenter.NewFindAllRunnersPresenter()
 	updateRunnerPresenter := runnerPresenter.NewUpdateRunnerPresenter()
 	executeRunnerPresenter := runnerPresenter.NewExecuteRunnerPresenter()
+	findRunnerHistoryPresenter := runnerPresenter.NewFindRunnerHistoryPresenter()
 
 	// --- UseCase ---
 	createUserUC := userUC.NewCreateUserInteractor(userRepo, createUserPresenter)
@@ -105,6 +107,7 @@ func main() {
 		executeRunnerPresenter,
 		appLogger,
 	)
+	findRunnerHistoryUC := runnerUC.NewFindRunnerHistoryInteractor(findRunnerHistoryRepo, findRunnerHistoryPresenter)
 
 	// --- Controller ---
 	userControllers := router.UserControllers{
@@ -131,6 +134,7 @@ func main() {
 		Update:   runnerController.NewUpdateRunnerController(updateRunnerUC),
 		Delete:   runnerController.NewDeleteRunnerController(deleteRunnerUC),
 		Execute:  runnerController.NewExecuteRunnerController(executeRunnerUC, appLogger),
+		History:  runnerController.NewFindRunnerHistoryController(findRunnerHistoryUC),
 	}
 
 	// --- Router ---
