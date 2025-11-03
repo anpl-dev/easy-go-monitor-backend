@@ -29,8 +29,8 @@ func toDomainRunner(s sqlcgen.Runner) *domain.Runner {
 		Region:         s.Region,
 		IntervalSecond: int(s.IntervalSecond),
 		IsEnabled:      s.IsEnabled,
-		CreatedAt:      s.CreatedAt.Time,
-		UpdatedAt:      s.UpdatedAt.Time,
+		CreatedAt:      *s.CreatedAt,
+		UpdatedAt:      *s.UpdatedAt,
 	}
 }
 

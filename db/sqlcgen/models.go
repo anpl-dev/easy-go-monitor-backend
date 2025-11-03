@@ -6,43 +6,43 @@ package sqlcgen
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Monitor struct {
-	ID        uuid.UUID          `json:"id"`
-	UserID    uuid.UUID          `json:"user_id"`
-	GroupID   pgtype.UUID        `json:"group_id"`
-	Name      string             `json:"name"`
-	Url       string             `json:"url"`
-	Type      string             `json:"type"`
-	Settings  json.RawMessage    `json:"settings"`
-	IsEnabled bool               `json:"is_enabled"`
-	CreatedAt pgtype.Timestamptz `json:"created_at"`
-	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
+	ID        uuid.UUID       `json:"id"`
+	UserID    uuid.UUID       `json:"user_id"`
+	GroupID   uuid.UUID       `json:"group_id"`
+	Name      string          `json:"name"`
+	Url       string          `json:"url"`
+	Type      string          `json:"type"`
+	Settings  json.RawMessage `json:"settings"`
+	IsEnabled bool            `json:"is_enabled"`
+	CreatedAt *time.Time      `json:"created_at"`
+	UpdatedAt *time.Time      `json:"updated_at"`
 }
 
 type MonitorGroup struct {
-	ID        uuid.UUID          `json:"id"`
-	UserID    uuid.UUID          `json:"user_id"`
-	Name      string             `json:"name"`
-	IsEnabled bool               `json:"is_enabled"`
-	CreatedAt pgtype.Timestamptz `json:"created_at"`
-	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
+	ID        uuid.UUID  `json:"id"`
+	UserID    uuid.UUID  `json:"user_id"`
+	Name      string     `json:"name"`
+	IsEnabled bool       `json:"is_enabled"`
+	CreatedAt *time.Time `json:"created_at"`
+	UpdatedAt *time.Time `json:"updated_at"`
 }
 
 type Notification struct {
-	ID         uuid.UUID          `json:"id"`
-	RunnerID   uuid.UUID          `json:"runner_id"`
-	NotifierID int32              `json:"notifier_id"`
-	Type       string             `json:"type"`
-	Trigger    string             `json:"trigger"`
-	Message    string             `json:"message"`
-	IsEnabled  bool               `json:"is_enabled"`
-	CreatedAt  pgtype.Timestamptz `json:"created_at"`
-	UpdatedAt  pgtype.Timestamptz `json:"updated_at"`
+	ID         uuid.UUID  `json:"id"`
+	RunnerID   uuid.UUID  `json:"runner_id"`
+	NotifierID int32      `json:"notifier_id"`
+	Type       string     `json:"type"`
+	Trigger    string     `json:"trigger"`
+	Message    string     `json:"message"`
+	IsEnabled  bool       `json:"is_enabled"`
+	CreatedAt  *time.Time `json:"created_at"`
+	UpdatedAt  *time.Time `json:"updated_at"`
 }
 
 type Notifier struct {
@@ -52,34 +52,34 @@ type Notifier struct {
 }
 
 type Runner struct {
-	ID             uuid.UUID          `json:"id"`
-	UserID         uuid.UUID          `json:"user_id"`
-	MonitorID      uuid.UUID          `json:"monitor_id"`
-	Name           string             `json:"name"`
-	Region         string             `json:"region"`
-	IntervalSecond int32              `json:"interval_second"`
-	IsEnabled      bool               `json:"is_enabled"`
-	CreatedAt      pgtype.Timestamptz `json:"created_at"`
-	UpdatedAt      pgtype.Timestamptz `json:"updated_at"`
+	ID             uuid.UUID  `json:"id"`
+	UserID         uuid.UUID  `json:"user_id"`
+	MonitorID      uuid.UUID  `json:"monitor_id"`
+	Name           string     `json:"name"`
+	Region         string     `json:"region"`
+	IntervalSecond int32      `json:"interval_second"`
+	IsEnabled      bool       `json:"is_enabled"`
+	CreatedAt      *time.Time `json:"created_at"`
+	UpdatedAt      *time.Time `json:"updated_at"`
 }
 
 type RunnerHistory struct {
-	ID             uuid.UUID          `json:"id"`
-	RunnerID       uuid.UUID          `json:"runner_id"`
-	Status         string             `json:"status"`
-	Message        *string            `json:"message"`
-	StartedAt      pgtype.Timestamptz `json:"started_at"`
-	EndedAt        pgtype.Timestamptz `json:"ended_at"`
-	DurationMs     *int32             `json:"duration_ms"`
-	ResponseTimeMs *int32             `json:"response_time_ms"`
-	CreatedAt      pgtype.Timestamptz `json:"created_at"`
+	ID             uuid.UUID  `json:"id"`
+	RunnerID       uuid.UUID  `json:"runner_id"`
+	Status         string     `json:"status"`
+	Message        *string    `json:"message"`
+	StartedAt      *time.Time `json:"started_at"`
+	EndedAt        *time.Time `json:"ended_at"`
+	DurationMs     *int32     `json:"duration_ms"`
+	ResponseTimeMs *int32     `json:"response_time_ms"`
+	CreatedAt      *time.Time `json:"created_at"`
 }
 
 type User struct {
-	ID        uuid.UUID          `json:"id"`
-	Name      string             `json:"name"`
-	Email     string             `json:"email"`
-	Password  string             `json:"password"`
-	CreatedAt pgtype.Timestamptz `json:"created_at"`
-	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
+	ID        uuid.UUID  `json:"id"`
+	Name      string     `json:"name"`
+	Email     string     `json:"email"`
+	Password  string     `json:"password"`
+	CreatedAt *time.Time `json:"created_at"`
+	UpdatedAt *time.Time `json:"updated_at"`
 }

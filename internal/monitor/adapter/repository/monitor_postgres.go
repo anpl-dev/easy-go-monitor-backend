@@ -38,8 +38,8 @@ func toDomainMonitor(s sqlcgen.Monitor) *domain.Monitor {
 		Type:      s.Type,
 		Settings:  &settings,
 		IsEnabled: s.IsEnabled,
-		CreatedAt: s.CreatedAt.Time,
-		UpdatedAt: s.UpdatedAt.Time,
+		CreatedAt: *s.CreatedAt,
+		UpdatedAt: *s.UpdatedAt,
 	}
 }
 

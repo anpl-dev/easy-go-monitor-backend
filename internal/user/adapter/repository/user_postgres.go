@@ -26,8 +26,8 @@ func toDomainUser(s sqlcgen.User) *domain.User {
 		Name:      s.Name,
 		Email:     s.Email,
 		Password:  s.Password,
-		CreatedAt: s.CreatedAt.Time,
-		UpdatedAt: s.UpdatedAt.Time,
+		CreatedAt: *s.CreatedAt,
+		UpdatedAt: *s.UpdatedAt,
 	}
 }
 

@@ -10,7 +10,6 @@ import (
 	"encoding/json"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createMonitor = `-- name: CreateMonitor :one
@@ -26,7 +25,7 @@ RETURNING id, user_id, group_id, name, url, type, settings, is_enabled, created_
 type CreateMonitorParams struct {
 	ID        uuid.UUID       `json:"id"`
 	UserID    uuid.UUID       `json:"user_id"`
-	GroupID   pgtype.UUID     `json:"group_id"`
+	GroupID   uuid.UUID       `json:"group_id"`
 	Name      string          `json:"name"`
 	Url       string          `json:"url"`
 	Type      string          `json:"type"`

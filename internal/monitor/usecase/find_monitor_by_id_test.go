@@ -39,12 +39,12 @@ func TestFindMonitorByIDInteractor_Execute(t *testing.T) {
 
 	now := time.Date(2025, 4, 1, 0, 0, 0, 0, time.UTC)
 	monitor := &domain.Monitor{
-		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-		UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-		Name:           "test-monitor",
-		URL:            "https://examaple.com",
-		CreatedAt:      now,
-		UpdatedAt:      now,
+		ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+		UserID:    uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+		Name:      "test-monitor",
+		URL:       "https://examaple.com",
+		CreatedAt: now,
+		UpdatedAt: now,
 	}
 
 	tests := []struct {
@@ -65,12 +65,12 @@ func TestFindMonitorByIDInteractor_Execute(t *testing.T) {
 			},
 			mockPresenter: mockFindMonitorByIDPresenter{
 				result: FindMonitorByIDOutput{
-					ID:             monitor.ID,
-					UserID:         monitor.UserID,
-					Name:           monitor.Name,
-					URL:            monitor.URL,
-					CreatedAt:      monitor.CreatedAt,
-					UpdatedAt:      monitor.UpdatedAt,
+					ID:        monitor.ID,
+					UserID:    monitor.UserID,
+					Name:      monitor.Name,
+					URL:       monitor.URL,
+					CreatedAt: monitor.CreatedAt,
+					UpdatedAt: monitor.UpdatedAt,
 				},
 			},
 			wantError: nil,
