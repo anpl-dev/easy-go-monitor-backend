@@ -14,18 +14,17 @@ import (
 
 const createMonitor = `-- name: CreateMonitor :one
 INSERT INTO monitors (
-    id, user_id, group_id, name, url, type, settings, is_enabled
+    id, user_id, name, url, type, settings, is_enabled
 )
 VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8
+    $1, $2, $3, $4, $5, $6, $7
 )
-RETURNING id, user_id, group_id, name, url, type, settings, is_enabled, created_at, updated_at
+RETURNING id, user_id, name, url, type, settings, is_enabled, created_at, updated_at
 `
 
 type CreateMonitorParams struct {
 	ID        uuid.UUID       `json:"id"`
 	UserID    uuid.UUID       `json:"user_id"`
-	GroupID   uuid.UUID       `json:"group_id"`
 	Name      string          `json:"name"`
 	Url       string          `json:"url"`
 	Type      string          `json:"type"`
@@ -37,7 +36,6 @@ func (q *Queries) CreateMonitor(ctx context.Context, arg CreateMonitorParams) (M
 	row := q.db.QueryRow(ctx, createMonitor,
 		arg.ID,
 		arg.UserID,
-		arg.GroupID,
 		arg.Name,
 		arg.Url,
 		arg.Type,
@@ -48,7 +46,6 @@ func (q *Queries) CreateMonitor(ctx context.Context, arg CreateMonitorParams) (M
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
-		&i.GroupID,
 		&i.Name,
 		&i.Url,
 		&i.Type,
@@ -71,7 +68,7 @@ func (q *Queries) DeleteMonitor(ctx context.Context, id uuid.UUID) error {
 }
 
 const findAllMonitors = `-- name: FindAllMonitors :many
-SELECT id, user_id, group_id, name, url, type, settings, is_enabled, created_at, updated_at 
+SELECT id, user_id, name, url, type, settings, is_enabled, created_at, updated_at 
 FROM monitors
 WHERE user_id = $1
 ORDER BY created_at DESC
@@ -89,7 +86,6 @@ func (q *Queries) FindAllMonitors(ctx context.Context, userID uuid.UUID) ([]Moni
 		if err := rows.Scan(
 			&i.ID,
 			&i.UserID,
-			&i.GroupID,
 			&i.Name,
 			&i.Url,
 			&i.Type,
@@ -109,7 +105,7 @@ func (q *Queries) FindAllMonitors(ctx context.Context, userID uuid.UUID) ([]Moni
 }
 
 const findMonitorByID = `-- name: FindMonitorByID :one
-SELECT id, user_id, group_id, name, url, type, settings, is_enabled, created_at, updated_at 
+SELECT id, user_id, name, url, type, settings, is_enabled, created_at, updated_at 
 FROM monitors
 WHERE id = $1
 `
@@ -120,7 +116,6 @@ func (q *Queries) FindMonitorByID(ctx context.Context, id uuid.UUID) (Monitor, e
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
-		&i.GroupID,
 		&i.Name,
 		&i.Url,
 		&i.Type,
@@ -142,7 +137,7 @@ SET
     is_enabled = $6,
     updated_at = now()
 WHERE id = $1
-RETURNING id, user_id, group_id, name, url, type, settings, is_enabled, created_at, updated_at
+RETURNING id, user_id, name, url, type, settings, is_enabled, created_at, updated_at
 `
 
 type UpdateMonitorParams struct {
@@ -167,7 +162,6 @@ func (q *Queries) UpdateMonitor(ctx context.Context, arg UpdateMonitorParams) (M
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
-		&i.GroupID,
 		&i.Name,
 		&i.Url,
 		&i.Type,
@@ -185,7 +179,7 @@ SET
   is_enabled = $2,
   updated_at = now()
 WHERE id = $1
-RETURNING id, user_id, group_id, name, url, type, settings, is_enabled, created_at, updated_at
+RETURNING id, user_id, name, url, type, settings, is_enabled, created_at, updated_at
 `
 
 type UpdateMonitorIsEnabledParams struct {
@@ -199,7 +193,6 @@ func (q *Queries) UpdateMonitorIsEnabled(ctx context.Context, arg UpdateMonitorI
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
-		&i.GroupID,
 		&i.Name,
 		&i.Url,
 		&i.Type,

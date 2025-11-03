@@ -8,20 +8,9 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS monitor_groups (
-    id UUID PRIMARY KEY,
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    name VARCHAR(100) NOT NULL,
-    is_enabled BOOLEAN NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
-    updated_at TIMESTAMPTZ DEFAULT now() NOT NULL,
-    UNIQUE (user_id, name)
-);
-
 CREATE TABLE IF NOT EXISTS monitors (
     id UUID PRIMARY KEY,
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    group_id UUID DEFAULT NULL REFERENCES monitor_groups(id) ON DELETE SET NULL,
     name VARCHAR(100) NOT NULL,
     url TEXT NOT NULL,
     type VARCHAR(50) NOT NULL,

@@ -1,9 +1,9 @@
 -- name: CreateMonitor :one
 INSERT INTO monitors (
-    id, user_id, group_id, name, url, type, settings, is_enabled
+    id, user_id, name, url, type, settings, is_enabled
 )
 VALUES (
-    $1, $2, $3, $4, $5, $6, $7, $8
+    $1, $2, $3, $4, $5, $6, $7
 )
 RETURNING *;
 

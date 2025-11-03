@@ -14,7 +14,6 @@ import (
 type Monitor struct {
 	ID        uuid.UUID       `json:"id"`
 	UserID    uuid.UUID       `json:"user_id"`
-	GroupID   uuid.UUID       `json:"group_id"`
 	Name      string          `json:"name"`
 	Url       string          `json:"url"`
 	Type      string          `json:"type"`
@@ -22,15 +21,6 @@ type Monitor struct {
 	IsEnabled bool            `json:"is_enabled"`
 	CreatedAt *time.Time      `json:"created_at"`
 	UpdatedAt *time.Time      `json:"updated_at"`
-}
-
-type MonitorGroup struct {
-	ID        uuid.UUID  `json:"id"`
-	UserID    uuid.UUID  `json:"user_id"`
-	Name      string     `json:"name"`
-	IsEnabled bool       `json:"is_enabled"`
-	CreatedAt *time.Time `json:"created_at"`
-	UpdatedAt *time.Time `json:"updated_at"`
 }
 
 type Notification struct {
