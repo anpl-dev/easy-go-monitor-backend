@@ -19,10 +19,11 @@ ORDER BY created_at DESC;
 -- name: UpdateRunner :one
 UPDATE runners
 SET 
-    name = $2,
-    region = $3,
-    interval_second = $4,
-    is_enabled = $5,
+    monitor_id = $2,
+    name = $3,
+    region = $4,
+    interval_second = $5,
+    is_enabled = $6,
     updated_at = now()
 WHERE id = $1
 RETURNING *;

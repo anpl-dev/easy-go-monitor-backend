@@ -5,6 +5,7 @@ import (
 	"easy-go-monitor/internal/infra/jwt"
 	"easy-go-monitor/internal/infra/logger"
 	"easy-go-monitor/internal/infra/router"
+	"easy-go-monitor/internal/infra/websocket"
 	monitorController "easy-go-monitor/internal/monitor/adapter/controller"
 	monitorPresenter "easy-go-monitor/internal/monitor/adapter/presenter"
 	monitorRepository "easy-go-monitor/internal/monitor/adapter/repository"
@@ -83,6 +84,10 @@ func main() {
 	executeRunnerPresenter := runnerPresenter.NewExecuteRunnerPresenter()
 	findRunnerHistoryPresenter := runnerPresenter.NewFindRunnerHistoryPresenter()
 
+	// --- Weboscket Notifier & RunnerService ---
+	notifier := &websocket.WebSocketNotifier{}
+	runnerService := runnerDomain.NewRunnerService(runnerRepo, monitorRepo, runnerHistoryRepo, notifier, appLogger)
+
 	// --- UseCase ---
 	createUserUC := userUC.NewCreateUserInteractor(userRepo, createUserPresenter)
 	findUserByIDUC := userUC.NewFindUserByIDInteractor(userRepo, findUserByIDPresenter)
@@ -102,11 +107,7 @@ func main() {
 	findAllRunnersUC := runnerUC.NewFindAllRunnersInteractor(runnerRepo, findAllRunnersPresenter)
 	updateRunnerUC := runnerUC.NewUpdateRunnerInteractor(runnerRepo, updateRunnerPresenter)
 	deleteRunnerUC := runnerUC.NewDeleteRunnerInteractor(runnerRepo)
-	executeRunnerUC := runnerUC.NewExecuteRunnerInteractor(
-		runnerDomain.NewRunnerService(runnerRepo, monitorRepo, runnerHistoryRepo, appLogger),
-		executeRunnerPresenter,
-		appLogger,
-	)
+	executeRunnerUC := runnerUC.NewExecuteRunnerInteractor(runnerService, executeRunnerPresenter, appLogger)
 	findRunnerHistoryUC := runnerUC.NewFindRunnerHistoryInteractor(runnerHistoryRepo, findRunnerHistoryPresenter)
 
 	// --- Controller ---

@@ -17,6 +17,7 @@ type (
 	// UpdateRunnerInput input data
 	UpdateRunnerInput struct {
 		ID             uuid.UUID `json:"-"`
+		MonitorID      uuid.UUID `json:"monitor_id"`
 		Name           string    `json:"name"`
 		Region         string    `json:"region"`
 		IntervalSecond int       `json:"interval_second"`
@@ -32,7 +33,7 @@ type (
 	UpdateRunnerOutput struct {
 		ID             uuid.UUID `json:"id"`
 		UserID         uuid.UUID `json:"user_id"`
-		MonitorID      uuid.UUID `json:"runner_id"`
+		MonitorID      uuid.UUID `json:"monitor_id"`
 		Name           string    `json:"name"`
 		Region         string    `json:"region"`
 		IntervalSecond int       `json:"interval_second"`
@@ -59,6 +60,7 @@ func NewUpdateRunnerInteractor(
 func (i *updateRunnerInteractor) Execute(ctx context.Context, input UpdateRunnerInput) (UpdateRunnerOutput, error) {
 	runner := domain.Runner{
 		ID:             input.ID,
+		MonitorID:      input.MonitorID,
 		Name:           input.Name,
 		Region:         input.Region,
 		IntervalSecond: input.IntervalSecond,

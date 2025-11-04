@@ -80,6 +80,7 @@ func (r *RunnerPostgresRepository) FindAll(ctx context.Context, userID uuid.UUID
 func (r *RunnerPostgresRepository) Update(ctx context.Context, runner domain.Runner) (*domain.Runner, error) {
 	row, err := r.queries.UpdateRunner(ctx, sqlcgen.UpdateRunnerParams{
 		ID:             runner.ID,
+		MonitorID:      runner.MonitorID,
 		Name:           runner.Name,
 		Region:         runner.Region,
 		IntervalSecond: int32(runner.IntervalSecond),

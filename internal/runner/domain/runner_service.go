@@ -18,6 +18,7 @@ type runnerService struct {
 	runnerRepo  RunnerRepository
 	monitorRepo domain.MonitorRepository
 	historyRepo RunnerHistoryRepository
+	notifier    Notifier
 	log         *logger.Logger
 }
 
@@ -25,12 +26,14 @@ func NewRunnerService(
 	runnerRepo RunnerRepository,
 	monitorRepo domain.MonitorRepository,
 	historyRepo RunnerHistoryRepository,
+	notifier Notifier,
 	log *logger.Logger,
 ) RunnerService {
 	return &runnerService{
 		runnerRepo:  runnerRepo,
 		monitorRepo: monitorRepo,
 		historyRepo: historyRepo,
+		notifier:    notifier,
 		log:         log,
 	}
 }
@@ -64,7 +67,16 @@ func (s *runnerService) Run(ctx context.Context, runnerID uuid.UUID) ([]MonitorR
 		} else {
 			message = res.Status
 		}
+
+		// 失敗時、Webscoket経由で通知
+		s.notifier.PushEvent("RUNNER_FAIL", map[string]any{
+			"id":      runner.ID,
+			"name":    runner.Name,
+			"message": message,
+			"time":    time.Now(),
+		})
 	}
+
 	if res != nil {
 		res.Body.Close()
 	}

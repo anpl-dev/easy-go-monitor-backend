@@ -18,6 +18,7 @@ func (p *UpdateRunnerPresenter) Output(runner *domain.Runner) usecase.UpdateRunn
 	return usecase.UpdateRunnerOutput{
 		ID:             runner.ID,
 		UserID:         runner.UserID,
+		MonitorID:      runner.MonitorID,
 		Name:           runner.Name,
 		Region:         runner.Region,
 		IntervalSecond: runner.IntervalSecond,

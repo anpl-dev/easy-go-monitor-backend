@@ -128,10 +128,11 @@ func (q *Queries) FindRunnerByID(ctx context.Context, id uuid.UUID) (Runner, err
 const updateRunner = `-- name: UpdateRunner :one
 UPDATE runners
 SET 
-    name = $2,
-    region = $3,
-    interval_second = $4,
-    is_enabled = $5,
+    monitor_id = $2,
+    name = $3,
+    region = $4,
+    interval_second = $5,
+    is_enabled = $6,
     updated_at = now()
 WHERE id = $1
 RETURNING id, user_id, monitor_id, name, region, interval_second, is_enabled, created_at, updated_at
@@ -139,6 +140,7 @@ RETURNING id, user_id, monitor_id, name, region, interval_second, is_enabled, cr
 
 type UpdateRunnerParams struct {
 	ID             uuid.UUID `json:"id"`
+	MonitorID      uuid.UUID `json:"monitor_id"`
 	Name           string    `json:"name"`
 	Region         string    `json:"region"`
 	IntervalSecond int32     `json:"interval_second"`
@@ -148,6 +150,7 @@ type UpdateRunnerParams struct {
 func (q *Queries) UpdateRunner(ctx context.Context, arg UpdateRunnerParams) (Runner, error) {
 	row := q.db.QueryRow(ctx, updateRunner,
 		arg.ID,
+		arg.MonitorID,
 		arg.Name,
 		arg.Region,
 		arg.IntervalSecond,
