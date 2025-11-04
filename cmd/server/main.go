@@ -81,7 +81,8 @@ func main() {
 	findAllRunnersPresenter := runnerPresenter.NewFindAllRunnersPresenter()
 	updateRunnerPresenter := runnerPresenter.NewUpdateRunnerPresenter()
 	executeRunnerPresenter := runnerPresenter.NewExecuteRunnerPresenter()
-	findRunnerHistoryPresenter := runnerPresenter.NewFindRunnerHistoriesPresenter()
+	findRunnerHistoriesPresenter := runnerPresenter.NewFindRunnerHistoriesPresenter()
+	searchRunnerHistoriesPresenter := runnerPresenter.NewSearchRunnerHistoriesPresenter()
 
 	// --- Weboscket Notifier & RunnerService ---
 	runnerService := runnerDomain.NewRunnerService(runnerRepo, monitorRepo, runnerHistoryRepo, appLogger)
@@ -106,7 +107,8 @@ func main() {
 	updateRunnerUC := runnerUC.NewUpdateRunnerInteractor(runnerRepo, updateRunnerPresenter)
 	deleteRunnerUC := runnerUC.NewDeleteRunnerInteractor(runnerRepo)
 	executeRunnerUC := runnerUC.NewExecuteRunnerInteractor(runnerService, executeRunnerPresenter, appLogger)
-	findRunnerHistoryUC := runnerUC.NewFindRunnerHistoriesInteractor(runnerHistoryRepo, findRunnerHistoryPresenter)
+	findRunnerHistoriesUC := runnerUC.NewFindRunnerHistoriesInteractor(runnerHistoryRepo, findRunnerHistoriesPresenter)
+	searchRunnerHistoriesUC := runnerUC.NewSearchRunnerHistoriesInteractor(runnerHistoryRepo, searchRunnerHistoriesPresenter)
 
 	// --- Controller ---
 	userControllers := router.UserControllers{
@@ -133,7 +135,8 @@ func main() {
 		Update:   runnerController.NewUpdateRunnerController(updateRunnerUC),
 		Delete:   runnerController.NewDeleteRunnerController(deleteRunnerUC),
 		Execute:  runnerController.NewExecuteRunnerController(executeRunnerUC, appLogger),
-		History:  runnerController.NewFindRunnerHistoriesController(findRunnerHistoryUC),
+		History:  runnerController.NewFindRunnerHistoriesController(findRunnerHistoriesUC),
+		Search:   runnerController.NewSearchRunnerHistoriesController(searchRunnerHistoriesUC),
 	}
 
 	// --- Gin Router ---

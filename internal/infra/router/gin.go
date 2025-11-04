@@ -31,14 +31,14 @@ type (
 	}
 
 	RunnerControllers struct {
-		Create      *runnerController.CreateRunnerController
-		FindByID    *runnerController.FindRunnerByIDController
-		FindAll     *runnerController.FindAllRunnersController
-		Update      *runnerController.UpdateRunnerController
-		Delete      *runnerController.DeleteRunnerController
-		Execute     *runnerController.ExecuteRunnerController
-		History     *runnerController.FindRunnerHistoriesController
-		FailHistory *runnerController.SearchRunnerHistoriesController
+		Create   *runnerController.CreateRunnerController
+		FindByID *runnerController.FindRunnerByIDController
+		FindAll  *runnerController.FindAllRunnersController
+		Update   *runnerController.UpdateRunnerController
+		Delete   *runnerController.DeleteRunnerController
+		Execute  *runnerController.ExecuteRunnerController
+		History  *runnerController.FindRunnerHistoriesController
+		Search   *runnerController.SearchRunnerHistoriesController
 	}
 )
 
@@ -91,7 +91,7 @@ func NewGinRouter(
 			runnersApi.DELETE("/:id", runners.Delete.Handle)
 			runnersApi.POST("/:id/execute", runners.Execute.Handle)
 			runnersApi.GET("/:id/histories", runners.History.Handle)
-			runnersApi.GET("/histories", runners.FailHistory.Handle)
+			runnersApi.GET("/histories", runners.Search.Handle)
 		}
 	}
 
