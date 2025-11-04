@@ -10,15 +10,15 @@ import (
 	"github.com/google/uuid"
 )
 
-type FindRunnerHistoryController struct {
-	uc usecase.FindRunnerHistoryUseCase
+type FindRunnerHistoriesController struct {
+	uc usecase.FindRunnerHistoriesUseCase
 }
 
-func NewFindRunnerHistoryController(uc usecase.FindRunnerHistoryUseCase) *FindRunnerHistoryController {
-	return &FindRunnerHistoryController{uc: uc}
+func NewFindRunnerHistoriesController(uc usecase.FindRunnerHistoriesUseCase) *FindRunnerHistoriesController {
+	return &FindRunnerHistoriesController{uc: uc}
 }
 
-func (h *FindRunnerHistoryController) Handle(c *gin.Context) {
+func (h *FindRunnerHistoriesController) Handle(c *gin.Context) {
 	idStr := c.Param("id")
 	runnerID, err := uuid.Parse(idStr)
 	if err != nil {
@@ -26,7 +26,7 @@ func (h *FindRunnerHistoryController) Handle(c *gin.Context) {
 		return
 	}
 
-	output, err := h.uc.Execute(c.Request.Context(), usecase.FindRunnerHistoryInput{RunnerID: runnerID})
+	output, err := h.uc.Execute(c.Request.Context(), usecase.FindRunnerHistoriesInput{RunnerID: runnerID})
 	if err != nil {
 		response.HandleError(c, err)
 		return

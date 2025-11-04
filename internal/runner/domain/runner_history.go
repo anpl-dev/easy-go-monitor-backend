@@ -10,7 +10,8 @@ import (
 type (
 	RunnerHistoryRepository interface {
 		Save(ctx context.Context, history RunnerHistory) error
-		FindHistory(ctx context.Context, runnerID uuid.UUID) ([]*RunnerHistory, error)
+		FindByID(ctx context.Context, runnerID uuid.UUID) ([]*RunnerHistory, error)
+		Search(ctx context.Context, userID uuid.UUID, status string, minutes int) ([]*RunnerHistory, error)
 	}
 
 	RunnerHistory struct {

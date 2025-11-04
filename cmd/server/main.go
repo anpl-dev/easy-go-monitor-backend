@@ -5,7 +5,6 @@ import (
 	"easy-go-monitor/internal/infra/jwt"
 	"easy-go-monitor/internal/infra/logger"
 	"easy-go-monitor/internal/infra/router"
-	"easy-go-monitor/internal/infra/websocket"
 	monitorController "easy-go-monitor/internal/monitor/adapter/controller"
 	monitorPresenter "easy-go-monitor/internal/monitor/adapter/presenter"
 	monitorRepository "easy-go-monitor/internal/monitor/adapter/repository"
@@ -82,11 +81,10 @@ func main() {
 	findAllRunnersPresenter := runnerPresenter.NewFindAllRunnersPresenter()
 	updateRunnerPresenter := runnerPresenter.NewUpdateRunnerPresenter()
 	executeRunnerPresenter := runnerPresenter.NewExecuteRunnerPresenter()
-	findRunnerHistoryPresenter := runnerPresenter.NewFindRunnerHistoryPresenter()
+	findRunnerHistoryPresenter := runnerPresenter.NewFindRunnerHistoriesPresenter()
 
 	// --- Weboscket Notifier & RunnerService ---
-	notifier := &websocket.WebSocketNotifier{}
-	runnerService := runnerDomain.NewRunnerService(runnerRepo, monitorRepo, runnerHistoryRepo, notifier, appLogger)
+	runnerService := runnerDomain.NewRunnerService(runnerRepo, monitorRepo, runnerHistoryRepo, appLogger)
 
 	// --- UseCase ---
 	createUserUC := userUC.NewCreateUserInteractor(userRepo, createUserPresenter)
@@ -108,7 +106,7 @@ func main() {
 	updateRunnerUC := runnerUC.NewUpdateRunnerInteractor(runnerRepo, updateRunnerPresenter)
 	deleteRunnerUC := runnerUC.NewDeleteRunnerInteractor(runnerRepo)
 	executeRunnerUC := runnerUC.NewExecuteRunnerInteractor(runnerService, executeRunnerPresenter, appLogger)
-	findRunnerHistoryUC := runnerUC.NewFindRunnerHistoryInteractor(runnerHistoryRepo, findRunnerHistoryPresenter)
+	findRunnerHistoryUC := runnerUC.NewFindRunnerHistoriesInteractor(runnerHistoryRepo, findRunnerHistoryPresenter)
 
 	// --- Controller ---
 	userControllers := router.UserControllers{
@@ -135,10 +133,10 @@ func main() {
 		Update:   runnerController.NewUpdateRunnerController(updateRunnerUC),
 		Delete:   runnerController.NewDeleteRunnerController(deleteRunnerUC),
 		Execute:  runnerController.NewExecuteRunnerController(executeRunnerUC, appLogger),
-		History:  runnerController.NewFindRunnerHistoryController(findRunnerHistoryUC),
+		History:  runnerController.NewFindRunnerHistoriesController(findRunnerHistoryUC),
 	}
 
-	// --- Router ---
+	// --- Gin Router ---
 	r := router.NewGinRouter(userControllers, monitorControllers, runnerControllers, jwtService, appLogger)
 
 	// --- Run Server ---

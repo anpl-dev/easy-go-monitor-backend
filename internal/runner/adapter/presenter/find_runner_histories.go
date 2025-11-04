@@ -5,16 +5,16 @@ import (
 	"easy-go-monitor/internal/runner/usecase"
 )
 
-type findRunnerHistoryPresenter struct{}
+type findRunnerHistoriesPresenter struct{}
 
-func NewFindRunnerHistoryPresenter() usecase.FindRunnerHistoryPresenter {
-	return &findRunnerHistoryPresenter{}
+func NewFindRunnerHistoriesPresenter() usecase.FindRunnerHistoriesPresenter {
+	return &findRunnerHistoriesPresenter{}
 }
 
-func (p *findRunnerHistoryPresenter) Output(histories []domain.RunnerHistory) []usecase.FindRunnerHistoryOutput {
-	result := make([]usecase.FindRunnerHistoryOutput, len(histories))
+func (p *findRunnerHistoriesPresenter) Output(histories []domain.RunnerHistory) []usecase.FindRunnerHistoriesOutput {
+	result := make([]usecase.FindRunnerHistoriesOutput, len(histories))
 	for i, h := range histories {
-		result[i] = usecase.FindRunnerHistoryOutput{
+		result[i] = usecase.FindRunnerHistoriesOutput{
 			ID:             h.ID,
 			Status:         h.Status,
 			Message:        *h.Message,

@@ -55,8 +55,8 @@ func (r *RunnerHistoryPostgresRepository) Save(ctx context.Context, h domain.Run
 	return nil
 }
 
-func (r *RunnerHistoryPostgresRepository) FindHistory(ctx context.Context, runnerID uuid.UUID) ([]*domain.RunnerHistory, error) {
-	rows, err := r.queries.FindHistoryByRunnerID(ctx, runnerID)
+func (r *RunnerHistoryPostgresRepository) FindByID(ctx context.Context, runnerID uuid.UUID) ([]*domain.RunnerHistory, error) {
+	rows, err := r.queries.FindRunnerHistoriesByRunnerID(ctx, runnerID)
 	if err != nil {
 		if err == pgx.ErrNoRows {
 			return []*domain.RunnerHistory{}, nil
@@ -64,6 +64,27 @@ func (r *RunnerHistoryPostgresRepository) FindHistory(ctx context.Context, runne
 		return nil, codes.Wrap(codes.ErrInternal, err)
 	}
 
+	result := make([]*domain.RunnerHistory, 0, len(rows))
+	for _, row := range rows {
+		result = append(result, toDomainRunnerHistory(row))
+	}
+	return result, nil
+}
+
+func (r *RunnerHistoryPostgresRepository) Search(
+	ctx context.Context,
+	userID uuid.UUID,
+	status string,
+	minutes int,
+) ([]*domain.RunnerHistory, error) {
+	rows, err := r.queries.SearchRunnerHistories(ctx, sqlcgen.SearchRunnerHistoriesParams{
+		UserID:  userID,
+		Status:  status,
+		Minutes: int32(minutes),
+	})
+	if err != nil {
+		return nil, codes.Wrap(codes.ErrInternal, err)
+	}
 	result := make([]*domain.RunnerHistory, 0, len(rows))
 	for _, row := range rows {
 		result = append(result, toDomainRunnerHistory(row))

@@ -8,19 +8,19 @@ import (
 )
 
 type (
-	FindRunnerHistoryUseCase interface {
-		Execute(ctx context.Context, input FindRunnerHistoryInput) ([]FindRunnerHistoryOutput, error)
+	FindRunnerHistoriesUseCase interface {
+		Execute(ctx context.Context, input FindRunnerHistoriesInput) ([]FindRunnerHistoriesOutput, error)
 	}
 
-	FindRunnerHistoryInput struct {
+	FindRunnerHistoriesInput struct {
 		RunnerID uuid.UUID
 	}
 
-	FindRunnerHistoryPresenter interface {
-		Output([]domain.RunnerHistory) []FindRunnerHistoryOutput
+	FindRunnerHistoriesPresenter interface {
+		Output([]domain.RunnerHistory) []FindRunnerHistoriesOutput
 	}
 
-	FindRunnerHistoryOutput struct {
+	FindRunnerHistoriesOutput struct {
 		ID             uuid.UUID `json:"id"`
 		Status         string    `json:"status"`
 		Message        string    `json:"message"`
@@ -29,29 +29,28 @@ type (
 		ResponseTimeMs int32     `json:"response_time_ms"`
 	}
 
-	findRunnerHistoryInteractor struct {
+	findRunnerHistoriesInteractor struct {
 		repo      domain.RunnerHistoryRepository
-		presenter FindRunnerHistoryPresenter
+		presenter FindRunnerHistoriesPresenter
 	}
 )
 
-func NewFindRunnerHistoryInteractor(
+func NewFindRunnerHistoriesInteractor(
 	repo domain.RunnerHistoryRepository,
-	presenter FindRunnerHistoryPresenter,
-) FindRunnerHistoryUseCase {
-	return &findRunnerHistoryInteractor{
+	presenter FindRunnerHistoriesPresenter,
+) FindRunnerHistoriesUseCase {
+	return &findRunnerHistoriesInteractor{
 		repo:      repo,
 		presenter: presenter,
 	}
 }
 
-func (i *findRunnerHistoryInteractor) Execute(ctx context.Context, input FindRunnerHistoryInput) ([]FindRunnerHistoryOutput, error) {
-	histories, err := i.repo.FindHistory(ctx, input.RunnerID)
+func (i *findRunnerHistoriesInteractor) Execute(ctx context.Context, input FindRunnerHistoriesInput) ([]FindRunnerHistoriesOutput, error) {
+	histories, err := i.repo.FindByID(ctx, input.RunnerID)
 	if err != nil {
 		return nil, err
 	}
 
-	// convert []*domain.RunnerHistory → []domain.RunnerHistory
 	values := make([]domain.RunnerHistory, len(histories))
 	for idx, h := range histories {
 		values[idx] = *h

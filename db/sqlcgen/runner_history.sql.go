@@ -12,7 +12,7 @@ import (
 	"github.com/google/uuid"
 )
 
-const findHistoryByRunnerID = `-- name: FindHistoryByRunnerID :many
+const findRunnerHistoriesByRunnerID = `-- name: FindRunnerHistoriesByRunnerID :many
 SELECT
     id,
     runner_id,
@@ -27,8 +27,8 @@ WHERE runner_id = $1
 ORDER BY created_at DESC
 `
 
-func (q *Queries) FindHistoryByRunnerID(ctx context.Context, runnerID uuid.UUID) ([]RunnerHistory, error) {
-	rows, err := q.db.Query(ctx, findHistoryByRunnerID, runnerID)
+func (q *Queries) FindRunnerHistoriesByRunnerID(ctx context.Context, runnerID uuid.UUID) ([]RunnerHistory, error) {
+	rows, err := q.db.Query(ctx, findRunnerHistoriesByRunnerID, runnerID)
 	if err != nil {
 		return nil, err
 	}
@@ -92,4 +92,58 @@ func (q *Queries) SaveRunnerHistory(ctx context.Context, arg SaveRunnerHistoryPa
 		arg.ResponseTimeMs,
 	)
 	return err
+}
+
+const searchRunnerHistories = `-- name: SearchRunnerHistories :many
+SELECT
+    rh.id,
+    rh.runner_id,
+    rh.status,
+    rh.message,
+    rh.started_at,
+    rh.ended_at,
+    rh.response_time_ms,
+    rh.created_at
+FROM runner_histories AS rh
+JOIN runners AS r ON rh.runner_id = r.id
+WHERE 
+    r.user_id = $1
+    AND rh.status = $2
+    AND rh.created_at BETWEEN (NOW() - ($3 * INTERVAL '1 minute')) AND NOW()
+ORDER BY rh.created_at DESC
+`
+
+type SearchRunnerHistoriesParams struct {
+	UserID  uuid.UUID   `json:"user_id"`
+	Status  string      `json:"status"`
+	Minutes interface{} `json:"minutes"`
+}
+
+func (q *Queries) SearchRunnerHistories(ctx context.Context, arg SearchRunnerHistoriesParams) ([]RunnerHistory, error) {
+	rows, err := q.db.Query(ctx, searchRunnerHistories, arg.UserID, arg.Status, arg.Minutes)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []RunnerHistory
+	for rows.Next() {
+		var i RunnerHistory
+		if err := rows.Scan(
+			&i.ID,
+			&i.RunnerID,
+			&i.Status,
+			&i.Message,
+			&i.StartedAt,
+			&i.EndedAt,
+			&i.ResponseTimeMs,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
