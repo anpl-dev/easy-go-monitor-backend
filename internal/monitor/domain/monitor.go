@@ -9,9 +9,7 @@ import (
 )
 
 const (
-	MonitorTypeHTTP = "http"
-	MonitorTypeTCP  = "tcp"
-	MonitorTypePing = "ping"
+	MonitorTypeHTTP = "HTTP"
 )
 
 type (
@@ -62,7 +60,7 @@ func NewMonitor(
 		return nil, codes.ErrInvalidMonitorURL
 	}
 	switch monitorType {
-	case MonitorTypeHTTP, MonitorTypeTCP, MonitorTypePing:
+	case MonitorTypeHTTP:
 		// OK
 	default:
 		return nil, codes.ErrInvalidMonitorType
@@ -111,10 +109,6 @@ func NewMonitorSettingsByType(monitorType string) (*MonitorSettings, error) {
 	switch monitorType {
 	case MonitorTypeHTTP:
 		return NewMonitorSettings("GET", 5000, nil, "")
-	case MonitorTypeTCP:
-		return NewMonitorSettings("", 5000, nil, "")
-	case MonitorTypePing:
-		return NewMonitorSettings("", 5000, nil, "")
 	default:
 		return nil, codes.ErrInvalidMonitorType
 	}

@@ -9,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -45,7 +46,14 @@ func (r *RunnerPostgresRepository) Create(ctx context.Context, runner domain.Run
 		IsEnabled:      runner.IsEnabled,
 	})
 	if err != nil {
-		return nil, err
+		if pgErr, ok := err.(*pgconn.PgError); ok {
+			if pgErr.Code == codes.PostgresForeignKeyViolation {
+				return nil, codes.ErrInvalidMonitorRequest
+			}
+			if pgErr.Code == codes.PostgresUniqueViolation {
+				return nil, codes.ErrAlreadyExists
+			}
+		}
 	}
 	return toDomainRunner(row), nil
 }
