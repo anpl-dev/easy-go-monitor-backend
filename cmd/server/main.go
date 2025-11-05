@@ -108,7 +108,7 @@ func main() {
 	deleteRunnerUC := runnerUC.NewDeleteRunnerInteractor(runnerRepo)
 	executeRunnerUC := runnerUC.NewExecuteRunnerInteractor(runnerService, executeRunnerPresenter, appLogger)
 	findRunnerHistoriesUC := runnerUC.NewFindRunnerHistoriesInteractor(runnerHistoryRepo, findRunnerHistoriesPresenter)
-	searchRunnerHistoriesUC := runnerUC.NewSearchRunnerHistoriesInteractor(runnerHistoryRepo, searchRunnerHistoriesPresenter)
+	searchRunnerHistoriesUC := runnerUC.NewSearchRunnerHistoriesInteractor(runnerHistoryRepo, searchRunnerHistoriesPresenter, appLogger)
 
 	// --- Controller ---
 	userControllers := router.UserControllers{

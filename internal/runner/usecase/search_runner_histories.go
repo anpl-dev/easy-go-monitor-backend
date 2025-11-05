@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"easy-go-monitor/internal/infra/logger"
 	"easy-go-monitor/internal/runner/domain"
 
 	"github.com/google/uuid"
@@ -31,25 +32,35 @@ type (
 		ResponseTimeMs int32     `json:"response_time_ms"`
 	}
 
-	findRunnerFailHistoriesInteractor struct {
+	searchRunnerHistoriesInteractor struct {
 		repo      domain.RunnerHistoryRepository
 		presenter SearchRunnerHistoriesPresenter
+		log       *logger.Logger
 	}
 )
 
 func NewSearchRunnerHistoriesInteractor(
 	repo domain.RunnerHistoryRepository,
 	presenter SearchRunnerHistoriesPresenter,
+	log *logger.Logger,
 ) SearchRunnerHistoriesUseCase {
-	return &findRunnerFailHistoriesInteractor{
+	return &searchRunnerHistoriesInteractor{
 		repo:      repo,
 		presenter: presenter,
+		log:       log,
 	}
 }
 
-func (i *findRunnerFailHistoriesInteractor) Execute(ctx context.Context, input SearchRunnerHistoriesInput) ([]SearchRunnerHistoriesOutput, error) {
+func (i *searchRunnerHistoriesInteractor) Execute(ctx context.Context, input SearchRunnerHistoriesInput) ([]SearchRunnerHistoriesOutput, error) {
+	i.log.Info("SearchRunnerHistories Execute",
+		"user_id", input.UserID.String(),
+		"status", input.Status,
+		"minutes", input.Minutes,
+	)
 	histories, err := i.repo.Search(ctx, input.UserID, input.Status, int(input.Minutes))
+
 	if err != nil {
+		i.log.Error("FindRunnerFailHistories repo error", "error", err)
 		return nil, err
 	}
 
