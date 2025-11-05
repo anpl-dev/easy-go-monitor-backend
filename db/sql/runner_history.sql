@@ -2,6 +2,7 @@
 INSERT INTO runner_histories (
     id,
     runner_id,
+    runner_name,
     status,
     message,
     started_at,
@@ -9,13 +10,14 @@ INSERT INTO runner_histories (
     response_time_ms,
     created_at
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, now()
+    $1, $2, $3, $4, $5, $6, $7, $8, now()
 );
 
 -- name: FindRunnerHistoriesByRunnerID :many
 SELECT
     id,
     runner_id,
+    runner_name,
     status,
     message,
     started_at,
@@ -30,6 +32,7 @@ ORDER BY created_at DESC;
 SELECT
     rh.id,
     rh.runner_id,
+    rh.runner_name,
     rh.status,
     rh.message,
     rh.started_at,
@@ -41,5 +44,5 @@ JOIN runners AS r ON rh.runner_id = r.id
 WHERE 
     r.user_id = $1
     AND rh.status = $2
-    AND rh.created_at BETWEEN (NOW() - (sqlc.arg('minutes') * INTERVAL '1 minute')) AND NOW()
+    AND rh.created_at BETWEEN (NOW() - (sqlc.arg('minutes')::int * INTERVAL '1 minute')) AND NOW()
 ORDER BY rh.created_at DESC;;

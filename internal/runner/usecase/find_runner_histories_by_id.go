@@ -22,6 +22,8 @@ type (
 
 	FindRunnerHistoriesOutput struct {
 		ID             uuid.UUID `json:"id"`
+		RunnerID       uuid.UUID `json:"runner_id"`
+		RunnerName     string    `json:"runner_name"`
 		Status         string    `json:"status"`
 		Message        string    `json:"message"`
 		StartedAt      string    `json:"started_at"`

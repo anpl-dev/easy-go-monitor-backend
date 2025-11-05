@@ -63,7 +63,7 @@ func main() {
 	userRepo := userRepository.NewUserPostgresRepository(db)
 	monitorRepo := monitorRepository.NewMonitorPostgresRepository(db, appLogger)
 	runnerRepo := runnerRepository.NewRunnerPostgresRepository(db)
-	runnerHistoryRepo := runnerRepository.NewRunnerHistoryPostgresRepository(db)
+	runnerHistoryRepo := runnerRepository.NewRunnerHistoryPostgresRepository(db, appLogger)
 
 	// --- Presenter ---
 	createUserPresenter := userPresenter.NewCreateUserPresenter()

@@ -15,8 +15,8 @@ type (
 
 	SearchRunnerHistoriesInput struct {
 		UserID  uuid.UUID `json:"-"`
-		Status  string    `json:"status"`
-		Minutes int32     `json:"minutes"`
+		Status  string    `form:"status" binding:"required"`
+		Minutes int32     `form:"minutes" binding:"required"`
 	}
 
 	SearchRunnerHistoriesPresenter interface {
@@ -25,6 +25,8 @@ type (
 
 	SearchRunnerHistoriesOutput struct {
 		ID             uuid.UUID `json:"id"`
+		RunnerID       uuid.UUID `json:"runner_id"`
+		RunnerName     string    `json:"runner_name"`
 		Status         string    `json:"status"`
 		Message        string    `json:"message"`
 		StartedAt      string    `json:"started_at"`

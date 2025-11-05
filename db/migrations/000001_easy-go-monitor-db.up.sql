@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS runners (
 CREATE TABLE IF NOT EXISTS runner_histories (
     id UUID PRIMARY KEY,
     runner_id uuid NOT NULL REFERENCES runners(id) ON DELETE CASCADE,
+    runner_name VARCHAR(32) NOT NULL,
     status VARCHAR(32) NOT NULL,
     message TEXT,
     started_at TIMESTAMPTZ NOT NULL,
@@ -45,13 +46,13 @@ CREATE TABLE IF NOT EXISTS runner_histories (
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS notifiers (
+/* CREATE TABLE IF NOT EXISTS notifiers (
     id INT PRIMARY KEY,
     type VARCHAR(50) NOT NULL UNIQUE,
     display_name VARCHAR(100) NOT NULL
-);
+) */;
 
-CREATE TABLE IF NOT EXISTS notifications (
+/* CREATE TABLE IF NOT EXISTS notifications (
     id UUID PRIMARY KEY,
     runner_id UUID NOT NULL REFERENCES runners(id) ON DELETE CASCADE,
     notifier_id INT NOT NULL REFERENCES notifiers(id) ON DELETE CASCADE,
@@ -62,14 +63,14 @@ CREATE TABLE IF NOT EXISTS notifications (
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
-
+ */
 CREATE INDEX idx_monitors_user_id ON monitors(user_id);
 CREATE INDEX idx_runners_user_id ON runners(user_id);
 CREATE INDEX idx_runner_histories_runner_id ON runner_histories(runner_id);
 -------
 
-INSERT INTO notifiers (id, type, display_name) VALUES
+/* INSERT INTO notifiers (id, type, display_name) VALUES
 (1, 'email', 'Email'),
 (2, 'slack', 'Slack'),
 (3, 'webhook', 'Webhook')
-ON CONFLICT DO NOTHING;
+ON CONFLICT DO NOTHING */;

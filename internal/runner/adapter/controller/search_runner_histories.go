@@ -35,6 +35,7 @@ func (h *SearchRunnerHistoriesController) Handle(c *gin.Context) {
 
 	output, err := h.uc.Execute(c.Request.Context(), usecase.SearchRunnerHistoriesInput{
 		UserID:  userID,
+		Status:  input.Status,
 		Minutes: input.Minutes,
 	})
 	if err != nil {

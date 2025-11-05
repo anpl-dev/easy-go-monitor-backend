@@ -23,24 +23,6 @@ type Monitor struct {
 	UpdatedAt *time.Time      `json:"updated_at"`
 }
 
-type Notification struct {
-	ID         uuid.UUID  `json:"id"`
-	RunnerID   uuid.UUID  `json:"runner_id"`
-	NotifierID int32      `json:"notifier_id"`
-	Type       string     `json:"type"`
-	Trigger    string     `json:"trigger"`
-	Message    string     `json:"message"`
-	IsEnabled  bool       `json:"is_enabled"`
-	CreatedAt  *time.Time `json:"created_at"`
-	UpdatedAt  *time.Time `json:"updated_at"`
-}
-
-type Notifier struct {
-	ID          int32  `json:"id"`
-	Type        string `json:"type"`
-	DisplayName string `json:"display_name"`
-}
-
 type Runner struct {
 	ID             uuid.UUID  `json:"id"`
 	UserID         uuid.UUID  `json:"user_id"`
@@ -56,6 +38,7 @@ type Runner struct {
 type RunnerHistory struct {
 	ID             uuid.UUID  `json:"id"`
 	RunnerID       uuid.UUID  `json:"runner_id"`
+	RunnerName     string     `json:"runner_name"`
 	Status         string     `json:"status"`
 	Message        *string    `json:"message"`
 	StartedAt      *time.Time `json:"started_at"`

@@ -4,6 +4,7 @@ import (
 	"context"
 	"easy-go-monitor/db/sqlcgen"
 	"easy-go-monitor/internal/codes"
+	"easy-go-monitor/internal/infra/logger"
 	"easy-go-monitor/internal/runner/domain"
 
 	"github.com/google/uuid"
@@ -13,16 +14,21 @@ import (
 
 type RunnerHistoryPostgresRepository struct {
 	queries *sqlcgen.Queries
+	log     *logger.Logger
 }
 
-func NewRunnerHistoryPostgresRepository(pool *pgxpool.Pool) *RunnerHistoryPostgresRepository {
-	return &RunnerHistoryPostgresRepository{queries: sqlcgen.New(pool)}
+func NewRunnerHistoryPostgresRepository(pool *pgxpool.Pool, log *logger.Logger) *RunnerHistoryPostgresRepository {
+	return &RunnerHistoryPostgresRepository{
+		queries: sqlcgen.New(pool),
+		log:     log,
+	}
 }
 
 func toDomainRunnerHistory(s sqlcgen.RunnerHistory) *domain.RunnerHistory {
 	h := &domain.RunnerHistory{
 		ID:             s.ID,
 		RunnerID:       s.RunnerID,
+		RunnerName:     s.RunnerName,
 		Status:         s.Status,
 		Message:        s.Message,
 		StartedAt:      *s.StartedAt,
@@ -43,6 +49,7 @@ func (r *RunnerHistoryPostgresRepository) Save(ctx context.Context, h domain.Run
 	params := sqlcgen.SaveRunnerHistoryParams{
 		ID:             h.ID,
 		RunnerID:       h.RunnerID,
+		RunnerName:     h.RunnerName,
 		Status:         h.Status,
 		Message:        h.Message,
 		StartedAt:      &h.StartedAt,
@@ -82,6 +89,10 @@ func (r *RunnerHistoryPostgresRepository) Search(
 		Status:  status,
 		Minutes: int32(minutes),
 	})
+	if err == pgx.ErrNoRows {
+		r.log.Debug("No Rows")
+		return []*domain.RunnerHistory{}, codes.ErrNotFound
+	}
 	if err != nil {
 		return nil, codes.Wrap(codes.ErrInternal, err)
 	}

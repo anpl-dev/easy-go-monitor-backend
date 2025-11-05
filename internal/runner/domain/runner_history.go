@@ -15,13 +15,14 @@ type (
 	}
 
 	RunnerHistory struct {
-		ID             uuid.UUID  `json:"id"`
-		RunnerID       uuid.UUID  `json:"runner_id"`
-		Status         string     `json:"status"`
-		Message        *string    `json:"message"`
-		StartedAt      time.Time  `json:"started_at"`
-		EndedAt        *time.Time `json:"ended_at"`
-		ResponseTimeMs *int32     `json:"response_time_ms"`
-		CreatedAt      time.Time  `json:"created_at"`
+		ID             uuid.UUID
+		RunnerID       uuid.UUID
+		RunnerName     string
+		Status         string
+		Message        *string
+		StartedAt      time.Time
+		EndedAt        *time.Time
+		ResponseTimeMs *int32
+		CreatedAt      time.Time
 	}
 )

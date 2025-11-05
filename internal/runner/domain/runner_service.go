@@ -85,6 +85,7 @@ func (s *runnerService) Run(ctx context.Context, runnerID uuid.UUID) ([]MonitorR
 	history := RunnerHistory{
 		ID:             uuid.New(),
 		RunnerID:       runnerID,
+		RunnerName:     runner.Name,
 		Status:         status,
 		Message:        &message,
 		StartedAt:      start,

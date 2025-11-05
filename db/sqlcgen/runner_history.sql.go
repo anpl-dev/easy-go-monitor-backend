@@ -16,6 +16,7 @@ const findRunnerHistoriesByRunnerID = `-- name: FindRunnerHistoriesByRunnerID :m
 SELECT
     id,
     runner_id,
+    runner_name,
     status,
     message,
     started_at,
@@ -39,6 +40,7 @@ func (q *Queries) FindRunnerHistoriesByRunnerID(ctx context.Context, runnerID uu
 		if err := rows.Scan(
 			&i.ID,
 			&i.RunnerID,
+			&i.RunnerName,
 			&i.Status,
 			&i.Message,
 			&i.StartedAt,
@@ -60,6 +62,7 @@ const saveRunnerHistory = `-- name: SaveRunnerHistory :exec
 INSERT INTO runner_histories (
     id,
     runner_id,
+    runner_name,
     status,
     message,
     started_at,
@@ -67,13 +70,14 @@ INSERT INTO runner_histories (
     response_time_ms,
     created_at
 ) VALUES (
-    $1, $2, $3, $4, $5, $6, $7, now()
+    $1, $2, $3, $4, $5, $6, $7, $8, now()
 )
 `
 
 type SaveRunnerHistoryParams struct {
 	ID             uuid.UUID  `json:"id"`
 	RunnerID       uuid.UUID  `json:"runner_id"`
+	RunnerName     string     `json:"runner_name"`
 	Status         string     `json:"status"`
 	Message        *string    `json:"message"`
 	StartedAt      *time.Time `json:"started_at"`
@@ -85,6 +89,7 @@ func (q *Queries) SaveRunnerHistory(ctx context.Context, arg SaveRunnerHistoryPa
 	_, err := q.db.Exec(ctx, saveRunnerHistory,
 		arg.ID,
 		arg.RunnerID,
+		arg.RunnerName,
 		arg.Status,
 		arg.Message,
 		arg.StartedAt,
@@ -98,6 +103,7 @@ const searchRunnerHistories = `-- name: SearchRunnerHistories :many
 SELECT
     rh.id,
     rh.runner_id,
+    rh.runner_name,
     rh.status,
     rh.message,
     rh.started_at,
@@ -109,14 +115,14 @@ JOIN runners AS r ON rh.runner_id = r.id
 WHERE 
     r.user_id = $1
     AND rh.status = $2
-    AND rh.created_at BETWEEN (NOW() - ($3 * INTERVAL '1 minute')) AND NOW()
+    AND rh.created_at BETWEEN (NOW() - ($3::int * INTERVAL '1 minute')) AND NOW()
 ORDER BY rh.created_at DESC
 `
 
 type SearchRunnerHistoriesParams struct {
-	UserID  uuid.UUID   `json:"user_id"`
-	Status  string      `json:"status"`
-	Minutes interface{} `json:"minutes"`
+	UserID  uuid.UUID `json:"user_id"`
+	Status  string    `json:"status"`
+	Minutes int32     `json:"minutes"`
 }
 
 func (q *Queries) SearchRunnerHistories(ctx context.Context, arg SearchRunnerHistoriesParams) ([]RunnerHistory, error) {
@@ -131,6 +137,7 @@ func (q *Queries) SearchRunnerHistories(ctx context.Context, arg SearchRunnerHis
 		if err := rows.Scan(
 			&i.ID,
 			&i.RunnerID,
+			&i.RunnerName,
 			&i.Status,
 			&i.Message,
 			&i.StartedAt,
