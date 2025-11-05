@@ -3,6 +3,7 @@ package domain
 import (
 	"context"
 	"easy-go-monitor/internal/codes"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -50,6 +51,7 @@ func NewMonitor(
 	monitorUrl string,
 	monitorType string,
 ) (*Monitor, error) {
+	normalizedType := strings.ToUpper(monitorType)
 	if userID == uuid.Nil {
 		return nil, codes.ErrInvalidUUID
 	}
@@ -59,14 +61,14 @@ func NewMonitor(
 	if monitorUrl == "" {
 		return nil, codes.ErrInvalidMonitorURL
 	}
-	switch monitorType {
+	switch normalizedType {
 	case MonitorTypeHTTP:
 		// OK
 	default:
 		return nil, codes.ErrInvalidMonitorType
 	}
 
-	defaultSettings, err := NewMonitorSettingsByType(monitorType)
+	defaultSettings, err := NewMonitorSettingsByType(normalizedType)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +78,7 @@ func NewMonitor(
 		UserID:    userID,
 		Name:      name,
 		URL:       monitorUrl,
-		Type:      monitorType,
+		Type:      normalizedType,
 		Settings:  defaultSettings,
 		IsEnabled: true,
 	}, nil
