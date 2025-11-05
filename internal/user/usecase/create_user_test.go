@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"go-monitor-tool/internal/apperr"
-	"go-monitor-tool/internal/user/domain"
+	"easy-go-monitor/internal/codes"
+	"easy-go-monitor/internal/user/domain"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
@@ -56,12 +56,12 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			},
 			mockRepo: mockUserRepoCreate{
 				result: &domain.User{
-					ID:           uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-					Name:         "Alice",
-					Email:        "alice@example.com",
-					PasswordHash: hashed,
-					CreatedAt:    now,
-					UpdatedAt:    now,
+					ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+					Name:      "Alice",
+					Email:     "alice@example.com",
+					Password:  hashed,
+					CreatedAt: now,
+					UpdatedAt: now,
 				},
 				err: nil,
 			},
@@ -87,7 +87,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			mockPresenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			wantError: apperr.ErrInvalidUserName,
+			wantError: codes.ErrInvalidUserName,
 		},
 		{
 			name: "error: missing email",
@@ -100,7 +100,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			mockPresenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			wantError: apperr.ErrInvalidEmail,
+			wantError: codes.ErrInvalidEmail,
 		},
 		{
 			name: "error: missing password",
@@ -113,7 +113,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 			mockPresenter: mockCreateUserPresenter{
 				result: CreateUserOutput{},
 			},
-			wantError: apperr.ErrInvalidPassword,
+			wantError: codes.ErrInvalidPassword,
 		},
 	}
 
@@ -129,7 +129,7 @@ func TestCreateUserInteractor_Execute(t *testing.T) {
 				require.Equal(t, tt.mockPresenter.result, got, "[%s] output mismatch", tt.name)
 
 				// check hashed password
-				require.True(t, domain.CheckPasswordHash(tt.input.Password, tt.mockRepo.result.PasswordHash),
+				require.True(t, domain.CheckPassword(tt.input.Password, tt.mockRepo.result.Password),
 					"[%s] password hash mismatch", tt.name)
 			}
 		})

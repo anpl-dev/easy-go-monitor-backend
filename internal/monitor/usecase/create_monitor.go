@@ -2,7 +2,8 @@ package usecase
 
 import (
 	"context"
-	"go-monitor-tool/internal/monitor/domain"
+	"easy-go-monitor/internal/infra/logger"
+	"easy-go-monitor/internal/monitor/domain"
 	"time"
 
 	"github.com/google/uuid"
@@ -16,10 +17,10 @@ type (
 
 	// CreateMonitorInput input data
 	CreateMonitorInput struct {
-		UserID         uuid.UUID `json:"user_id"`
-		Name           string    `json:"name" binding:"required"`
-		URL            string    `json:"url" binding:"required"`
-		IntervalSecond int       `json:"interval_second" binding:"required,min=1"`
+		UserID string `json:"-"`
+		Name   string `json:"name" binding:"required"`
+		URL    string `json:"url" binding:"required"`
+		Type   string `json:"type" binding:"required"`
 	}
 
 	// CreateMonitorPresenter output port
@@ -27,41 +28,59 @@ type (
 		Output(*domain.Monitor) CreateMonitorOutput
 	}
 
-	// CreateMonitorInput output data
+	// CreateMonitorOutput output data
 	CreateMonitorOutput struct {
-		ID             uuid.UUID `json:"id"`
-		UserID         uuid.UUID `json:"user_id"`
-		Name           string    `json:"name"`
-		URL            string    `json:"url"`
-		IntervalSecond int       `json:"interval_second"`
-		CreatedAt      time.Time `json:"created_at"`
-		UpdatedAt      time.Time `json:"updated_at"`
+		ID        uuid.UUID               `json:"id"`
+		UserID    uuid.UUID               `json:"user_id"`
+		Name      string                  `json:"name"`
+		URL       string                  `json:"url"`
+		Type      string                  `json:"type"`
+		Settings  *domain.MonitorSettings `json:"settings"`
+		IsEnabled bool                    `json:"is_enabled"`
+		CreatedAt time.Time               `json:"created_at"`
+		UpdatedAt time.Time               `json:"updated_at"`
 	}
 
 	createMonitorInteractor struct {
 		repo      domain.MonitorRepository
 		presenter CreateMonitorPresenter
+		logger    *logger.Logger
 	}
 )
 
 func NewCreateMonitorInteractor(
 	repo domain.MonitorRepository,
 	presenter CreateMonitorPresenter,
+	logger *logger.Logger,
 ) CreateMonitorUseCase {
 	return &createMonitorInteractor{
 		repo:      repo,
 		presenter: presenter,
+		logger:    logger,
 	}
 }
 
 func (i *createMonitorInteractor) Execute(ctx context.Context, input CreateMonitorInput) (CreateMonitorOutput, error) {
+	i.logger.Debug("CreateMonitor started",
+		"user_id", input.UserID,
+		"name", input.Name,
+		"url", input.URL,
+		"type", input.Type,
+	)
+
+	userID, err := uuid.Parse(input.UserID)
+	if err != nil {
+		return CreateMonitorOutput{}, err
+	}
+
 	monitor, err := domain.NewMonitor(
-		input.UserID,
+		userID,
 		input.Name,
 		input.URL,
-		input.IntervalSecond,
+		input.Type,
 	)
 	if err != nil {
+		i.logger.Error("CreateMonitor", "failed", "error", err)
 		return CreateMonitorOutput{}, err
 	}
 
@@ -70,5 +89,6 @@ func (i *createMonitorInteractor) Execute(ctx context.Context, input CreateMonit
 		return CreateMonitorOutput{}, err
 	}
 
+	i.logger.Debug("CreateMonitor success", "monitor_id", monitor.ID.String())
 	return i.presenter.Output(created), nil
 }

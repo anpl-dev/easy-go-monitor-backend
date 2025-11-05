@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS monitor_groups;
+DROP TABLE IF EXISTS monitors;
+DROP TABLE IF EXISTS runners;
+DROP TABLE IF EXISTS runner_histories;
+DROP TABLE IF EXISTS notifiers;
+DROP TABLE IF EXISTS notifications;

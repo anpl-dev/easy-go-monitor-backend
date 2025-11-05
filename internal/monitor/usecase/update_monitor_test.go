@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"go-monitor-tool/internal/apperr"
-	"go-monitor-tool/internal/monitor/domain"
+	"easy-go-monitor/internal/codes"
+	"easy-go-monitor/internal/monitor/domain"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
@@ -39,13 +39,12 @@ func TestUpdateMonitorInteractor_Execute(t *testing.T) {
 
 	now := time.Now()
 	monitor := &domain.Monitor{
-		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-		UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-		Name:           "test-monitor",
-		URL:            "https://examaple.com",
-		IntervalSecond: 60,
-		CreatedAt:      now,
-		UpdatedAt:      now,
+		ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+		UserID:    uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+		Name:      "test-monitor",
+		URL:       "https://examaple.com",
+		CreatedAt: now,
+		UpdatedAt: now,
 	}
 
 	tests := []struct {
@@ -66,12 +65,11 @@ func TestUpdateMonitorInteractor_Execute(t *testing.T) {
 			},
 			mockPresenter: mockUpdateMonitorPresenter{
 				result: UpdateMonitorOutput{
-					ID:             monitor.ID,
-					UserID:         monitor.UserID,
-					Name:           monitor.Name,
-					URL:            monitor.URL,
-					IntervalSecond: monitor.IntervalSecond,
-					UpdatedAt:      monitor.UpdatedAt,
+					ID:        monitor.ID,
+					UserID:    monitor.UserID,
+					Name:      monitor.Name,
+					URL:       monitor.URL,
+					UpdatedAt: monitor.UpdatedAt,
 				},
 			},
 			wantError: nil,
@@ -83,10 +81,10 @@ func TestUpdateMonitorInteractor_Execute(t *testing.T) {
 			},
 			mockRepo: mockMonitorRepoUpdate{
 				result: nil,
-				err:    apperr.ErrNotFound,
+				err:    codes.ErrNotFound,
 			},
 			mockPresenter: mockUpdateMonitorPresenter{},
-			wantError:     apperr.ErrNotFound,
+			wantError:     codes.ErrNotFound,
 		},
 	}
 

@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"context"
-	"go-monitor-tool/internal/monitor/domain"
+	"easy-go-monitor/internal/monitor/domain"
 	"time"
 
 	"github.com/google/uuid"
@@ -16,7 +16,7 @@ type (
 
 	// FindMonitorByIDInput input data
 	FindMonitorByIDInput struct {
-		ID uuid.UUID `json:"id" binding:"required"`
+		ID uuid.UUID `json:"-"`
 	}
 
 	// FindMonitorByIDPresenter output port
@@ -26,13 +26,15 @@ type (
 
 	// FindMonitorByIDOutput output data
 	FindMonitorByIDOutput struct {
-		ID             uuid.UUID `json:"id"`
-		UserID         uuid.UUID `json:"user_id"`
-		Name           string    `json:"name"`
-		URL            string    `json:"url"`
-		IntervalSecond int       `json:"interval_second"`
-		CreatedAt      time.Time `json:"created_at"`
-		UpdatedAt      time.Time `json:"updated_at"`
+		ID        uuid.UUID               `json:"id"`
+		UserID    uuid.UUID               `json:"user_id"`
+		Name      string                  `json:"name"`
+		URL       string                  `json:"url"`
+		Type      string                  `json:"type"`
+		Settings  *domain.MonitorSettings `json:"settings"`
+		IsEnabled bool                    `json:"is_enabled"`
+		CreatedAt time.Time               `json:"created_at"`
+		UpdatedAt time.Time               `json:"updated_at"`
 	}
 
 	findMonitorByIDInteractor struct {

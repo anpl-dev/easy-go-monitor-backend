@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"context"
-	"go-monitor-tool/internal/monitor/domain"
+	"easy-go-monitor/internal/monitor/domain"
 	"time"
 
 	"github.com/google/uuid"
@@ -16,10 +16,12 @@ type (
 
 	// UpdateMonitorInput input data
 	UpdateMonitorInput struct {
-		ID             uuid.UUID `json:"-"`
-		Name           string    `json:"name" binding:"required"`
-		URL            string    `json:"url" binding:"required"`
-		IntervalSecond int       `json:"interval_second" binding:"required,min=1"`
+		ID        uuid.UUID               `json:"-"`
+		Name      string                  `json:"name" binding:"required"`
+		URL       string                  `json:"url" binding:"required"`
+		Type      string                  `json:"type" binding:"required"`
+		Settings  *domain.MonitorSettings `json:"settings" biding:"required"`
+		IsEnabled bool                    `json:"is_enabled" binding:"required"`
 	}
 
 	// UpdateMonitorPresenter output port
@@ -29,12 +31,14 @@ type (
 
 	// UpdateMonitorInput output data
 	UpdateMonitorOutput struct {
-		ID             uuid.UUID `json:"id"`
-		UserID         uuid.UUID `json:"user_id"`
-		Name           string    `json:"name"`
-		URL            string    `json:"url"`
-		IntervalSecond int       `json:"interval_second"`
-		UpdatedAt      time.Time `json:"updated_at"`
+		ID        uuid.UUID               `json:"id"`
+		UserID    uuid.UUID               `json:"user_id"`
+		Name      string                  `json:"name"`
+		URL       string                  `json:"url"`
+		Type      string                  `json:"type"`
+		Settings  *domain.MonitorSettings `json:"settings"`
+		IsEnabled bool                    `json:"is_enabled"`
+		UpdatedAt time.Time               `json:"updated_at"`
 	}
 
 	updateMonitorInteractor struct {
@@ -55,11 +59,12 @@ func NewUpdateMonitorInteractor(
 
 func (i *updateMonitorInteractor) Execute(ctx context.Context, input UpdateMonitorInput) (UpdateMonitorOutput, error) {
 	monitor := domain.Monitor{
-		ID:             input.ID,
-		Name:           input.Name,
-		URL:            input.URL,
-		IntervalSecond: input.IntervalSecond,
-		UpdatedAt:      time.Now(),
+		ID:        input.ID,
+		Name:      input.Name,
+		URL:       input.URL,
+		Type:      input.Type,
+		Settings:  input.Settings,
+		IsEnabled: input.IsEnabled,
 	}
 	updated, err := i.repo.Update(ctx, monitor)
 	if err != nil {

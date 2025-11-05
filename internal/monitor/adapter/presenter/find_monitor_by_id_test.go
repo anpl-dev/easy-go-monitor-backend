@@ -1,8 +1,8 @@
 package presenter
 
 import (
-	"go-monitor-tool/internal/monitor/domain"
-	"go-monitor-tool/internal/monitor/usecase"
+	"easy-go-monitor/internal/monitor/domain"
+	"easy-go-monitor/internal/monitor/usecase"
 	"testing"
 	"time"
 
@@ -18,16 +18,12 @@ func TestFindMonitorByIDPresenter_Output(t *testing.T) {
 		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:           "test-monitor",
 		URL:            "https://example.com",
-		IntervalSecond: 60,
-		CreatedAt:      now,
-		UpdatedAt:      now,
 	}
 
 	want := usecase.FindMonitorByIDOutput{
 		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:           "test-monitor",
 		URL:            "https://example.com",
-		IntervalSecond: 60,
 		CreatedAt:      now,
 		UpdatedAt:      now,
 	}

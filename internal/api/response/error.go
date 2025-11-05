@@ -1,7 +1,7 @@
 package response
 
 import (
-	"go-monitor-tool/internal/apperr"
+	"easy-go-monitor/internal/codes"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,7 +15,7 @@ type APIResponse struct {
 }
 
 func ErrorResponse(err error) (int, APIResponse) {
-	if res, ok := err.(*apperr.AppError); ok {
+	if res, ok := err.(*codes.Error); ok {
 		status := toHTTPStatus(res.Code)
 		return status, APIResponse{
 			Code:    res.Code,

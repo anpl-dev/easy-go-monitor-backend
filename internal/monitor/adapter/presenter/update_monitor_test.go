@@ -1,8 +1,8 @@
 package presenter
 
 import (
-	"go-monitor-tool/internal/monitor/domain"
-	"go-monitor-tool/internal/monitor/usecase"
+	"easy-go-monitor/internal/monitor/domain"
+	"easy-go-monitor/internal/monitor/usecase"
 	"testing"
 	"time"
 
@@ -19,8 +19,6 @@ func TestUpdateMonitorPresenter_Output(t *testing.T) {
 		UserID:    uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 		Name:      "Alice",
 		URL:       "https://example.com",
-		CreatedAt: now,
-		UpdatedAt: now,
 	}
 
 	want := usecase.UpdateMonitorOutput{

@@ -1,8 +1,8 @@
 package presenter
 
 import (
-	"go-monitor-tool/internal/user/domain"
-	"go-monitor-tool/internal/user/usecase"
+	"easy-go-monitor/internal/user/domain"
+	"easy-go-monitor/internal/user/usecase"
 	"testing"
 	"time"
 
@@ -15,12 +15,12 @@ func TestUpdateUserPresenter_Output(t *testing.T) {
 	now := time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local)
 
 	user := domain.User{
-		ID:           uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-		Name:         "Alice",
-		Email:        "alice@example.com",
-		PasswordHash: "hashedPass",
-		CreatedAt:    now,
-		UpdatedAt:    now,
+		ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+		Name:      "Alice",
+		Email:     "alice@example.com",
+		Password:  "hashedPass",
+		CreatedAt: now,
+		UpdatedAt: now,
 	}
 
 	want := usecase.UpdateUserOutput{

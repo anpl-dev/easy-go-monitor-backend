@@ -5,8 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"go-monitor-tool/internal/apperr"
-	"go-monitor-tool/internal/monitor/domain"
+	"easy-go-monitor/internal/codes"
+	"easy-go-monitor/internal/infra/logger"
+	"easy-go-monitor/internal/monitor/domain"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
@@ -39,13 +40,12 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 
 	now := time.Date(2025, 4, 1, 0, 0, 0, 0, time.UTC)
 	monitor := &domain.Monitor{
-		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-		UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-		Name:           "test-monitor",
-		URL:            "https://example.com",
-		IntervalSecond: 60,
-		CreatedAt:      now,
-		UpdatedAt:      now,
+		ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+		UserID:    uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+		Name:      "test-monitor",
+		URL:       "https://example.com",
+		CreatedAt: now,
+		UpdatedAt: now,
 	}
 
 	tests := []struct {
@@ -59,10 +59,8 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 		{
 			name: "success: create monitor",
 			input: CreateMonitorInput{
-				UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-				Name:           "test-monitor",
-				URL:            "https://example.com",
-				IntervalSecond: 60,
+				Name: "test-monitor",
+				URL:  "https://example.com",
 			},
 			mockRepo: mockMonitorRepoCreate{
 				result: monitor,
@@ -70,120 +68,82 @@ func TestCreateMonitorInteractor_Execute(t *testing.T) {
 			},
 			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{
-					ID:             monitor.ID,
-					UserID:         monitor.UserID,
-					Name:           monitor.Name,
-					URL:            monitor.URL,
-					IntervalSecond: monitor.IntervalSecond,
-					CreatedAt:      monitor.CreatedAt,
-					UpdatedAt:      monitor.UpdatedAt,
+					ID:        monitor.ID,
+					UserID:    monitor.UserID,
+					Name:      monitor.Name,
+					URL:       monitor.URL,
+					CreatedAt: monitor.CreatedAt,
+					UpdatedAt: monitor.UpdatedAt,
 				},
 			},
 			want: CreateMonitorOutput{
-				ID:             monitor.ID,
-				UserID:         monitor.UserID,
-				Name:           monitor.Name,
-				URL:            monitor.URL,
-				IntervalSecond: monitor.IntervalSecond,
-				CreatedAt:      monitor.CreatedAt,
-				UpdatedAt:      monitor.UpdatedAt,
+				ID:        monitor.ID,
+				UserID:    monitor.UserID,
+				Name:      monitor.Name,
+				URL:       monitor.URL,
+				CreatedAt: monitor.CreatedAt,
+				UpdatedAt: monitor.UpdatedAt,
 			},
 			wantError: nil,
 		},
 		{
 			name: "error: missing user id",
 			input: CreateMonitorInput{
-				Name:           "test-monitor",
-				URL:            "https://example.com",
-				IntervalSecond: 60,
+				Name: "test-monitor",
+				URL:  "https://example.com",
 			},
 			mockRepo: mockMonitorRepoCreate{},
 			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: apperr.ErrInvalidUUID,
+			wantError: codes.ErrInvalidUUID,
 		},
 		{
 			name: "error: user not found",
 			input: CreateMonitorInput{
-				UserID:         uuid.MustParse("22222222-2222-2222-2222-222222222222"),
-				Name:           "test-monitor",
-				URL:            "https://example.com",
-				IntervalSecond: 60,
+				Name: "test-monitor",
+				URL:  "https://example.com",
 			},
 			mockRepo: mockMonitorRepoCreate{
 				result: nil,
-				err:    apperr.ErrNotFound,
+				err:    codes.ErrNotFound,
 			},
 			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: apperr.ErrNotFound,
+			wantError: codes.ErrNotFound,
 		},
 		{
 			name: "error: missing name",
 			input: CreateMonitorInput{
-				UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-				URL:            "https://example.com",
-				IntervalSecond: 60,
+				URL: "https://example.com",
 			},
 			mockRepo: mockMonitorRepoCreate{},
 			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: apperr.ErrInvalidMonitorName,
+			wantError: codes.ErrInvalidMonitorName,
 		},
 		{
 			name: "error: missing url",
 			input: CreateMonitorInput{
-				UserID:         uuid.MustParse("22222222-2222-2222-2222-222222222222"),
-				Name:           "test-monitor",
-				IntervalSecond: 60,
+				Name: "test-monitor",
 			},
 			mockRepo: mockMonitorRepoCreate{},
 			mockPresenter: mockCreateMonitorPresenter{
 				result: CreateMonitorOutput{},
 			},
 			want:      CreateMonitorOutput{},
-			wantError: apperr.ErrInvalidMonitorURL,
-		},
-		{
-			name: "error: missing interval",
-			input: CreateMonitorInput{
-				UserID: uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-				Name:   "test-monitor",
-				URL:    "https://example.com",
-			},
-			mockRepo: mockMonitorRepoCreate{},
-			mockPresenter: mockCreateMonitorPresenter{
-				result: CreateMonitorOutput{},
-			},
-			want:      CreateMonitorOutput{},
-			wantError: apperr.ErrInvalidMonitorInterval,
-		},
-		{
-			name: "error: invalid interval",
-			input: CreateMonitorInput{
-				UserID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-				Name:           "test-monitor",
-				URL:            "https://example.com",
-				IntervalSecond: -5,
-			},
-			mockRepo: mockMonitorRepoCreate{},
-			mockPresenter: mockCreateMonitorPresenter{
-				result: CreateMonitorOutput{},
-			},
-			want:      CreateMonitorOutput{},
-			wantError: apperr.ErrInvalidMonitorInterval,
+			wantError: codes.ErrInvalidMonitorURL,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			uc := NewCreateMonitorInteractor(&tt.mockRepo, &tt.mockPresenter)
+			uc := NewCreateMonitorInteractor(&tt.mockRepo, &tt.mockPresenter, &logger.Logger{})
 			got, err := uc.Execute(context.Background(), tt.input)
 
 			if tt.wantError != nil {

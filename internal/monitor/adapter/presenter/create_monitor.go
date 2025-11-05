@@ -1,8 +1,8 @@
 package presenter
 
 import (
-	"go-monitor-tool/internal/monitor/usecase"
-	"go-monitor-tool/internal/monitor/domain"
+	"easy-go-monitor/internal/monitor/domain"
+	"easy-go-monitor/internal/monitor/usecase"
 )
 
 type CreateMonitorPresenter struct{}
@@ -16,12 +16,14 @@ func (p *CreateMonitorPresenter) Output(monitor *domain.Monitor) usecase.CreateM
 		return usecase.CreateMonitorOutput{}
 	}
 	return usecase.CreateMonitorOutput{
-		ID:             monitor.ID,
-		UserID:         monitor.UserID,
-		Name:           monitor.Name,
-		URL:            monitor.URL,
-		IntervalSecond: monitor.IntervalSecond,
-		CreatedAt:      monitor.CreatedAt,
-		UpdatedAt:      monitor.UpdatedAt,
+		ID:        monitor.ID,
+		UserID:    monitor.UserID,
+		Name:      monitor.Name,
+		URL:       monitor.URL,
+		Type:      monitor.Type,
+		Settings:  monitor.Settings,
+		IsEnabled: monitor.IsEnabled,
+		CreatedAt: monitor.CreatedAt,
+		UpdatedAt: monitor.UpdatedAt,
 	}
 }

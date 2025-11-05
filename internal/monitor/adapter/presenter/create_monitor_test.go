@@ -1,8 +1,8 @@
 package presenter
 
 import (
-	"go-monitor-tool/internal/monitor/domain"
-	"go-monitor-tool/internal/monitor/usecase"
+	"easy-go-monitor/internal/monitor/domain"
+	"easy-go-monitor/internal/monitor/usecase"
 	"testing"
 	"time"
 
@@ -14,12 +14,11 @@ func TestCreateMonitorPresenter_Output(t *testing.T) {
 
 	now := time.Date(2025, 4, 1, 0, 0, 0, 0, time.Local)
 	user := domain.Monitor{
-		ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-		Name:           "test-monitor",
-		URL:            "https://example.com",
-		IntervalSecond: 60,
-		CreatedAt:      now,
-		UpdatedAt:      now,
+		ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+		Name:      "test-monitor",
+		URL:       "https://example.com",
+		CreatedAt: now,
+		UpdatedAt: now,
 	}
 	tests := []struct {
 		name string
@@ -30,12 +29,11 @@ func TestCreateMonitorPresenter_Output(t *testing.T) {
 			name: "success: create user",
 			args: &user,
 			want: usecase.CreateMonitorOutput{
-				ID:             uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-				Name:           "test-monitor",
-				URL:            "https://example.com",
-				IntervalSecond: 60,
-				CreatedAt:      now,
-				UpdatedAt:      now,
+				ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+				Name:      "test-monitor",
+				URL:       "https://example.com",
+				CreatedAt: now,
+				UpdatedAt: now,
 			},
 		},
 	}

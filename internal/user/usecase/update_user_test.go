@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"go-monitor-tool/internal/apperr"
-	"go-monitor-tool/internal/user/domain"
+	"easy-go-monitor/internal/codes"
+	"easy-go-monitor/internal/user/domain"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
@@ -39,12 +39,12 @@ func TestUpdateUserInteractor_Execute(t *testing.T) {
 
 	now := time.Date(2025, 4, 1, 0, 0, 0, 0, time.UTC)
 	user := &domain.User{
-		ID:           uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-		Name:         "Alice",
-		Email:        "alice@example.com",
-		PasswordHash: "hashedPass",
-		CreatedAt:    now,
-		UpdatedAt:    now,
+		ID:        uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+		Name:      "Alice",
+		Email:     "alice@example.com",
+		Password:  "hashedPass",
+		CreatedAt: now,
+		UpdatedAt: now,
 	}
 
 	tests := []struct {
@@ -80,10 +80,10 @@ func TestUpdateUserInteractor_Execute(t *testing.T) {
 			},
 			mockRepo: mockUserRepoUpdate{
 				result: nil,
-				err:    apperr.ErrNotFound,
+				err:    codes.ErrNotFound,
 			},
 			mockPresenter: mockUpdateUserPresenter{},
-			wantError:     apperr.ErrNotFound,
+			wantError:     codes.ErrNotFound,
 		},
 	}
 

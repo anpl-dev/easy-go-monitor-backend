@@ -2,10 +2,11 @@ package usecase
 
 import (
 	"context"
-	"go-monitor-tool/internal/user/domain"
+	"easy-go-monitor/internal/user/domain"
 	"time"
 
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type (
@@ -16,10 +17,10 @@ type (
 
 	// UpdateUserInput input data
 	UpdateUserInput struct {
-		ID           uuid.UUID `json:"-"`
-		Name         string    `json:"name" binding:"required"`
-		Email        string    `json:"email" binding:"required"`
-		PasswordHash string    `json:"password_hash" binding:"required"`
+		ID       uuid.UUID `json:"-"`
+		Name     string    `json:"name" binding:"required"`
+		Email    string    `json:"email" binding:"required"`
+		Password string    `json:"password" binding:"required"`
 	}
 	// UpdateUserPresenter output port
 	UpdateUserPresenter interface {
@@ -51,12 +52,21 @@ func NewUpdateUserInteractor(
 }
 
 func (i *updateUserInteractor) Execute(ctx context.Context, input UpdateUserInput) (UpdateUserOutput, error) {
+	var hashedPassword string
+	if input.Password != "" {
+		hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+		if err != nil {
+			return UpdateUserOutput{}, err
+		}
+		hashedPassword = string(hash)
+	}
+
 	updated, err := i.repo.Update(ctx, domain.User{
-		ID:           input.ID,
-		Name:         input.Name,
-		Email:        input.Email,
-		PasswordHash: input.PasswordHash,
-		UpdatedAt:    time.Now(),
+		ID:        input.ID,
+		Name:      input.Name,
+		Email:     input.Email,
+		Password:  hashedPassword,
+		UpdatedAt: time.Now(),
 	})
 	if err != nil {
 		return UpdateUserOutput{}, err

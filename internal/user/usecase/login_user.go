@@ -3,9 +3,9 @@ package usecase
 import (
 	"context"
 
-	"go-monitor-tool/internal/apperr"
-	"go-monitor-tool/internal/infra/jwt"
-	"go-monitor-tool/internal/user/domain"
+	"easy-go-monitor/internal/codes"
+	"easy-go-monitor/internal/infra/jwt"
+	"easy-go-monitor/internal/user/domain"
 )
 
 type (
@@ -41,16 +41,16 @@ func NewLoginUserInteractor(repo domain.UserRepository, jwt jwt.JWTService) Logi
 func (i *loginUserInteractor) Execute(ctx context.Context, input LoginUserInput) (LoginUserOutput, error) {
 
 	if input.Email == "" || input.Password == "" {
-		return LoginUserOutput{}, apperr.ErrInvalidCredentials
+		return LoginUserOutput{}, codes.ErrInvalidCredentials
 	}
 
 	user, err := i.repo.FindByEmail(ctx, input.Email)
 	if err != nil {
-		return LoginUserOutput{}, apperr.ErrInvalidCredentials
+		return LoginUserOutput{}, codes.ErrInvalidCredentials
 	}
 
 	if err := user.Authenticate(input.Password); err != nil {
-		return LoginUserOutput{}, apperr.ErrInvalidCredentials
+		return LoginUserOutput{}, codes.ErrInvalidCredentials
 	}
 
 	token, err := i.jwt.GenerateToken(user.ID)
